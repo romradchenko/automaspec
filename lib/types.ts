@@ -92,3 +92,7 @@ export const invitationInsertSchema = createInsertSchema(schema.invitation)
 export type CreateOrganizationInput = z.infer<typeof organizationInsertSchema>
 export type CreateMemberInput = z.infer<typeof memberInsertSchema>
 export type CreateInvitationInput = z.infer<typeof invitationInsertSchema>
+
+export type VitestAssertion = { title?: string; status?: string }
+export type VitestTestResult = { assertionResults?: VitestAssertion[] }
+export type VitestReport = { testResults?: VitestTestResult[] }

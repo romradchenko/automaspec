@@ -2,4 +2,6 @@
 alwaysApply: true
 ---
 
-Never declare types in code, except files that has types in their name
+Never declare types directly in the code, except lib/types
+
+If you’re using inline types, avoid them when the type definition exceeds 20 characters. In such cases, declare the type in lib/types file

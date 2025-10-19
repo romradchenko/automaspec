@@ -3,8 +3,10 @@ import { testsContract } from '@/orpc/contracts/tests'
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
 import { eq, and } from 'drizzle-orm'
+import { TestStatus, TestFramework, SpecStatus, VitestTestResult, VitestReport } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
+import { TEST_STATUSES } from '@/lib/constants'
 
 const os = implement(testsContract).use(authMiddleware).use(organizationMiddleware)
 
@@ -189,6 +191,145 @@ const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input 
     return { success: true }
 })
 
+const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
+    console.log('=== SYNC REPORT STARTED ===')
+    console.log('Organization ID:', context.organizationId)
+
+    const titleToStatus: Record<string, TestStatus> = {}
+    const report = input as VitestReport
+
+    if (report.testResults) {
+        report.testResults.forEach((result: VitestTestResult) => {
+            if (result.assertionResults) {
+                result.assertionResults.forEach((assertion) => {
+                    if (assertion.title && assertion.status && assertion.status !== TEST_STATUSES.missing) {
+                        titleToStatus[assertion.title.toLowerCase()] = assertion.status as TestStatus
+                    }
+                })
+            }
+        })
+    }
+
+    console.log(`Found ${Object.keys(titleToStatus).length} tests in report:`)
+    Object.entries(titleToStatus).forEach(([title, status]) => {
+        console.log(`  - "${title}": ${status}`)
+    })
+
+    const orgTests = await db
+        .select({
+            testId: test.id,
+            testStatus: test.status,
+            requirementName: testRequirement.name,
+            specId: testSpec.id
+        })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, context.organizationId))
+
+    console.log(`Found ${orgTests.length} tests in database for organization`)
+
+    const matchedIds: string[] = []
+    const updates: Array<{ id: string; status: TestStatus; oldStatus: TestStatus; name: string }> = []
+
+    orgTests.forEach((orgTest) => {
+        const reportedStatus = titleToStatus[orgTest.requirementName.toLowerCase()]
+        if (reportedStatus) {
+            matchedIds.push(orgTest.testId)
+            if (orgTest.testStatus !== reportedStatus) {
+                updates.push({
+                    id: orgTest.testId,
+                    status: reportedStatus,
+                    oldStatus: orgTest.testStatus,
+                    name: orgTest.requirementName
+                })
+                console.log(`  UPDATE: "${orgTest.requirementName}" ${orgTest.testStatus} → ${reportedStatus}`)
+            } else {
+                console.log(`  SKIP: "${orgTest.requirementName}" already ${reportedStatus}`)
+            }
+        }
+    })
+
+    const missingIds = orgTests.filter((t) => !matchedIds.includes(t.testId)).map((t) => t.testId)
+    const missingTests = orgTests.filter((t) => !matchedIds.includes(t.testId))
+
+    console.log(`\nTests to mark as MISSING (${missingIds.length}):`)
+    missingTests.forEach((t) => {
+        console.log(`  - "${t.requirementName}" (was: ${t.testStatus})`)
+    })
+
+    console.log(`\nApplying ${updates.length} updates and ${missingIds.length} missing markers...`)
+
+    const updatePromises = [
+        ...updates.map((u) => db.update(test).set({ status: u.status }).where(eq(test.id, u.id))),
+        ...missingIds.map((id) =>
+            db
+                .update(test)
+                .set({ status: TEST_STATUSES.missing as TestStatus })
+                .where(eq(test.id, id))
+        )
+    ]
+    await Promise.all(updatePromises)
+
+    console.log('All test status updates applied')
+
+    const affectedSpecIds = [...new Set(orgTests.map((t) => t.specId))]
+    console.log(`\nRecalculating aggregates for ${affectedSpecIds.length} specs...`)
+
+    const allSpecTests = await db
+        .select({
+            specId: testRequirement.specId,
+            status: test.status
+        })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, context.organizationId))
+
+    const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
+
+    affectedSpecIds.forEach((specId) => {
+        specData[specId] = {
+            counts: Object.fromEntries(Object.values(TEST_STATUSES).map((status) => [status, 0])) as Record<
+                SpecStatus,
+                number
+            >,
+            total: 0
+        }
+    })
+
+    allSpecTests.forEach((t) => {
+        if (specData[t.specId] && t.status in specData[t.specId].counts) {
+            specData[t.specId].counts[t.status as SpecStatus]++
+            specData[t.specId].total++
+        }
+    })
+
+    affectedSpecIds.forEach((specId) => {
+        const data = specData[specId]
+        console.log(
+            `  Spec ${specId}: Total=${data.total}, Passed=${data.counts.passed}, Failed=${data.counts.failed}, Missing=${data.counts.missing}`
+        )
+    })
+
+    const specUpdatePromises = affectedSpecIds.map((specId) =>
+        db
+            .update(testSpec)
+            .set({
+                statuses: specData[specId].counts,
+                numberOfTests: specData[specId].total
+            })
+            .where(eq(testSpec.id, specId))
+    )
+    await Promise.all(specUpdatePromises)
+
+    console.log('Spec aggregates updated')
+    console.log('=== SYNC REPORT COMPLETED ===')
+    console.log(`Summary: Updated ${updates.length}, Missing ${missingIds.length}`)
+
+    return { updated: updates.length, missing: missingIds.length }
+})
+
 export const testsRouter = {
     testFolders: {
         get: getTestFolder,
@@ -209,6 +350,7 @@ export const testsRouter = {
     tests: {
         list: listTests,
         upsert: upsertTest,
-        delete: deleteTest
+        delete: deleteTest,
+        syncReport: syncReport
     }
 }

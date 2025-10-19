@@ -78,6 +78,11 @@ const deleteTestContract = oc
     .input(testInsertSchema.pick({ id: true }))
     .output(z.object({ success: z.boolean() }))
 
+const syncReportContract = oc
+    .route({ method: 'POST', path: '/tests/sync-report' })
+    .input(z.any())
+    .output(z.object({ updated: z.number(), missing: z.number() }))
+
 export const testsContract = {
     testFolders: {
         get: getTestFolderContract,
@@ -98,6 +103,7 @@ export const testsContract = {
     tests: {
         list: listTestsContract,
         upsert: upsertTestContract,
-        delete: deleteTestContract
+        delete: deleteTestContract,
+        syncReport: syncReportContract
     }
 }
