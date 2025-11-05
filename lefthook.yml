@@ -34,8 +34,4 @@ pre-commit:
 #           run: pnpm test
 #           fail_text: '❌ Test failed'
 
-skip_output:
-    - meta
-    - execution
-
 colors: true
