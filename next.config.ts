@@ -4,9 +4,10 @@ const nextConfig: NextConfig = {
     experimental: {
         browserDebugInfoInTerminal: true,
         typedEnv: true,
-        useLightningcss: true
+        useLightningcss: true,
+        turbopackFileSystemCacheForDev: true
     },
-    reactCompiler: true,
+    reactCompiler: false, // Broke react-headless-tree
     typedRoutes: true,
     images: {
         unoptimized: true // FIXME
