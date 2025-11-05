@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge'
 import { Loader2, Building2, Check, X, Mail } from 'lucide-react'
 import { authClient } from '@/lib/shared/better-auth'
 import { toast } from 'sonner'
-import { setActiveOrganization } from '@/lib/utils'
 
 import type { Invitation, Organization, User } from '@/lib/types'
 
@@ -21,41 +20,15 @@ interface InvitationWithDetails extends Invitation {
 export default function InvitationsPage() {
     const router = useRouter()
     const [invitations, setInvitations] = useState<InvitationWithDetails[]>([])
-    const [loading, setLoading] = useState(true)
     const [processingId, setProcessingId] = useState<string | null>(null)
-    const [error, setError] = useState<string | null>(null)
+    const { data: activeOrganization, isPending, error } = authClient.useActiveOrganization()
 
     useEffect(() => {
-        loadInvitations()
-    }, [])
+        if (activeOrganization) router.push('/dashboard')
+        else router.push('/create-organization')
+    }, [activeOrganization, router])
 
-    const loadInvitations = async () => {
-        try {
-            setLoading(true)
-
-            // Check if the user already has organizations
-            const hasOrganizations = await setActiveOrganization(authClient)
-            if (hasOrganizations) {
-                // User already has organizations, redirect to dashboard
-                router.push('/dashboard')
-                return
-            }
-
-            // Check if the user has any pending invitations
-            // For now, we'll simulate no invitations and redirect to create organization
-            // This will be updated when the Better Auth invitation API is properly configured
-            setInvitations([])
-            router.push('/create-organization')
-        } catch (err) {
-            setError('An unexpected error occurred')
-            console.error('Load invitations error:', err)
-            // If there's an error loading invitations, redirect to create organization
-            router.push('/create-organization')
-        } finally {
-            setLoading(false)
-        }
-    }
-
+    // TODO: refactor this
     const handleAcceptInvitation = async (invitationId: string) => {
         setProcessingId(invitationId)
         try {
@@ -131,7 +104,7 @@ export default function InvitationsPage() {
         }
     }
 
-    if (loading) {
+    if (isPending) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
                 <div className="flex items-center gap-2">
@@ -158,7 +131,7 @@ export default function InvitationsPage() {
 
                 {error && (
                     <Alert variant="destructive" className="mb-6">
-                        <AlertDescription>{error}</AlertDescription>
+                        <AlertDescription>{error.message}</AlertDescription>
                     </Alert>
                 )}
 
