@@ -34,7 +34,7 @@ export default function CreateOrganizationPage() {
                 {
                     onSuccess: () => {
                         toast.success('Organization created successfully!')
-                        router.push('/dashboard')
+                        router.push('/choose-organization')
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)
