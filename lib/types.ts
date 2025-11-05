@@ -93,6 +93,19 @@ export type CreateOrganizationInput = z.infer<typeof organizationInsertSchema>
 export type CreateMemberInput = z.infer<typeof memberInsertSchema>
 export type CreateInvitationInput = z.infer<typeof invitationInsertSchema>
 
-export type VitestAssertion = { title?: string; status?: string }
-export type VitestTestResult = { assertionResults?: VitestAssertion[] }
-export type VitestReport = { testResults?: VitestTestResult[] }
+export const vitestAssertionSchema = z.object({
+    title: z.string().optional(),
+    status: z.string().optional()
+})
+
+export const vitestTestResultSchema = z.object({
+    assertionResults: z.array(vitestAssertionSchema).optional()
+})
+
+export const vitestReportSchema = z.object({
+    testResults: z.array(vitestTestResultSchema).optional()
+})
+
+export type VitestAssertion = z.infer<typeof vitestAssertionSchema>
+export type VitestTestResult = z.infer<typeof vitestTestResultSchema>
+export type VitestReport = z.infer<typeof vitestReportSchema>

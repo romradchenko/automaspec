@@ -3,7 +3,7 @@ import { testsContract } from '@/orpc/contracts/tests'
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
 import { eq, and } from 'drizzle-orm'
-import { TestStatus, TestFramework, SpecStatus, VitestTestResult, VitestReport } from '@/lib/types'
+import { TestStatus, TestFramework, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
 import { TEST_STATUSES } from '@/lib/constants'
@@ -196,7 +196,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     console.log('Organization ID:', context.organizationId)
 
     const titleToStatus: Record<string, TestStatus> = {}
-    const report = input as VitestReport
+    const report = input
 
     if (report.testResults) {
         report.testResults.forEach((result: VitestTestResult) => {
