@@ -2,7 +2,8 @@ import { implement } from '@orpc/server'
 import { testsContract } from '@/orpc/contracts/tests'
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, inArray, sql } from 'drizzle-orm'
+import type { SQL } from 'drizzle-orm'
 import { TestStatus, TestFramework, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
@@ -202,7 +203,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         report.testResults.forEach((result: VitestTestResult) => {
             if (result.assertionResults) {
                 result.assertionResults.forEach((assertion) => {
-                    if (assertion.title && assertion.status && assertion.status !== TEST_STATUSES.missing) {
+                    if (assertion.title && assertion.status) {
                         titleToStatus[assertion.title.toLowerCase()] = assertion.status as TestStatus
                     }
                 })
@@ -250,30 +251,52 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         }
     })
 
-    const missingIds = orgTests.filter((t) => !matchedIds.includes(t.testId)).map((t) => t.testId)
-    const missingTests = orgTests.filter((t) => !matchedIds.includes(t.testId))
+    const matchedSet = new Set(matchedIds)
+    const missingIds: string[] = []
+    const missingLines: string[] = []
+    for (const t of orgTests) {
+        if (!matchedSet.has(t.testId)) {
+            missingIds.push(t.testId)
+            missingLines.push(`  - "${t.requirementName}" (was: ${t.testStatus})`)
+        }
+    }
 
     console.log(`\nTests to mark as MISSING (${missingIds.length}):`)
-    missingTests.forEach((t) => {
-        console.log(`  - "${t.requirementName}" (was: ${t.testStatus})`)
-    })
+    for (const line of missingLines) {
+        console.log(line)
+    }
 
     console.log(`\nApplying ${updates.length} updates and ${missingIds.length} missing markers...`)
 
-    const updatePromises = [
-        ...updates.map((u) => db.update(test).set({ status: u.status }).where(eq(test.id, u.id))),
-        ...missingIds.map((id) =>
-            db
-                .update(test)
-                .set({ status: TEST_STATUSES.missing as TestStatus })
-                .where(eq(test.id, id))
-        )
-    ]
-    await Promise.all(updatePromises)
+    if (updates.length > 0) {
+        const updateIds: string[] = []
+        const branches: SQL[] = []
+        for (const u of updates) {
+            updateIds.push(u.id)
+            branches.push(sql`when ${u.id} then ${u.status}`)
+        }
+        const statusCase = sql`case ${test.id} ${sql.join(branches, sql.raw(' '))} else ${test.status} end`
+
+        await db
+            .update(test)
+            .set({ status: statusCase as unknown as TestStatus })
+            .where(inArray(test.id, updateIds))
+    }
+
+    if (missingIds.length > 0) {
+        await db
+            .update(test)
+            .set({ status: TEST_STATUSES.missing as TestStatus })
+            .where(inArray(test.id, missingIds))
+    }
 
     console.log('All test status updates applied')
 
-    const affectedSpecIds = [...new Set(orgTests.map((t) => t.specId))]
+    const affectedSpecIdSet = new Set<string>()
+    for (const t of orgTests) {
+        affectedSpecIdSet.add(t.specId)
+    }
+    const affectedSpecIds = Array.from(affectedSpecIdSet)
     console.log(`\nRecalculating aggregates for ${affectedSpecIds.length} specs...`)
 
     const allSpecTests = await db
@@ -289,11 +312,12 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
 
     affectedSpecIds.forEach((specId) => {
+        const counts: any = {}
+        for (const status of Object.values(TEST_STATUSES)) {
+            counts[status] = 0
+        }
         specData[specId] = {
-            counts: Object.fromEntries(Object.values(TEST_STATUSES).map((status) => [status, 0])) as Record<
-                SpecStatus,
-                number
-            >,
+            counts: counts as Record<SpecStatus, number>,
             total: 0
         }
     })
@@ -312,16 +336,26 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         )
     })
 
-    const specUpdatePromises = affectedSpecIds.map((specId) =>
-        db
+    if (affectedSpecIds.length > 0) {
+        const statusBranches: SQL[] = []
+        const totalBranches: SQL[] = []
+        for (const specId of affectedSpecIds) {
+            statusBranches.push(sql`when ${specId} then ${JSON.stringify(specData[specId].counts)}`)
+            totalBranches.push(sql`when ${specId} then ${specData[specId].total}`)
+        }
+
+        const statusesCase = sql`case ${testSpec.id} ${sql.join(statusBranches, sql.raw(' '))} else ${testSpec.statuses} end`
+
+        const totalCase = sql`case ${testSpec.id} ${sql.join(totalBranches, sql.raw(' '))} else ${testSpec.numberOfTests} end`
+
+        await db
             .update(testSpec)
             .set({
-                statuses: specData[specId].counts,
-                numberOfTests: specData[specId].total
+                statuses: statusesCase as unknown as Record<SpecStatus, number>,
+                numberOfTests: totalCase as unknown as number
             })
-            .where(eq(testSpec.id, specId))
-    )
-    await Promise.all(specUpdatePromises)
+            .where(inArray(testSpec.id, affectedSpecIds))
+    }
 
     console.log('Spec aggregates updated')
     console.log('=== SYNC REPORT COMPLETED ===')
