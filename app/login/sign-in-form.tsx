@@ -15,7 +15,6 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { FieldInfo } from '@/lib/shared/tanstack-form'
 import { useRouter } from 'next/navigation'
-import { setActiveOrganization } from '@/lib/utils'
 
 const SignInSchema = z.object({
     email: z.email('Invalid email address'),
@@ -53,7 +52,8 @@ interface AuthFormProps {
 
 export default function SignInForm({ onToggle }: AuthFormProps) {
     const [showPassword, setShowPassword] = useState(false)
-    const router = useRouter()
+    const { data: organizations } = authClient.useListOrganizations()
+    
 
     const form = useForm({
         defaultValues: {
@@ -70,14 +70,11 @@ export default function SignInForm({ onToggle }: AuthFormProps) {
                     email: value.email,
                     password: value.password,
                     rememberMe: value.remember,
-                    callbackURL: '/dashboard'
+                    callbackURL: organizations && organizations.length > 0 ? '/dashboard' : '/create-organization'
                 },
                 {
                     onSuccess: async () => {
                         toast.success('Sign in successful')
-
-                        const hasOrganizations = await setActiveOrganization(authClient)
-                        router.push(hasOrganizations ? '/dashboard' : '/create-organization')
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)

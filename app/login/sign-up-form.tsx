@@ -2,7 +2,7 @@
 
 import { authClient } from '@/lib/shared/better-auth'
 import { useForm } from '@tanstack/react-form'
-import { useRouter } from 'next/navigation'
+
 import { toast } from 'sonner'
 import * as z from 'zod'
 import { Eye, EyeOff, Chrome, Github } from 'lucide-react'
@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { FieldInfo } from '@/lib/shared/tanstack-form'
-import { setActiveOrganization } from '@/lib/utils'
 
 const SignUpSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -51,7 +50,7 @@ interface AuthFormProps {
 
 export default function SignUpForm({ onToggle }: AuthFormProps) {
     const [showPassword, setShowPassword] = useState(false)
-    const router = useRouter()
+    const { data: organizations } = authClient.useListOrganizations()
 
     const form = useForm({
         defaultValues: {
@@ -68,14 +67,11 @@ export default function SignUpForm({ onToggle }: AuthFormProps) {
                     email: value.email,
                     password: value.password,
                     name: value.name,
-                    callbackURL: '/dashboard'
+                    callbackURL: organizations && organizations.length > 0 ? '/dashboard' : '/create-organization'
                 },
                 {
                     onSuccess: async () => {
                         toast.success('Sign up successful')
-
-                        const hasOrganizations = await setActiveOrganization(authClient)
-                        router.push(hasOrganizations ? '/dashboard' : '/create-organization')
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)

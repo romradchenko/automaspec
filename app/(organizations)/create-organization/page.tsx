@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from '@tanstack/react-form'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,32 +10,15 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Building2 } from 'lucide-react'
 import { authClient } from '@/lib/shared/better-auth'
-import { setActiveOrganization } from '@/lib/utils'
 import { toast } from 'sonner'
 
 export default function CreateOrganizationPage() {
     const router = useRouter()
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const [isChecking, setIsChecking] = useState(true)
+    const { data: activeOrganization, isPending, error } = authClient.useActiveOrganization()
 
     useEffect(() => {
-        const checkExistingOrganizations = async () => {
-            try {
-                const hasOrganizations = await setActiveOrganization(authClient)
-                if (hasOrganizations) {
-                    router.push('/dashboard')
-                    return
-                }
-            } catch (err) {
-                console.error('Error checking existing organizations:', err)
-            } finally {
-                setIsChecking(false)
-            }
-        }
-
-        checkExistingOrganizations()
-    }, [router])
+        if (activeOrganization) router.push('/dashboard')
+    }, [activeOrganization, router])
 
     const form = useForm({
         defaultValues: {
@@ -43,28 +26,21 @@ export default function CreateOrganizationPage() {
             slug: ''
         },
         onSubmit: async ({ value }) => {
-            setIsLoading(true)
-            setError(null)
-
-            try {
-                const result = await authClient.organization.create({
+            await authClient.organization.create(
+                {
                     name: value.name,
                     slug: value.slug
-                })
-
-                if (result.error) {
-                    setError(result.error.message || 'Failed to create organization')
-                    return
+                },
+                {
+                    onSuccess: () => {
+                        toast.success('Organization created successfully!')
+                        router.push('/dashboard')
+                    },
+                    onError: (ctx) => {
+                        toast.error(ctx.error.message)
+                    }
                 }
-
-                toast.success('Organization created successfully!')
-                router.push('/dashboard')
-            } catch (err) {
-                setError('An unexpected error occurred')
-                console.error('Organization creation error:', err)
-            } finally {
-                setIsLoading(false)
-            }
+            )
         }
     })
 
@@ -75,9 +51,10 @@ export default function CreateOrganizationPage() {
             .replace(/^-+|-+$/g, '')
     }
 
+    // TODO: recheck form state and validation
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            {isChecking ?
+            {isPending ?
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     <p className="text-muted-foreground">Checking your organizations...</p>
@@ -126,7 +103,7 @@ export default function CreateOrganizationPage() {
                                                 form.setFieldValue('slug', slug)
                                             }}
                                             placeholder="Acme Inc."
-                                            disabled={isLoading}
+                                            disabled={isPending}
                                         />
                                         {field.state.meta.errors && (
                                             <p className="text-sm text-destructive">{field.state.meta.errors[0]}</p>
@@ -172,7 +149,6 @@ export default function CreateOrganizationPage() {
                                             onBlur={field.handleBlur}
                                             onChange={(e) => field.handleChange(e.target.value)}
                                             placeholder="acme-inc"
-                                            disabled={isLoading}
                                         />
                                         <p className="text-xs text-muted-foreground">
                                             Used in URLs: AutomaSpec.com/{field.state.value || 'your-slug'}
@@ -186,18 +162,14 @@ export default function CreateOrganizationPage() {
 
                             {error && (
                                 <Alert variant="destructive">
-                                    <AlertDescription>{error}</AlertDescription>
+                                    <AlertDescription>{error.message}</AlertDescription>
                                 </Alert>
                             )}
 
                             <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                                 {([canSubmit, isSubmitting]) => (
-                                    <Button
-                                        type="submit"
-                                        className="w-full"
-                                        disabled={!canSubmit || isSubmitting || isLoading}
-                                    >
-                                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    <Button type="submit" className="w-full" disabled={!canSubmit || isSubmitting}>
+                                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                         Create Organization
                                     </Button>
                                 )}
