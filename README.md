@@ -1,59 +1,120 @@
 # Automaspec
 
-## Development
+Test management dashboard built with Next.js, Drizzle ORM, and Better Auth.
 
-### Git Hooks
+## Overview
 
-This project uses [Lefthook](https://lefthook.dev/) for managing git hooks to ensure code quality and consistency.
+Automaspec helps organize test specifications, requirements, and individual tests in a foldered hierarchy with per‑spec status breakdowns. It includes authentication, organizations, and a dashboard UI.
 
-#### Pre-commit Hooks
+## Tech Stack
 
-The following checks run on staged files before each commit:
+- Next.js 15 (Turbopack) + React 19
+- Drizzle ORM with libsql/Turso
+- Better Auth (with organizations plugin)
+- oRPC + TanStack Query
+- Tailwind CSS v4
+- Vitest + React Testing Library
+- Lefthook, Prettier, Oxlint
 
-- **Type Checking**: TypeScript type validation (`tsc --noEmit`)
-- **ESLint**: Code linting with auto-fix (`eslint --fix`)
-- **Prettier**: Code formatting (`prettier --write`)
-- **Console Log Check**: Prevents accidental `console.log` statements
-- **TODO/FIXME Check**: Warns about TODO/FIXME comments (non-blocking)
-- **Lint Staged**: Additional file processing via lint-staged
+## Prerequisites
 
-#### Pre-push Hooks
+- Node.js (active LTS recommended)
+- pnpm
+- Turso CLI (for `turso dev`) or another libsql-compatible server
 
-Before pushing to remote, these comprehensive checks run:
+## Setup
 
-- **Full TypeScript Check**: Complete type validation across the project
-- **Full ESLint**: Linting on entire codebase
-- **Build Check**: Ensures the project builds successfully (`npm run build`)
-- **Database Schema Validation**: Validates Drizzle schema changes (`drizzle-kit check`)
-
-#### Bypassing Hooks
-
-If you need to bypass hooks (use sparingly):
+1) Install dependencies
+>>>>>>> 77c10dd (Update .gitignore, add AGENTS.md for coding rules, and enhance README.md)
 
 ```bash
-# Skip pre-commit hooks
-git commit --no-verify
-
-# Skip pre-push hooks
-git push --no-verify
+pnpm install
 ```
 
-#### Manual Hook Execution
+2) Environment variables
 
-You can manually run hooks for testing:
+Copy `.env.example` to `.env.local` (already provided in the repo root):
+
+```env
+NEXT_PUBLIC_DATABASE_URL=http://127.0.0.1:8080
+DATABASE_AUTH_TOKEN=
+# Optional: VERCEL_URL=your-vercel-deployment-url
+```
+
+3) Database (local libsql)
+
+Start a local libsql dev server backed by `db/local.db`:
 
 ```bash
-# Run pre-commit checks
-npx lefthook run pre-commit
-
-# Run pre-push checks
-npx lefthook run pre-push
+pnpm db:local
 ```
 
-#### Setup
-
-Hooks are automatically installed when you run `npm install`. If needed, you can manually install them:
+In another terminal, run migrations:
 
 ```bash
-npx lefthook install
+pnpm dbm
 ```
+
+Optional: open Drizzle Studio
+
+```bash
+pnpm dbs
+```
+
+Optional: seed sample data into `db/local.db`:
+
+```bash
+sqlite3 db/local.db < sample_data.sql
+```
+
+## Run
+
+```bash
+pnpm dev     # start Next.js (Turbopack)
+pnpm build   # build
+pnpm start   # run production build
+```
+
+## Testing
+
+```bash
+pnpm test             # run unit/component tests
+pnpm test --watch     # watch mode
+pnpm test __tests__/components/tree.test.tsx
+```
+
+Notes:
+- Integration tests are skipped by default; to enable, set `NEXT_PUBLIC_DATABASE_URL` to a reachable libsql endpoint.
+
+## Git Hooks
+
+Managed with [Lefthook](https://lefthook.dev/). Hooks are installed automatically on `postinstall`.
+
+Pre-commit (configured in `lefthook.yml`):
+- Database schema check: `drizzle-kit check` on `db/schema/*.ts`
+- Format: Prettier write
+- Lint: Oxlint with autofix
+- TODO/FIXME notice (non-blocking)
+
+Pre-push: currently disabled (commented out in `lefthook.yml`). Uncomment to enable if desired.
+
+Manual execution examples:
+
+```bash
+pnpx lefthook run pre-commit
+# pnpx lefthook run pre-push   # if you enable it in lefthook.yml
+```
+
+## Scripts
+
+Common scripts (see `package.json`):
+
+- `dev`, `build`, `start`
+- `test`
+- `db:local`, `dbg` (generate), `dbm` (migrate), `dbs` (studio), `dbup` (generate+migrate)
+- `lint`, `format`, `typecheck` (lefthook-driven jobs)
+
+## Notes
+
+- The app reads database credentials from `NEXT_PUBLIC_DATABASE_URL` and `DATABASE_AUTH_TOKEN` (see `db/index.ts` and `drizzle.config.ts`).
+- Better Auth trusted origins use `VERCEL_URL` in production if set.
