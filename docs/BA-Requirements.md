@@ -481,20 +481,42 @@ graph TB
 - **I want to** sign up with email/password
 - **So that** I can access the platform and create test specifications
 
+ - **Acceptance Criteria:**
+   - Users can register using a valid email and password.
+   - Password meets complexity requirements (minimum 8 characters).
+   - Successful registration creates a user record and returns a success response.
+   - New users can log in immediately after registration or receive a confirmation flow if email verification is enabled.
+
 **US-1.2: Organization Creation**
 - **As a** registered user
 - **I want to** create an organization
 - **So that** I can manage my team's test specifications in an isolated workspace
+
+ - **Acceptance Criteria:**
+   - Registered users can create an organization with a unique name.
+   - Creating an organization assigns the creator the Owner role.
+   - Organization creation returns the organization ID and an initial empty workspace.
 
 **US-1.3: Team Member Invitations**
 - **As an** organization owner
 - **I want to** invite team members via email
 - **So that** they can collaborate on test specifications
 
+ - **Acceptance Criteria:**
+   - Owners can invite users by entering one or more email addresses.
+   - Invitees receive an email with an invitation link and instructions.
+   - Accepted invitations add the user to the organization with the specified role.
+   - The system prevents duplicate invitations to existing org members.
+
 **US-1.4: User Profile Management**
 - **As a** registered user
 - **I want to** update my profile information
 - **So that** my account details remain current
+
+ - **Acceptance Criteria:**
+   - Users can view and edit their profile fields (name, display name, avatar, etc.).
+   - Profile updates persist and are reflected across the application immediately.
+   - Validation prevents invalid profile data (e.g., malformed email).
 
 ---
 
@@ -505,25 +527,50 @@ graph TB
 - **I want to** create folders with nested structure
 - **So that** I can organize test specs by feature/module/component
 
+ - **Acceptance Criteria:**
+   - Users can create folders at the root and inside other folders (nesting).
+   - Folder names are editable and unique within the same parent.
+   - Folders can be collapsed/expanded in the UI and persist across sessions.
+
 **US-2.2: Test Spec Creation**
 - **As a** developer
 - **I want to** create test specifications with name and description
 - **So that** I can document test scenarios for specific features
+
+ - **Acceptance Criteria:**
+   - Users can create a test spec with a name and optional description.
+   - New specs appear in the selected folder and are immediately editable.
+   - Spec creation validates required fields and returns the new spec ID.
 
 **US-2.3: Requirement Definition**
 - **As a** QA engineer
 - **I want to** add requirements to test specs
 - **So that** I can break down test coverage into granular testable units
 
+ - **Acceptance Criteria:**
+   - Users can add, edit, and delete requirements inside a test spec.
+   - Requirements support rich text or markdown (as configured).
+   - Each requirement can be linked to one or more tests and saved successfully.
+
 **US-2.4: Item Reordering**
 - **As a** developer
 - **I want to** reorder folders, specs, and requirements via drag-and-drop
 - **So that** I can maintain logical structure that matches project organization
 
+ - **Acceptance Criteria:**
+   - Drag-and-drop reordering updates the order in the UI and persists to the backend.
+   - Reordering preserves parent/child relationships and updates indexes consistently.
+   - Concurrent reorder attempts are handled gracefully with last-write-wins or optimistic locking.
+
 **US-2.5: Bulk Operations**
 - **As a** QA engineer
 - **I want to** move or copy multiple specs between folders
 - **So that** I can efficiently reorganize test documentation
+
+ - **Acceptance Criteria:**
+   - Users can select multiple specs and perform move or copy operations.
+   - Bulk operations provide progress feedback and report failures per item.
+   - Copied specs retain their content but receive new IDs in the destination.
 
 ---
 
@@ -534,20 +581,40 @@ graph TB
 - **I want to** generate Vitest test code from requirements using AI SDK
 - **So that** I can save time on writing boilerplate test code
 
+ - **Acceptance Criteria:**
+   - Users can request AI generation for a requirement and receive a code suggestion within configured time limits.
+   - Generated code is syntactically valid and follows Vitest conventions.
+   - Users can preview, accept, or reject generated code; accepted code is saved to the spec/test.
+
 **US-3.2: Code Review Interface**
 - **As a** QA engineer
 - **I want to** review AI-generated test code before saving
 - **So that** I can ensure code quality and correctness
+
+ - **Acceptance Criteria:**
+   - The UI presents generated code with syntax highlighting and diff view against existing code.
+   - Reviewers can add inline comments and request regeneration.
+   - Only accepted code is persisted to the test record.
 
 **US-3.3: Test Code Editing**
 - **As a** developer
 - **I want to** edit generated test code directly in the platform
 - **So that** I can customize tests to match specific needs
 
+ - **Acceptance Criteria:**
+   - Users can edit test code in an editor with syntax highlighting and save changes.
+   - The editor validates basic syntax and warns about obvious errors.
+   - Saved edits update the associated test record and are versioned if applicable.
+
 **US-3.4: Code Export**
 - **As a** developer
 - **I want to** export generated test code to files
 - **So that** I can integrate tests into my codebase
+
+ - **Acceptance Criteria:**
+   - Users can export one or more tests/specs as files in a zip or repository-friendly structure.
+   - Exported files contain all necessary metadata and are downloadable.
+   - Export reports any conflicts or missing fields that prevent export.
 
 ---
 
@@ -558,15 +625,30 @@ graph TB
 - **I want to** see test status (passed/failed/pending/skipped/missing)
 - **So that** I can track test coverage and identify failing tests
 
+ - **Acceptance Criteria:**
+   - Test items display a clear status indicator reflecting the latest known state.
+   - Status updates propagate to the UI within expected sync windows after CI events.
+   - Missing or unlinked tests are flagged for review.
+
 **US-4.2: Aggregated Status at Spec Level**
 - **As a** developer
 - **I want to** see aggregated status for entire test specs
 - **So that** I can quickly identify problematic areas
 
+ - **Acceptance Criteria:**
+   - Spec-level aggregation shows counts of passed/failed/pending tests.
+   - Aggregation updates when individual test statuses change.
+   - Aggregated view supports filtering by status and time range.
+
 **US-4.3: Status History**
 - **As a** QA lead
 - **I want to** view status change history for tests
 - **So that** I can track test stability over time
+
+ - **Acceptance Criteria:**
+   - Users can view a timeline of status changes for a test or spec.
+   - History entries include timestamp, source (CI or manual), and user if applicable.
+   - History can be exported or filtered by date range.
 
 ---
 
@@ -577,20 +659,40 @@ graph TB
 - **I want to** connect my GitHub repository to Automaspec
 - **So that** test results automatically sync from CI/CD runs
 
+ - **Acceptance Criteria:**
+   - Users can authorize a GitHub repository and configure which workflows to ingest.
+   - Successful connection shows repository metadata and last sync time.
+   - Connection errors are surfaced with actionable messages.
+
 **US-5.2: Automated Test Result Sync**
 - **As a** developer
 - **I want to** have test results from GitHub Actions automatically update spec status
 - **So that** I don't need to manually track test execution results
+
+ - **Acceptance Criteria:**
+   - CI run results are parsed and mapped to tests/specs; statuses are updated automatically.
+   - Syncs are idempotent and retry on transient failures.
+   - Mapping failures are logged and surfaced for manual reconciliation.
 
 **US-5.3: Test Spec Export for CI/CD**
 - **As a** developer
 - **I want to** export test specs in CI/CD-compatible format
 - **So that** I can integrate generated tests into GitHub Actions workflows
 
+ - **Acceptance Criteria:**
+   - Exported specs include file layout and metadata required by CI workflows.
+   - Export operation validates compatibility and reports issues.
+   - Developers can download or push exported files to a configured repo.
+
 **US-5.4: Failure Notifications**
 - **As a** QA engineer
 - **I want to** receive notifications when tests fail in CI/CD
 - **So that** I can quickly respond to quality issues
+
+ - **Acceptance Criteria:**
+   - Notification channels (email, in-app) send alerts for failing runs based on user preferences.
+   - Notifications include a link to the failed spec/test and CI logs.
+   - Users can configure thresholds to reduce noise (e.g., only notify on repeated failures).
 
 ---
 
@@ -601,15 +703,30 @@ graph TB
 - **I want to** assign roles (Owner, Admin, Member) to team members
 - **So that** I can control who can modify test specifications
 
+ - **Acceptance Criteria:**
+   - Owners can assign and change roles for organization members.
+   - Role changes take effect immediately and enforce UI/backend permissions.
+   - Attempts to perform unauthorized actions return permission errors.
+
 **US-6.2: Real-Time Updates**
 - **As a** team member
 - **I want to** see changes made by other users in real-time
 - **So that** I can collaborate effectively without conflicts
 
+ - **Acceptance Criteria:**
+   - Real-time edits and structural changes appear to collaborators within expected latency.
+   - The system handles edit conflicts with clear indicators and merge options.
+   - Presence and change indicators show which user made recent edits.
+
 **US-6.3: Activity Feed**
 - **As an** organization admin
 - **I want to** view activity log of changes to specs
 - **So that** I can track team contributions and changes
+
+ - **Acceptance Criteria:**
+   - Activity feed records create/edit/delete actions with timestamp and actor.
+   - Feed supports basic filtering (user, action type, date range).
+   - Admins can export activity logs for audits.
 
 ---
 
@@ -620,15 +737,30 @@ graph TB
 - **I want to** view test coverage reports and statistics
 - **So that** I can assess quality and identify coverage gaps
 
+ - **Acceptance Criteria:**
+   - Reports summarize coverage metrics (e.g., percent of requirements with tests, pass rates).
+   - Reports can be generated for a given time range and exported as PDF/CSV.
+   - Report data aligns with latest synced CI results.
+
 **US-7.2: Specification Export**
 - **As a** QA lead
 - **I want to** export test specifications to PDF/Excel
 - **So that** I can share documentation with stakeholders
 
+ - **Acceptance Criteria:**
+   - Users can export selected specs or entire folders to PDF or Excel.
+   - Exports include spec metadata, requirements, and linked tests.
+   - Export process reports success/failure and provides downloadable artifacts.
+
 **US-7.3: Dashboard Widgets**
 - **As a** developer
 - **I want to** customize dashboard with widgets showing key metrics
 - **So that** I can monitor important KPIs at a glance
+
+ - **Acceptance Criteria:**
+   - Users can add, remove, and arrange dashboard widgets.
+   - Widgets display live or near-real-time metrics and update on refresh intervals.
+   - Widget configuration persists per user or organization settings.
 
 ---
 
