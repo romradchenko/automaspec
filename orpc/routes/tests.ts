@@ -193,9 +193,9 @@ const getReport = os.tests.getReport.handler(async () => {
     return testResultsData
 })
 
-const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
+const syncReport = os.tests.syncReport.handler(async ({ context }) => {
     const titleToStatus: Record<string, TestStatus> = {}
-    const report = input
+    const report = testResultsData
 
     if (report.testResults) {
         for (const result of report.testResults as VitestTestResult[]) {

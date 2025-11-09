@@ -21,10 +21,7 @@ export function DashboardHeader() {
         try {
             setIsSyncing(true)
 
-            const { data: report, error: getError } = await safe(client.tests.getReport())
-            if (getError) throw getError
-
-            const { data, error } = await safe(client.tests.syncReport(report))
+            const { data, error } = await safe(client.tests.syncReport())
             if (error) throw error
 
             toast.success('Test results synced successfully', {
