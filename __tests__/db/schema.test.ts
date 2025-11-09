@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { testFolder, testSpec, testRequirement, test } from '@/db/schema/tests'
-import { organization, member, user } from '@/db/schema/auth'
 import { getTableName } from 'drizzle-orm'
+import { describe, it, expect } from 'vitest'
+
+import { organization, member, user } from '@/db/schema/auth'
+import { testFolder, testSpec, testRequirement, test } from '@/db/schema/tests'
 
 describe('Database Schema', () => {
     describe('Test Tables', () => {

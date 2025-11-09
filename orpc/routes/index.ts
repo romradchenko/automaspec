@@ -1,7 +1,8 @@
 import { implement } from '@orpc/server'
+
 import { contract } from '../contracts'
-import { testsRouter } from './tests'
 import { accountRouter } from './account'
+import { testsRouter } from './tests'
 
 const os = implement(contract)
 

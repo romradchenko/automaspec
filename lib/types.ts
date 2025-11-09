@@ -1,7 +1,10 @@
-import * as schema from '@/db/schema'
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod'
-import type { authClient } from './shared/better-auth'
 import * as z from 'zod'
+
+import * as schema from '@/db/schema'
+
+import type { authClient } from './shared/better-auth'
+
 import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS } from './constants'
 
 // FIXME: will work after https://github.com/drizzle-team/drizzle-orm/pull/4820, removing all manual zod coercions

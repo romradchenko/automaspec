@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+
 import { TEST_STATUSES, SPEC_STATUSES, STATUS_CONFIGS } from '@/lib/constants'
 
 describe('Constants', () => {

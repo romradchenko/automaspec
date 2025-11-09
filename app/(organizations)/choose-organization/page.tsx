@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Loader2, Building2 } from 'lucide-react'
-import { authClient } from '@/lib/shared/better-auth'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { authClient } from '@/lib/shared/better-auth'
 
 export default function ChooseOrganizationPage() {
     const router = useRouter()
@@ -32,12 +33,13 @@ export default function ChooseOrganizationPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            {isPending ?
+            {isPending ? (
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     <p className="text-muted-foreground">Checking your organizations...</p>
                 </div>
-            :   <Card className="w-full max-w-md">
+            ) : (
+                <Card className="w-full max-w-md">
                     <CardHeader className="text-center">
                         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
                             <Building2 className="h-6 w-6 text-primary-foreground" />
@@ -49,7 +51,7 @@ export default function ChooseOrganizationPage() {
                         {error && <p className="text-sm text-destructive mb-4">{error.message}</p>}
 
                         <div className="space-y-3">
-                            {organizations && organizations.length > 0 ?
+                            {organizations && organizations.length > 0 ? (
                                 organizations.map((org: any) => (
                                     <div key={org.id} className="flex items-center justify-between p-3 rounded border">
                                         <div>
@@ -61,7 +63,9 @@ export default function ChooseOrganizationPage() {
                                         </Button>
                                     </div>
                                 ))
-                            :   <p className="text-sm text-muted-foreground">No organizations available.</p>}
+                            ) : (
+                                <p className="text-sm text-muted-foreground">No organizations available.</p>
+                            )}
                         </div>
 
                         <div className="mt-6 text-center">
@@ -75,7 +79,7 @@ export default function ChooseOrganizationPage() {
                         </div>
                     </CardContent>
                 </Card>
-            }
+            )}
         </div>
     )
 }

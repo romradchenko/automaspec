@@ -1,11 +1,17 @@
-import { OpenAPIHandler } from '@orpc/openapi/fetch'
-import { CORSPlugin } from '@orpc/server/plugins'
-import { onError } from '@orpc/server'
-import { router } from '@/orpc/routes'
-import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
-import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from '@orpc/json-schema'
-import { createContext } from '@/lib/orpc/context'
 import { NextResponse } from 'next/server'
+import pino from 'pino'
+import pretty from 'pino-pretty'
+
+import { createContext } from '@/lib/orpc/context'
+import { router } from '@/orpc/routes'
+import { LoggingHandlerPlugin } from '@orpc/experimental-pino'
+import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from '@orpc/json-schema'
+import { OpenAPIHandler } from '@orpc/openapi/fetch'
+import { onError } from '@orpc/server'
+import { CORSPlugin } from '@orpc/server/plugins'
+import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
+
+const logger = pino(pretty({ colorize: true }))
 
 const handler = new OpenAPIHandler(router, {
     plugins: [
@@ -14,6 +20,12 @@ const handler = new OpenAPIHandler(router, {
         }),
         new SmartCoercionPlugin({
             schemaConverters: [new ZodToJsonSchemaConverter()]
+        }),
+        new LoggingHandlerPlugin({
+            logger,
+            generateId: () => crypto.randomUUID(), // Custom ID generator
+            logRequestResponse: true, // Log request start/end (disabled by default)
+            logRequestAbort: true // Log when requests are aborted (disabled by default)
         })
     ],
     interceptors: [

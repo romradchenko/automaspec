@@ -1,22 +1,23 @@
 'use client'
 
-import { authClient } from '@/lib/shared/better-auth'
 import { Code, Eye, EyeOff, Chrome, Github } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import Loader from '@/components/loader'
-import { useForm } from '@tanstack/react-form'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import * as z from 'zod'
-import { Input } from '@/components/ui/input'
+
+import Loader from '@/components/loader'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { authClient } from '@/lib/shared/better-auth'
 import { FieldInfo } from '@/lib/shared/tanstack-form'
+import { useForm } from '@tanstack/react-form'
 
 const SignInSchema = z.object({
     email: z.email('Invalid email address'),
@@ -136,9 +137,7 @@ function PasswordField({
                                 type="button"
                                 variant="ghost"
                             >
-                                {showPassword ?
-                                    <EyeOff className="h-4 w-4" />
-                                :   <Eye className="h-4 w-4" />}
+                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                             </Button>
                         </div>
                         <FieldInfo field={field} />
@@ -373,15 +372,17 @@ export default function LoginPage() {
                         </Link>
                         <h1 className="font-bold text-2xl">{isSignUp ? 'Create your account' : 'Welcome back'}</h1>
                         <p className="text-muted-foreground">
-                            {isSignUp ?
-                                'Sign up to get started with AutomaSpec'
-                            :   'Sign in to your account to continue'}
+                            {isSignUp
+                                ? 'Sign up to get started with AutomaSpec'
+                                : 'Sign in to your account to continue'}
                         </p>
                     </div>
 
-                    {isSignUp ?
+                    {isSignUp ? (
                         <SignUpForm onToggle={() => setIsSignUp(false)} />
-                    :   <SignInForm onToggle={() => setIsSignUp(true)} />}
+                    ) : (
+                        <SignInForm onToggle={() => setIsSignUp(true)} />
+                    )}
                 </div>
 
                 <div className="w-full max-w-xs shrink-0 flex flex-col gap-4">

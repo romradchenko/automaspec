@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { TestDetailsPanel } from '@/app/dashboard/test-details-panel'
+
 import type { TestSpec, TestRequirement } from '@/lib/types'
+
+import { TestDetailsPanel } from '@/app/dashboard/test-details-panel'
+import { render, screen } from '@testing-library/react'
 
 describe('Test Details Panel', () => {
     it('should display test spec details', () => {

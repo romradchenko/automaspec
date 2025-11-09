@@ -7,7 +7,13 @@ const nextConfig: NextConfig = {
         useLightningcss: true,
         turbopackFileSystemCacheForDev: true
     },
+    logging: {
+        incomingRequests: {
+            ignore: [/\/rpc/] // Handled by oRPC logger
+        }
+    },
     reactCompiler: false, // Broke react-headless-tree
+    reactStrictMode: false,
     typedRoutes: true,
     images: {
         unoptimized: true // FIXME

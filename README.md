@@ -43,14 +43,6 @@ pnpx lefthook run pre-commit
 pnpx lefthook run pre-push
 ```
 
-#### Setup
-
-Hooks are automatically installed when you run `pnpm install`. If needed, you can manually install them:
-
-```bash
-pnpx lefthook install
-```
-
 ## Overview
 
 Automaspec helps organize test specifications, requirements, and individual tests in a foldered hierarchy with per‑spec status breakdowns. It includes authentication, organizations, and a dashboard UI.
@@ -73,23 +65,23 @@ Automaspec helps organize test specifications, requirements, and individual test
 
 ## Setup
 
-1) Install dependencies
+1. Install dependencies
 
-```bash
-pnpm install
-```
+    ```bash
+    pnpm install
+    ```
 
-2) Environment variables
+2. Environment variables
 
-Copy `.env.example` to `.env.local` (already provided in the repo root):
+    Copy `.env.example` to `.env.local` (already provided in the repo root):
 
-```env
-NEXT_PUBLIC_DATABASE_URL=http://127.0.0.1:8080
-DATABASE_AUTH_TOKEN=
-# Optional: VERCEL_URL=your-vercel-deployment-url
-```
+    ```env
+    NEXT_PUBLIC_DATABASE_URL=http://127.0.0.1:8080
+    DATABASE_AUTH_TOKEN=
+    # Optional: VERCEL_URL=your-vercel-deployment-url
+    ```
 
-3) Database (local libsql)
+3. Database (local libsql)
 
 Start a local libsql dev server backed by `db/local.db`:
 
@@ -132,6 +124,7 @@ pnpm test __tests__/components/tree.test.tsx
 ```
 
 Notes:
+
 - Integration tests are skipped by default; to enable, set `NEXT_PUBLIC_DATABASE_URL` to a reachable libsql endpoint.
 
 ## Scripts

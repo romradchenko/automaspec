@@ -1,29 +1,27 @@
 'use client'
+import { ChevronDown, ChevronRight, FileText, Folder, Plus, Trash2 } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { toast } from 'sonner'
 
-import { useMemo, useState } from 'react'
+import type { TestSpec } from '@/lib/types'
+
+import { Button } from '@/components/ui/button'
+import { safeClient } from '@/lib/orpc/orpc'
+import { cn } from '@/lib/utils'
 import {
-    selectionFeature,
     asyncDataLoaderFeature,
+    selectionFeature,
     hotkeysCoreFeature,
     dragAndDropFeature,
     keyboardDragAndDropFeature,
     createOnDropHandler
 } from '@headless-tree/core'
 import { useTree } from '@headless-tree/react'
-import { ChevronDown, ChevronRight, FileText, Folder, Plus, Trash2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { SPEC_STATUSES, STATUS_CONFIGS } from '@/lib/constants'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import type { FolderWithChildren, TestFolder, TestSpec, TestRequirement, Test, SpecStatus } from '@/lib/types'
+import { useQueryClient } from '@tanstack/react-query'
 
-type ItemPayload = { type: 'folder'; folder: FolderWithChildren } | { type: 'spec'; spec: TestSpec }
+import { invalidateAndRefetchQueries } from './hooks'
 
 interface TreeProps {
-    folders: TestFolder[]
-    specs: TestSpec[]
-    requirements: TestRequirement[]
-    tests: Test[]
     selectedSpecId: TestSpec['id'] | null
     onSelectSpec: (spec: TestSpec) => void
     onCreateTest?: (folderId: string) => void
@@ -31,134 +29,258 @@ interface TreeProps {
     onDeleteSpec?: (specId: string) => void
 }
 
-export function Tree({
-    folders,
-    specs,
-    requirements,
-    tests,
-    selectedSpecId,
-    onSelectSpec,
-    onCreateTest,
-    onDeleteFolder,
-    onDeleteSpec
-}: TreeProps) {
-    const buildHierarchy = useMemo(() => {
-        const buildFolder = (folder: TestFolder): FolderWithChildren => {
-            const childFolders = folders
-                .filter((f) => f.parentFolderId === folder.id)
-                .map((child) => buildFolder(child))
-
-            const folderSpecs = specs.filter((spec) => spec.folderId === folder.id)
-            return {
-                ...folder,
-                folders: childFolders,
-                specs: folderSpecs
-            }
+async function getFolderContent(
+    folderId: string,
+    depth: number = 0
+): Promise<
+    {
+        id: string
+        data: {
+            name: string
+            type: 'folder' | 'spec'
+            id: string
+            children?: Array<{ id: string; name: string; type: 'folder' | 'spec' }>
         }
+    }[]
+> {
+    const { data: children, error } = await safeClient.testFolders.getChildren({ folderId, depth })
 
-        const roots: FolderWithChildren[] = folders
-            .filter((f) => !f.parentFolderId || f.parentFolderId === '0')
-            .map(buildFolder)
+    if (error) throw error
+    return children.map((child) => ({
+        id: child.id,
+        data: child
+    }))
+}
 
-        const orphanSpecs: TestSpec[] = specs.filter((s) => !s.folderId)
-        return { roots, orphanSpecs }
-    }, [folders, specs, requirements, tests])
+async function getSpecById(specId: string): Promise<TestSpec | null> {
+    const { data: spec, error } = await safeClient.testSpecs.get({ id: specId })
+    if (error) throw error
+    return spec
+}
 
-    const { itemsById, foldersById } = useMemo(() => {
-        const items: Record<string, ItemPayload> = {}
-        const folders: Record<string, string[]> = { root: [] }
-
-        const makeFolderId = (id: string) => `folder:${id}`
-        const makeSpecId = (id: string) => `spec:${id}`
-
-        const ensure = (id: string) => {
-            if (!folders[id]) folders[id] = []
+async function getFolderItemData(itemId: string): Promise<{ name: string; type: 'folder' | 'spec'; id: string }> {
+    try {
+        const { data: folder, error } = await safeClient.testFolders.get({ id: itemId })
+        if (error) throw error
+        if (folder) {
+            return { name: folder.name, type: 'folder', id: folder.id }
         }
+    } catch {}
 
-        // Orphan specs (without folder) go under root
-        buildHierarchy.orphanSpecs.forEach((spec) => {
-            const sid = makeSpecId(spec.id)
-            items[sid] = { type: 'spec', spec }
-            folders.root.push(sid)
-        })
+    const { data: spec, error } = await safeClient.testSpecs.get({ id: itemId })
+    if (error) throw error
+    if (spec) {
+        return { name: spec.name, type: 'spec', id: spec.id }
+    }
 
-        const addFolder = (folder: FolderWithChildren, parent: string | null) => {
-            const fid = makeFolderId(folder.id)
-            items[fid] = { type: 'folder', folder: folder }
-            ensure(fid)
-            if (parent) {
-                ensure(parent)
-                folders[parent].push(fid)
-            } else {
-                folders.root.push(fid)
-            }
+    throw new Error(`Item with id ${itemId} not found`)
+}
 
-            // specs of this folder
-            folder.specs.forEach((spec) => {
-                const sid = makeSpecId(spec.id)
-                items[sid] = { type: 'spec', spec }
-                folders[fid].push(sid)
-            })
-
-            // folders of this folder
-            folder.folders.forEach((folder) => addFolder(folder, fid))
-        }
-
-        buildHierarchy.roots.forEach((r) => addFolder(r, null))
-
-        return { itemsById: items, foldersById: folders }
-    }, [buildHierarchy])
-
-    // Store only overrides produced by drag-and-drop; fall back to computed children
+export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolder, onDeleteSpec }: TreeProps) {
+    const queryClient = useQueryClient()
+    const [loadingItemData, setLoadingItemData] = useState<string[]>([])
+    const [loadingItemChildrens, setLoadingItemChildrens] = useState<string[]>([])
     const [overrides, setOverrides] = useState<Record<string, string[]>>({})
-
     const [selectedItems, setSelectedItems] = useState<string[]>([])
     const [expandedItems, setExpandedItems] = useState<string[]>([])
     const [focusedItem, setFocusedItem] = useState<string | null>(null)
+    const previousChildrenRef = useRef<Record<string, string[]>>({})
+    const preloadedChildrenCache = useRef<
+        Record<string, Array<{ id: string; data: { name: string; type: 'folder' | 'spec'; id: string } }>>
+    >({})
 
-    const tree = useTree<ItemPayload>({
+    const tree = useTree<{ type: 'folder' | 'spec'; id: string; name: string }>({
         rootItemId: 'root',
         state: {
+            loadingItemData,
+            loadingItemChildrens,
             selectedItems,
             expandedItems,
             focusedItem
         },
+        setLoadingItemData,
+        setLoadingItemChildrens,
         setSelectedItems,
         setExpandedItems,
         setFocusedItem,
+        getItemName: (item) => item.getItemData().name,
         isItemFolder: (item) => item.getItemData().type === 'folder',
         canReorder: true,
-        indent: 16,
+        createLoadingItemData: () => ({ type: 'folder', id: 'loading', name: 'Loading...' }),
+        dataLoader: {
+            getItem: (itemId) => getFolderItemData(itemId),
+            getChildrenWithData: async (itemId) => {
+                if (preloadedChildrenCache.current[itemId]) {
+                    const cached = preloadedChildrenCache.current[itemId]
+                    previousChildrenRef.current[itemId] = cached.map((c) => c.id)
+                    return cached
+                }
 
-        // ALREADY CHECKED UP TO HERE
-        getItemName: (item) => {
-            const data = item.getItemData()
-            return data.type === 'folder' ? data.folder.name : data.spec.name
+                const depth = itemId === 'root' ? 2 : 0
+                const children = await getFolderContent(itemId, depth)
+
+                if (depth > 0) {
+                    const flattenChildren = (items: typeof children) => {
+                        for (const item of items) {
+                            if (item.data.children) {
+                                const childrenData = item.data.children.map((child) => ({
+                                    id: child.id,
+                                    data: { name: child.name, type: child.type, id: child.id }
+                                }))
+                                preloadedChildrenCache.current[item.id] = childrenData
+                                flattenChildren(childrenData)
+                            }
+                        }
+                    }
+                    flattenChildren(children)
+                }
+
+                if (overrides[itemId]) {
+                    const overrideMap = new Map<
+                        string,
+                        { id: string; data: { name: string; type: 'folder' | 'spec'; id: string } }
+                    >()
+                    for (const child of children) {
+                        overrideMap.set(child.id, child)
+                    }
+                    const result: { id: string; data: { name: string; type: 'folder' | 'spec'; id: string } }[] = []
+                    for (const id of overrides[itemId]) {
+                        const existing = overrideMap.get(id)
+                        if (existing) {
+                            result.push(existing)
+                        } else {
+                            const itemData = await getFolderItemData(id)
+                            result.push({ id, data: itemData })
+                        }
+                    }
+                    previousChildrenRef.current[itemId] = result.map((r) => r.id)
+                    return result
+                }
+                previousChildrenRef.current[itemId] = children.map((c) => c.id)
+                return children
+            }
         },
-        // TODO: make this pretty
-        createLoadingItemData: () => ({
-            type: 'folder',
-            folder: {
-                id: 'loading',
-                name: 'Loading...',
-                description: 'Loading...',
-                parentFolderId: 'loading',
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                folders: [],
-                specs: [],
-                organizationId: 'loading',
-                order: 0
+        onDrop: createOnDropHandler(async (item, newChildren) => {
+            const targetId = item.getId()
+            const previousChildren = previousChildrenRef.current[targetId] ?? []
+
+            setOverrides((prev) => ({ ...prev, [targetId]: newChildren }))
+
+            const newParentId = targetId === 'root' ? null : targetId
+            const previousChildrenSet = new Set(previousChildren)
+
+            const movedItems: string[] = []
+            for (const childId of newChildren) {
+                if (!previousChildrenSet.has(childId)) {
+                    movedItems.push(childId)
+                }
+            }
+
+            const removedItems: string[] = []
+            for (const childId of previousChildren) {
+                if (!newChildren.includes(childId)) {
+                    removedItems.push(childId)
+                }
+            }
+
+            if (movedItems.length > 0 || removedItems.length > 0) {
+                try {
+                    const { data: allFolders, error: error1 } = await safeClient.testFolders.list({})
+                    if (error1) throw error1
+                    const { data: allSpecs, error: error2 } = await safeClient.testSpecs.list({})
+                    if (error2) throw error2
+
+                    const updatePromises: Promise<unknown>[] = []
+
+                    for (const itemId of movedItems) {
+                        const folder = allFolders.find((f) => f.id === itemId)
+                        if (folder) {
+                            updatePromises.push(
+                                safeClient.testFolders.upsert({
+                                    id: folder.id,
+                                    name: folder.name,
+                                    description: folder.description,
+                                    parentFolderId: newParentId,
+                                    organizationId: folder.organizationId,
+                                    order: folder.order
+                                })
+                            )
+                        } else {
+                            const spec = allSpecs.find((s) => s.id === itemId)
+                            if (spec) {
+                                updatePromises.push(
+                                    safeClient.testSpecs.upsert({
+                                        id: spec.id,
+                                        name: spec.name,
+                                        fileName: spec.fileName,
+                                        description: spec.description,
+                                        folderId: newParentId,
+                                        organizationId: spec.organizationId,
+                                        statuses: spec.statuses,
+                                        numberOfTests: spec.numberOfTests
+                                    })
+                                )
+                            }
+                        }
+                    }
+
+                    for (const itemId of removedItems) {
+                        const folder = allFolders.find((f) => f.id === itemId)
+                        if (folder) {
+                            const oldParentId = folder.parentFolderId
+                            if (oldParentId !== newParentId) {
+                                for (const [parentId, children] of Object.entries(previousChildrenRef.current)) {
+                                    if (children.includes(itemId) && parentId !== targetId) {
+                                        setOverrides((prev) => {
+                                            const updated = { ...prev }
+                                            if (updated[parentId]) {
+                                                updated[parentId] = updated[parentId].filter((id) => id !== itemId)
+                                            }
+                                            return updated
+                                        })
+                                        break
+                                    }
+                                }
+                            }
+                        } else {
+                            const spec = allSpecs.find((s) => s.id === itemId)
+                            if (spec) {
+                                const oldParentId = spec.folderId
+                                if (oldParentId !== newParentId) {
+                                    for (const [parentId, children] of Object.entries(previousChildrenRef.current)) {
+                                        if (children.includes(itemId) && parentId !== targetId) {
+                                            setOverrides((prev) => {
+                                                const updated = { ...prev }
+                                                if (updated[parentId]) {
+                                                    updated[parentId] = updated[parentId].filter((id) => id !== itemId)
+                                                }
+                                                return updated
+                                            })
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    await Promise.all(updatePromises)
+                    await invalidateAndRefetchQueries(queryClient, '/test-folders')
+                    await invalidateAndRefetchQueries(queryClient, '/test-specs')
+                    previousChildrenRef.current[targetId] = newChildren
+                } catch (error) {
+                    toast.error(error instanceof Error ? error.message : 'Failed to move items')
+                    setOverrides((prev) => {
+                        const updated = { ...prev }
+                        delete updated[targetId]
+                        return updated
+                    })
+                }
+            } else {
+                previousChildrenRef.current[targetId] = newChildren
             }
         }),
-        dataLoader: {
-            getItem: (itemId) => itemsById[itemId],
-            getChildren: (itemId) => overrides[itemId] ?? foldersById[itemId]
-        },
-        onDrop: createOnDropHandler((item, newChildren) => {
-            const targetId = item.getId()
-            setOverrides((prev) => ({ ...prev, [targetId]: newChildren }))
-        }),
+        indent: 16,
         features: [
             asyncDataLoaderFeature,
             selectionFeature,
@@ -175,12 +297,15 @@ export function Tree({
                 const level = item.getItemMeta().level
                 const isFolder = item.isFolder()
                 const isExpanded = item.isExpanded()
-                const isSelected = payload.type === 'spec' ? selectedSpecId === payload.spec.id : false
+                const isSelected = payload.type === 'spec' ? selectedSpecId === payload.id : item.isSelected()
 
-                const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+                const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
                     item.getProps().onClick?.(e)
                     if (payload.type === 'spec') {
-                        onSelectSpec(payload.spec)
+                        const spec = await getSpecById(payload.id)
+                        if (spec) {
+                            onSelectSpec(spec)
+                        }
                     }
                     setSelectedItems([item.getId()])
                 }
@@ -201,46 +326,25 @@ export function Tree({
                             type="button"
                         >
                             <div className="flex h-4 w-4 items-center justify-center">
-                                {isFolder ?
-                                    isExpanded ?
+                                {isFolder ? (
+                                    isExpanded ? (
                                         <ChevronDown className="h-3 w-3" />
-                                    :   <ChevronRight className="h-3 w-3" />
-                                :   <span className="w-3" />}
+                                    ) : (
+                                        <ChevronRight className="h-3 w-3" />
+                                    )
+                                ) : (
+                                    <span className="w-3" />
+                                )}
                             </div>
 
-                            {isFolder ?
+                            {isFolder ? (
                                 <Folder className="h-4 w-4 text-muted-foreground" />
-                            :   <FileText className="h-4 w-4 text-muted-foreground" />}
+                            ) : (
+                                <FileText className="h-4 w-4 text-muted-foreground" />
+                            )}
 
                             <span className="flex-1 text-left text-sm font-medium">{item.getItemName()}</span>
-
-                            {payload.type === 'spec' && (
-                                <div className="flex items-center gap-2">
-                                    {payload.spec.statuses[SPEC_STATUSES.deactivated] &&
-                                        (() => {
-                                            const config = STATUS_CONFIGS[SPEC_STATUSES.deactivated]
-                                            return config?.badgeClassName ?
-                                                    <Badge className={config.badgeClassName}>{config.label}</Badge>
-                                                :   null
-                                        })()}
-                                    {payload.spec.numberOfTests > 0 && (
-                                        <div className="flex items-center gap-1 text-xs">
-                                            {Object.entries(STATUS_CONFIGS).map(([statusKey, config]) => {
-                                                const count = payload.spec.statuses[statusKey as SpecStatus]
-                                                const color = config.color
-                                                return (
-                                                    <span key={statusKey} className={cn(color, 'font-medium')}>
-                                                        {count}
-                                                    </span>
-                                                )
-                                            })}
-                                            <span className="text-muted-foreground">
-                                                ({payload.spec.numberOfTests})
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            {item.isLoading() && <span className="text-xs text-muted-foreground">(loading...)</span>}
                         </button>
                         {isFolder && onCreateTest && (
                             <Button
@@ -250,7 +354,7 @@ export function Tree({
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     if (payload.type === 'folder') {
-                                        onCreateTest(payload.folder.id)
+                                        onCreateTest(payload.id)
                                     }
                                 }}
                             >
@@ -265,7 +369,7 @@ export function Tree({
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     if (payload.type === 'folder') {
-                                        onDeleteFolder(payload.folder.id)
+                                        onDeleteFolder(payload.id)
                                     }
                                 }}
                             >
@@ -280,7 +384,7 @@ export function Tree({
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     if (payload.type === 'spec') {
-                                        onDeleteSpec(payload.spec.id)
+                                        onDeleteSpec(payload.id)
                                     }
                                 }}
                             >

@@ -1,16 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
 import { Loader2, Building2, Check, X, Mail } from 'lucide-react'
-import { authClient } from '@/lib/shared/better-auth'
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
 import type { Invitation, Organization, User } from '@/lib/types'
+
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { authClient } from '@/lib/shared/better-auth'
 
 interface InvitationWithDetails extends Invitation {
     organization: Organization
@@ -166,9 +167,11 @@ export default function InvitationsPage() {
                                             onClick={() => handleRejectInvitation(invitation.id)}
                                             disabled={processingId === invitation.id}
                                         >
-                                            {processingId === invitation.id ?
+                                            {processingId === invitation.id ? (
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            :   <X className="mr-2 h-4 w-4" />}
+                                            ) : (
+                                                <X className="mr-2 h-4 w-4" />
+                                            )}
                                             Decline
                                         </Button>
                                         <Button
@@ -176,9 +179,11 @@ export default function InvitationsPage() {
                                             onClick={() => handleAcceptInvitation(invitation.id)}
                                             disabled={processingId === invitation.id}
                                         >
-                                            {processingId === invitation.id ?
+                                            {processingId === invitation.id ? (
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            :   <Check className="mr-2 h-4 w-4" />}
+                                            ) : (
+                                                <Check className="mr-2 h-4 w-4" />
+                                            )}
                                             Accept
                                         </Button>
                                     </div>

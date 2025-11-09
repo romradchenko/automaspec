@@ -1,16 +1,17 @@
 'use client'
 
-import { useEffect } from 'react'
+import { Loader2, Building2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useForm } from '@tanstack/react-form'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, Building2 } from 'lucide-react'
 import { authClient } from '@/lib/shared/better-auth'
-import { toast } from 'sonner'
+import { useForm } from '@tanstack/react-form'
 
 export default function CreateOrganizationPage() {
     const router = useRouter()
@@ -56,12 +57,13 @@ export default function CreateOrganizationPage() {
     // TODO: recheck form state and validation
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            {isPending ?
+            {isPending ? (
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     <p className="text-muted-foreground">Checking your organizations...</p>
                 </div>
-            :   <Card className="w-full max-w-md">
+            ) : (
+                <Card className="w-full max-w-md">
                     <CardHeader className="text-center">
                         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
                             <Building2 className="h-6 w-6 text-primary-foreground" />
@@ -179,7 +181,7 @@ export default function CreateOrganizationPage() {
                         </form>
                     </CardContent>
                 </Card>
-            }
+            )}
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+
 import './globals.css'
 import '../lib/orpc/orpc.server' // for pre-rendering
 import { Providers } from './providers'

@@ -2,10 +2,10 @@
 
 import { Command as CommandPrimitive } from 'cmdk'
 import { Search } from 'lucide-react'
-
-import { cn } from '@/lib/utils'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { ComponentProps } from 'react'
+
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { cn } from '@/lib/utils'
 
 const Command = ({ ref, className, ...props }: ComponentProps<typeof CommandPrimitive>) => (
     <CommandPrimitive

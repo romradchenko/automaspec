@@ -1,9 +1,10 @@
-import { NavigationMenu as NavigationMenuPrimitive } from 'radix-ui'
+import type { ComponentProps } from 'react'
+
 import { cva } from 'class-variance-authority'
 import { ChevronDown } from 'lucide-react'
+import { NavigationMenu as NavigationMenuPrimitive } from 'radix-ui'
 
 import { cn } from '@/lib/utils'
-import type { ComponentProps } from 'react'
 
 const NavigationMenu = ({
     ref,

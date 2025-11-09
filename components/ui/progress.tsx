@@ -1,9 +1,10 @@
 'use client'
 
+import type { ComponentProps } from 'react'
+
 import { Progress as ProgressPrimitive } from 'radix-ui'
 
 import { cn } from '@/lib/utils'
-import type { ComponentProps } from 'react'
 
 const Progress = ({ ref, className, value, ...props }: ComponentProps<typeof ProgressPrimitive.Root>) => (
     <ProgressPrimitive.Root

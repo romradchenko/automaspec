@@ -1,9 +1,10 @@
 'use client'
 
+import type { ComponentProps } from 'react'
+
 import { Switch as SwitchPrimitives } from 'radix-ui'
 
 import { cn } from '@/lib/utils'
-import type { ComponentProps } from 'react'
 
 const Switch = ({ ref, className, ...props }: ComponentProps<typeof SwitchPrimitives.Root>) => (
     <SwitchPrimitives.Root

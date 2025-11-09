@@ -1,9 +1,10 @@
-import { implement } from '@orpc/server'
-import { accountContract } from '@/orpc/contracts/account'
-import { authMiddleware } from '@/orpc/middleware'
+import { eq } from 'drizzle-orm'
+
 import { db } from '@/db'
 import { user, member, organization } from '@/db/schema/auth'
-import { eq } from 'drizzle-orm'
+import { accountContract } from '@/orpc/contracts/account'
+import { authMiddleware } from '@/orpc/middleware'
+import { implement } from '@orpc/server'
 
 const os = implement(accountContract).use(authMiddleware)
 

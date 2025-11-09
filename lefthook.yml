@@ -7,9 +7,9 @@ pre-commit:
 
         - name: format
           glob: '*.{ts,tsx,mts}'
-          run: pnpx prettier --write {staged_files}
+          run: pnpx oxfmt {staged_files}
           stage_fixed: true
-          fail_text: '❌ Prettier failed'
+          fail_text: '❌ Oxfmt failed'
 
         - name: lint
           run: pnpx oxlint {staged_files} --fix --fix-suggestions --fix-dangerously --deny-warnings
@@ -23,6 +23,7 @@ pre-commit:
                 echo "⚠️  TODO/FIXME comments found. Consider addressing them."
               fi
 
+# TODO: Enable this
 # pre-push:
 #     parallel: true
 #     jobs:
