@@ -3,17 +3,29 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Mail, Calendar, Settings, Building2, LogOut } from 'lucide-react'
+import { ArrowLeft, Mail, Calendar, Building2, LogOut, AlertTriangle, Download, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/shared/better-auth'
 import { ModeToggle } from '@/components/theme-toggler'
+import { client } from '@/lib/orpc/orpc'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle
+} from '@/components/ui/alert-dialog'
 
 export default function ProfilePage() {
     const router = useRouter()
     const { data: session } = authClient.useSession()
     const { data: activeOrganization } = authClient.useActiveOrganization()
+    const [confirmOpen, setConfirmOpen] = useState(false)
 
     const userName = session?.user.name || ''
     const userEmail = session?.user.email || ''
@@ -29,8 +41,7 @@ export default function ProfilePage() {
         userInitials = userEmail.slice(0, 2).toUpperCase()
     }
     const joinDate = session?.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString() : ''
-    const planKey = activeOrganization?.plan
-    const planLabel = planKey ? `${planKey.charAt(0).toUpperCase()}${planKey.slice(1)} Plan` : ''
+    
 
     return (
         <div className="min-h-screen bg-background">
@@ -41,12 +52,6 @@ export default function ProfilePage() {
                             <Button variant="ghost" size="sm">
                                 <ArrowLeft className="mr-2 size-4" />
                                 Back to Dashboard
-                            </Button>
-                        </Link>
-                        <Link href="/settings">
-                            <Button size="sm" variant="outline">
-                                <Settings className="mr-2 size-4" />
-                                Settings
                             </Button>
                         </Link>
                     </div>
@@ -63,9 +68,6 @@ export default function ProfilePage() {
                             <div className="flex-1">
                                 <div className="flex flex-wrap items-center gap-3">
                                     <h2 className="font-bold text-2xl leading-tight">{userName || '—'}</h2>
-                                    {planLabel ?
-                                        <Badge variant="secondary">{planLabel}</Badge>
-                                    :   null}
                                 </div>
                                 <p className="text-muted-foreground">{userEmail || '—'}</p>
                             </div>
@@ -93,27 +95,45 @@ export default function ProfilePage() {
                             <CardDescription>Active organization and plan</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div className="font-medium">{activeOrganization?.name || '—'}</div>
-                                {planLabel ?
-                                    <Badge variant="secondary">{planLabel}</Badge>
-                                :   null}
-                            </div>
+                            <div className="font-medium">{activeOrganization?.name || '—'}</div>
                         </CardContent>
                     </Card>
 
                     <Card>
                         <CardHeader>
                             <div className="flex items-center gap-2">
-                                <Settings className="size-5" />
-                                <CardTitle>Quick Preferences</CardTitle>
+                                <Download className="size-5" />
+                                <CardTitle>Preferences & Data</CardTitle>
                             </div>
-                            <CardDescription>Common appearance</CardDescription>
+                            <CardDescription>Appearance and data access</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between mb-4">
                                 <div className="text-base">Theme</div>
                                 <ModeToggle />
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div className="text-base">Export my data (JSON)</div>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={async () => {
+                                        const data = await client.account.export()
+                                        const blob = new Blob([JSON.stringify(data, null, 2)], {
+                                            type: 'application/json'
+                                        })
+                                        const url = URL.createObjectURL(blob)
+                                        const a = document.createElement('a')
+                                        a.href = url
+                                        a.download = `automaspec-export-${new Date().toISOString().slice(0, 10)}.json`
+                                        document.body.appendChild(a)
+                                        a.click()
+                                        a.remove()
+                                        URL.revokeObjectURL(url)
+                                    }}
+                                >
+                                    <Download className="mr-2 size-4" /> Export
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
@@ -124,7 +144,7 @@ export default function ProfilePage() {
                                 <LogOut className="size-5" />
                                 <CardTitle>Session</CardTitle>
                             </div>
-                            <CardDescription>Account session actions</CardDescription>
+                            <CardDescription>Manage your current session</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Button
@@ -134,11 +154,54 @@ export default function ProfilePage() {
                                     router.push('/login')
                                 }}
                             >
-                                Sign out
+                                <LogOut className="mr-2 size-4" /> Sign out
                             </Button>
                         </CardContent>
                     </Card>
+
+                    <Card className="border-red-200">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <AlertTriangle className="size-5 text-red-600" />
+                                <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                            </div>
+                            <CardDescription>Permanently remove your account and data</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-4">
+                                <div>
+                                    <div className="font-medium text-red-800">Delete Account</div>
+                                    <div className="text-sm text-red-600">This action cannot be undone</div>
+                                </div>
+                                <Button variant="destructive" onClick={() => setConfirmOpen(true)}>
+                                    <Trash2 className="mr-2 size-4" /> Delete
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
+                <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete account</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This removes your user and associated data. This action cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={async () => {
+                                    await client.account.delete()
+                                    await authClient.signOut()
+                                    router.push('/login')
+                                }}
+                            >
+                                Confirm
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     )
