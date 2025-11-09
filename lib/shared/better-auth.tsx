@@ -5,6 +5,7 @@ import * as schema from '@/db/schema'
 import { createAuthClient } from 'better-auth/react'
 import { organization } from 'better-auth/plugins/organization'
 import { organizationClient, inferOrgAdditionalFields } from 'better-auth/client/plugins'
+import { nextCookies } from 'better-auth/next-js'
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -21,7 +22,8 @@ export const auth = betterAuth({
             organizationLimit: 1,
             membershipLimit: 1,
             creatorRole: 'owner'
-        })
+        }),
+        nextCookies()
     ]
 })
 
@@ -33,5 +35,3 @@ export const authClient = createAuthClient({
         })
     ]
 })
-
-export type AuthClient = typeof authClient
