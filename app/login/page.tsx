@@ -4,6 +4,7 @@ import { authClient } from '@/lib/shared/better-auth'
 import { Code, Eye, EyeOff, Chrome, Github } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -262,6 +263,7 @@ function SignInForm({ onToggle }: AuthFormProps) {
 
 function SignUpForm({ onToggle }: AuthFormProps) {
     const [showPassword, setShowPassword] = useState(false)
+    const router = useRouter()
     const { data: organizations } = authClient.useListOrganizations()
 
     const form = useForm({
@@ -278,13 +280,15 @@ function SignUpForm({ onToggle }: AuthFormProps) {
                 {
                     email: value.email,
                     password: value.password,
-                    name: value.name,
-                    callbackURL:
-                        organizations && organizations.length > 0 ? '/choose-organization' : '/create-organization'
+                    name: value.name
+                    // callbackURL does not work here because it is for email verification
                 },
                 {
                     onSuccess: async () => {
                         toast.success('Sign up successful')
+                        router.push(
+                            organizations && organizations.length > 0 ? '/choose-organization' : '/create-organization'
+                        )
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)
