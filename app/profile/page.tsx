@@ -1,206 +1,218 @@
 'use client'
 
-import { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-
-import { ArrowLeft, Camera, Mail, User, Calendar, MapPin, Save } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { ArrowLeft, Mail, Calendar, Building2, LogOut, AlertTriangle, Download, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { authClient } from '@/lib/shared/better-auth'
+import { ModeToggle } from '@/components/theme-toggler'
+import { client } from '@/lib/orpc/orpc'
+import { toast } from 'sonner'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle
+} from '@/components/ui/alert-dialog'
 
 export default function ProfilePage() {
-    const [isEditing, setIsEditing] = useState(false)
-    const [profileData, setProfileData] = useState({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        bio: 'Senior QA Engineer focused on test automation and quality assurance',
-        location: 'San Francisco, CA',
-        website: 'https://johndoe.dev',
-        joinDate: 'January 2024'
-    })
+    const router = useRouter()
+    const { data: session } = authClient.useSession()
+    const { data: activeOrganization } = authClient.useActiveOrganization()
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
-    const [formData, setFormData] = useState(profileData)
-
-    const handleSave = () => {
-        setProfileData(formData)
-        setIsEditing(false)
-        // Here you would typically save to backend
+    const userName = session?.user.name || ''
+    const userEmail = session?.user.email || ''
+    let userInitials = ''
+    if (userName) {
+        const parts = userName.trim().split(' ')
+        for (const p of parts) {
+            if (p) userInitials += p[0]
+            if (userInitials.length >= 2) break
+        }
     }
-
-    const handleCancel = () => {
-        setFormData(profileData)
-        setIsEditing(false)
+    if (!userInitials) {
+        userInitials = userEmail.slice(0, 2).toUpperCase()
     }
+    const joinDate = session?.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString() : ''
 
     return (
         <div className="min-h-screen bg-background">
             <div className="container max-w-4xl mx-auto py-8 px-4">
-                {/* Header */}
                 <div className="mb-8">
-                    <Link href="/dashboard">
-                        <Button variant="ghost" size="sm" className="mb-4">
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            Back to Dashboard
-                        </Button>
-                    </Link>
-                    <h1 className="text-3xl font-bold">Profile</h1>
+                    <div className="flex items-center justify-between">
+                        <Link href="/dashboard">
+                            <Button variant="ghost" size="sm">
+                                <ArrowLeft className="mr-2 size-4" />
+                                Back to Dashboard
+                            </Button>
+                        </Link>
+                    </div>
+                    <h1 className="mt-4 text-3xl font-bold">Profile</h1>
                 </div>
 
-                <div className="space-y-6">
-                    {/* Profile Header Card */}
-                    <Card>
-                        <CardHeader>
-                            <div className="flex flex-col sm:flex-row gap-6">
-                                <div className="relative">
-                                    <Avatar className="h-24 w-24">
-                                        <AvatarImage src="/placeholder-user.jpg" alt={profileData.name} />
-                                        <AvatarFallback className="text-lg">
-                                            {profileData.name
-                                                .split(' ')
-                                                .map((n) => n[0])
-                                                .join('')}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    {isEditing && (
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0"
-                                        >
-                                            <Camera className="h-4 w-4" />
-                                        </Button>
-                                    )}
+                <Card>
+                    <CardHeader>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                            <Avatar className="size-24">
+                                <AvatarImage src={session?.user.image || undefined} alt={userName} />
+                                <AvatarFallback className="text-lg">{userInitials || 'U'}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1">
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <h2 className="font-bold text-2xl leading-tight">{userName || '—'}</h2>
                                 </div>
-                                <div className="flex-1">
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                        <div>
-                                            <h2 className="text-2xl font-bold">{profileData.name}</h2>
-                                            <p className="text-muted-foreground">{profileData.email}</p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {!isEditing ?
-                                                <Button onClick={() => setIsEditing(true)}>
-                                                    <User className="h-4 w-4 mr-2" />
-                                                    Edit Profile
-                                                </Button>
-                                            :   <div className="flex gap-2">
-                                                    <Button variant="outline" onClick={handleCancel}>
-                                                        Cancel
-                                                    </Button>
-                                                    <Button onClick={handleSave}>
-                                                        <Save className="h-4 w-4 mr-2" />
-                                                        Save Changes
-                                                    </Button>
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                    <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                                        <div className="flex items-center gap-1">
-                                            <Mail className="h-4 w-4" />
-                                            {profileData.email}
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <MapPin className="h-4 w-4" />
-                                            {profileData.location}
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Calendar className="h-4 w-4" />
-                                            Joined {profileData.joinDate}
-                                        </div>
-                                    </div>
-                                </div>
+                                <p className="text-muted-foreground">{userEmail || '—'}</p>
                             </div>
-                        </CardHeader>
-                    </Card>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                            <div className="flex items-center text-muted-foreground text-sm">
+                                <Mail className="mr-2 size-4" /> {userEmail || '—'}
+                            </div>
+                            <div className="flex items-center text-muted-foreground text-sm">
+                                <Calendar className="mr-2 size-4" /> {joinDate || '—'}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                    {/* Profile Details Card */}
+                <div className="mt-8 grid gap-6 md:grid-cols-2">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Profile Details</CardTitle>
-                            <CardDescription>Update your personal information and preferences</CardDescription>
+                            <div className="flex items-center gap-2">
+                                <Building2 className="size-5" />
+                                <CardTitle>Organization</CardTitle>
+                            </div>
+                            <CardDescription>Active organization and plan</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="name">Full Name</Label>
-                                    <Input
-                                        id="name"
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        disabled={!isEditing}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input
-                                        id="email"
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        disabled={!isEditing}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="location">Location</Label>
-                                    <Input
-                                        id="location"
-                                        value={formData.location}
-                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                        disabled={!isEditing}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="website">Website</Label>
-                                    <Input
-                                        id="website"
-                                        type="url"
-                                        value={formData.website}
-                                        onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                                        disabled={!isEditing}
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="bio">Bio</Label>
-                                <Textarea
-                                    id="bio"
-                                    value={formData.bio}
-                                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                                    disabled={!isEditing}
-                                    rows={3}
-                                    placeholder="Tell us about yourself..."
-                                />
-                            </div>
+                        <CardContent className="space-y-4">
+                            <div className="font-medium">{activeOrganization?.name || '—'}</div>
                         </CardContent>
                     </Card>
 
-                    {/* Plan Information */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Plan & Billing</CardTitle>
-                            <CardDescription>Manage your subscription and billing information</CardDescription>
+                            <div className="flex items-center gap-2">
+                                <Download className="size-5" />
+                                <CardTitle>Preferences & Data</CardTitle>
+                            </div>
+                            <CardDescription>Appearance and data access</CardDescription>
                         </CardHeader>
                         <CardContent>
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="text-base">Theme</div>
+                                <ModeToggle />
+                            </div>
                             <div className="flex items-center justify-between">
+                                <div className="text-base">Export my data (JSON)</div>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={async () => {
+                                        const data = await client.account.export()
+                                        const blob = new Blob([JSON.stringify(data, null, 2)], {
+                                            type: 'application/json'
+                                        })
+                                        const url = URL.createObjectURL(blob)
+                                        const a = document.createElement('a')
+                                        a.href = url
+                                        a.download = `automaspec-export-${new Date().toISOString().slice(0, 10)}.json`
+                                        document.body.appendChild(a)
+                                        a.click()
+                                        a.remove()
+                                        URL.revokeObjectURL(url)
+                                    }}
+                                >
+                                    <Download className="mr-2 size-4" /> Export
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <LogOut className="size-5" />
+                                <CardTitle>Session</CardTitle>
+                            </div>
+                            <CardDescription>Manage your current session</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button
+                                variant="outline"
+                                onClick={async () => {
+                                    await authClient.signOut()
+                                    router.push('/login')
+                                }}
+                            >
+                                <LogOut className="mr-2 size-4" /> Sign out
+                            </Button>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-red-200">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <AlertTriangle className="size-5 text-red-600" />
+                                <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                            </div>
+                            <CardDescription>Permanently remove your account and data</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-4">
                                 <div>
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="font-semibold">Current Plan</h3>
-                                        <Badge variant="secondary">Free Plan</Badge>
-                                    </div>
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        Access to basic features and limited test suites
-                                    </p>
+                                    <div className="font-medium text-red-800">Delete Account</div>
+                                    <div className="text-sm text-red-600">This action cannot be undone</div>
                                 </div>
-                                <Button variant="outline">Upgrade Plan</Button>
+                                <Button variant="destructive" onClick={() => setConfirmOpen(true)}>
+                                    <Trash2 className="mr-2 size-4" /> Delete
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
                 </div>
+                <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete account</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This removes your user and associated data. This action cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                disabled={deleting}
+                                onClick={async () => {
+                                    if (deleting) return
+                                    setDeleting(true)
+                                    try {
+                                        await client.account.delete()
+                                        await authClient.signOut()
+                                        setConfirmOpen(false)
+                                        router.push('/login')
+                                    } catch {
+                                        toast.error('Failed to delete account')
+                                    } finally {
+                                        setDeleting(false)
+                                    }
+                                }}
+                            >
+                                Confirm
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     )
