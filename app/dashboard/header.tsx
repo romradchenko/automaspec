@@ -7,12 +7,14 @@ import { User, Settings, LogOut, Building2, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { authClient } from '@/lib/shared/better-auth'
 import { useState } from 'react'
-import { client } from '@/lib/orpc/orpc'
+import { client, orpc } from '@/lib/orpc/orpc'
+import { useQueryClient } from '@tanstack/react-query'
 import { safe } from '@orpc/client'
 import { toast } from 'sonner'
 
 export function DashboardHeader() {
     const { data: activeOrganization } = authClient.useActiveOrganization()
+    const queryClient = useQueryClient()
     const [isSyncing, setIsSyncing] = useState(false)
 
     const handleSyncClick = async () => {
@@ -28,6 +30,11 @@ export function DashboardHeader() {
             toast.success('Test results synced successfully', {
                 description: `Updated: ${data.updated}, Missing: ${data.missing}`
             })
+
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: orpc.tests.key({ type: 'query' }) }),
+                queryClient.invalidateQueries({ queryKey: orpc.testSpecs.key({ type: 'query' }) })
+            ])
         } catch (error) {
             toast.error('Failed to sync test results', {
                 description: error instanceof Error ? error.message : 'Unknown error'
