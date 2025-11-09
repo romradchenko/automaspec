@@ -15,10 +15,12 @@ import { toast } from 'sonner'
 export default function CreateOrganizationPage() {
     const router = useRouter()
     const { data: activeOrganization, isPending, error } = authClient.useActiveOrganization()
+    const { data: organizations } = authClient.useListOrganizations()
 
     useEffect(() => {
         if (activeOrganization) router.push('/dashboard')
-    }, [activeOrganization, router])
+        else if (organizations && organizations.length > 0) router.push('/choose-organization')
+    }, [organizations, activeOrganization, router])
 
     const form = useForm({
         defaultValues: {
