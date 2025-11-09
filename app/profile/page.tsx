@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/shared/better-auth'
 import { ModeToggle } from '@/components/theme-toggler'
 import { client } from '@/lib/orpc/orpc'
+import { toast } from 'sonner'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,6 +27,7 @@ export default function ProfilePage() {
     const { data: session } = authClient.useSession()
     const { data: activeOrganization } = authClient.useActiveOrganization()
     const [confirmOpen, setConfirmOpen] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
     const userName = session?.user.name || ''
     const userEmail = session?.user.email || ''
@@ -190,11 +192,18 @@ export default function ProfilePage() {
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
+                                disabled={deleting}
                                 onClick={async () => {
+                                    if (deleting) return
+                                    setDeleting(true)
                                     try {
                                         await client.account.delete()
-                                    } finally {
+                                        setConfirmOpen(false)
                                         router.push('/login')
+                                    } catch {
+                                        toast.error('Failed to delete account')
+                                    } finally {
+                                        setDeleting(false)
                                     }
                                 }}
                             >
