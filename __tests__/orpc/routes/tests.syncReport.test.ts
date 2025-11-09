@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { TEST_STATUSES } from '@/lib/constants'
-import { syncReport } from '@/orpc/routes/tests'
+import { testsRouter } from '@/orpc/routes/tests'
 import { test as testTable, testSpec as testSpecTable } from '@/db/schema'
 
 let orgTests: Array<Record<string, unknown>> = []
@@ -67,7 +67,10 @@ describe('syncReport', () => {
             ]
         }
 
-        const res = (await syncReport({ input: report, context: ctx })) as unknown as Record<string, unknown>
+        const res = (await testsRouter.tests.syncReport({ input: report, context: ctx })) as unknown as Record<
+            string,
+            unknown
+        >
 
         expect(res).toEqual({ updated: 2, missing: 1 })
 

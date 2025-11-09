@@ -2,8 +2,7 @@ import { implement } from '@orpc/server'
 import { testsContract } from '@/orpc/contracts/tests'
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
-import { eq, and, inArray, sql } from 'drizzle-orm'
-import type { SQL } from 'drizzle-orm'
+import { eq, and, inArray } from 'drizzle-orm'
 import { TestStatus, TestFramework, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
@@ -27,12 +26,10 @@ const getTestFolder = os.testFolders.get.handler(async ({ input, context }) => {
     return folder[0]
 })
 
-// RIGHT
 const listTestFolders = os.testFolders.list.handler(async ({ context }) => {
     return await db.select().from(testFolder).where(eq(testFolder.organizationId, context.organizationId))
 })
 
-// WRONG
 const upsertTestFolder = os.testFolders.upsert.handler(async ({ input, context }) => {
     const { id = crypto.randomUUID(), ...updates } = input
 
@@ -94,7 +91,6 @@ const upsertTestSpec = os.testSpecs.upsert.handler(async ({ input }) => {
 const deleteTestSpec = os.testSpecs.delete.handler(async ({ input, context }) => {
     const organizationId = context.organizationId
 
-    // Verify the spec belongs to the organization before deletion
     const verification = await db
         .select({ id: testSpec.id })
         .from(testSpec)
@@ -233,19 +229,24 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         .where(eq(testSpec.organizationId, context.organizationId))
 
     const matchedIds: string[] = []
-    const updates: Array<{ id: string; status: TestStatus; oldStatus: TestStatus; name: string }> = []
+    const updatesByStatus: Record<TestStatus, string[]> = {
+        passed: [],
+        failed: [],
+        skipped: [],
+        todo: [],
+        pending: [],
+        disabled: [],
+        missing: []
+    }
+    let updatedCount = 0
 
     for (const orgTest of orgTests) {
         const reportedStatus = titleToStatus[orgTest.requirementName.toLowerCase()]
         if (reportedStatus) {
             matchedIds.push(orgTest.testId)
             if (orgTest.testStatus !== reportedStatus) {
-                updates.push({
-                    id: orgTest.testId,
-                    status: reportedStatus,
-                    oldStatus: orgTest.testStatus,
-                    name: orgTest.requirementName
-                })
+                updatesByStatus[reportedStatus].push(orgTest.testId)
+                updatedCount++
             }
         }
     }
@@ -258,19 +259,15 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         }
     }
 
-    if (updates.length > 0) {
-        const updateIds: string[] = []
-        const branches: SQL[] = []
-        for (const u of updates) {
-            updateIds.push(u.id)
-            branches.push(sql`when ${u.id} then ${u.status}`)
+    const updateTasks: Promise<unknown>[] = []
+    for (const status of Object.keys(updatesByStatus) as TestStatus[]) {
+        const ids = updatesByStatus[status]
+        if (ids.length > 0) {
+            updateTasks.push(db.update(test).set({ status }).where(inArray(test.id, ids)))
         }
-        const statusCase = sql`case ${test.id} ${sql.join(branches, sql.raw(' '))} else ${test.status} end`
-
-        await db
-            .update(test)
-            .set({ status: statusCase as unknown as TestStatus })
-            .where(inArray(test.id, updateIds))
+    }
+    if (updateTasks.length > 0) {
+        await Promise.all(updateTasks)
     }
 
     if (missingIds.length > 0) {
@@ -320,27 +317,22 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     }
 
     if (affectedSpecIds.length > 0) {
-        const statusBranches: SQL[] = []
-        const totalBranches: SQL[] = []
-        for (const specId of affectedSpecIds) {
-            statusBranches.push(sql`when ${specId} then ${JSON.stringify(specData[specId].counts)}`)
-            totalBranches.push(sql`when ${specId} then ${specData[specId].total}`)
+        const specUpdateTasks: Promise<unknown>[] = []
+        for (const sid of affectedSpecIds) {
+            specUpdateTasks.push(
+                db
+                    .update(testSpec)
+                    .set({
+                        statuses: specData[sid].counts as Record<SpecStatus, number>,
+                        numberOfTests: specData[sid].total
+                    })
+                    .where(eq(testSpec.id, sid))
+            )
         }
-
-        const statusesCase = sql`case ${testSpec.id} ${sql.join(statusBranches, sql.raw(' '))} else ${testSpec.statuses} end`
-
-        const totalCase = sql`case ${testSpec.id} ${sql.join(totalBranches, sql.raw(' '))} else ${testSpec.numberOfTests} end`
-
-        await db
-            .update(testSpec)
-            .set({
-                statuses: statusesCase as unknown as Record<SpecStatus, number>,
-                numberOfTests: totalCase as unknown as number
-            })
-            .where(inArray(testSpec.id, affectedSpecIds))
+        await Promise.all(specUpdateTasks)
     }
 
-    return { updated: updates.length, missing: missingIds.length }
+    return { updated: updatedCount, missing: missingIds.length }
 })
 
 export const testsRouter = {
@@ -368,5 +360,3 @@ export const testsRouter = {
         getReport: getReport
     }
 }
-
-export { syncReport }
