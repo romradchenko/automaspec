@@ -19,13 +19,10 @@ export function DashboardHeader() {
         try {
             setIsSyncing(true)
 
-            const response = await fetch('/test-results.json')
-            if (!response.ok) {
-                throw new Error('test-results.json not found. Make sure the file exists in the public folder.')
-            }
+            const { data: report, error: getError } = await safe(client.tests.getReport())
+            if (getError) throw getError
 
-            const testResults = await response.json()
-            const { data, error } = await safe(client.tests.syncReport(testResults))
+            const { data, error } = await safe(client.tests.syncReport(report))
             if (error) throw error
 
             toast.success('Test results synced successfully', {

@@ -84,6 +84,8 @@ const syncReportContract = oc
     .input(vitestReportSchema)
     .output(z.object({ updated: z.number(), missing: z.number() }))
 
+const getReportContract = oc.route({ method: 'GET', path: '/tests/report' }).output(vitestReportSchema)
+
 export const testsContract = {
     testFolders: {
         get: getTestFolderContract,
@@ -105,6 +107,7 @@ export const testsContract = {
         list: listTestsContract,
         upsert: upsertTestContract,
         delete: deleteTestContract,
-        syncReport: syncReportContract
+        syncReport: syncReportContract,
+        getReport: getReportContract
     }
 }

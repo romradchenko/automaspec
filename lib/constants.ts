@@ -102,3 +102,5 @@ export const STATUS_CONFIGS = {
         requirementClassName: 'text-slate-700 bg-slate-50'
     }
 } as const satisfies { [K in SpecStatus]: StatusConfig }
+
+export const TEST_RESULTS_FILE = 'test-results.json'

@@ -7,7 +7,9 @@ import type { SQL } from 'drizzle-orm'
 import { TestStatus, TestFramework, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
-import { TEST_STATUSES } from '@/lib/constants'
+import { TEST_STATUSES, TEST_RESULTS_FILE } from '@/lib/constants'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 const os = implement(testsContract).use(authMiddleware).use(organizationMiddleware)
 
@@ -190,6 +192,16 @@ const upsertTestRequirement = os.testRequirements.upsert.handler(async ({ input 
 const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input }) => {
     await db.delete(testRequirement).where(eq(testRequirement.id, input.id))
     return { success: true }
+})
+
+const getReport = os.tests.getReport.handler(async () => {
+    try {
+        const path = join(process.cwd(), TEST_RESULTS_FILE)
+        const content = await readFile(path, 'utf-8')
+        return JSON.parse(content)
+    } catch {
+        throw new ORPCError('NOT_FOUND', { message: 'Test results not found' })
+    }
 })
 
 const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
@@ -385,7 +397,8 @@ export const testsRouter = {
         list: listTests,
         upsert: upsertTest,
         delete: deleteTest,
-        syncReport: syncReport
+        syncReport: syncReport,
+        getReport: getReport
     }
 }
 
