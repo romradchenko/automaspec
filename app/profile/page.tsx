@@ -41,7 +41,6 @@ export default function ProfilePage() {
         userInitials = userEmail.slice(0, 2).toUpperCase()
     }
     const joinDate = session?.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString() : ''
-    
 
     return (
         <div className="min-h-screen bg-background">
@@ -192,9 +191,11 @@ export default function ProfilePage() {
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 onClick={async () => {
-                                    await client.account.delete()
-                                    await authClient.signOut()
-                                    router.push('/login')
+                                    try {
+                                        await client.account.delete()
+                                    } finally {
+                                        router.push('/login')
+                                    }
                                 }}
                             >
                                 Confirm
