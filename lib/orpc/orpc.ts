@@ -1,6 +1,6 @@
 import { OpenAPILink } from '@orpc/openapi-client/fetch'
 import { contract } from '@/orpc/contracts'
-import { createORPCClient, onError } from '@orpc/client'
+import { createORPCClient, onError, createSafeClient } from '@orpc/client'
 import type { ContractRouterClient } from '@orpc/contract'
 import { createTanstackQueryUtils } from '@orpc/tanstack-query'
 import { ResponseValidationPlugin } from '@orpc/contract/plugins'
@@ -48,5 +48,6 @@ const link = new OpenAPILink(contract, {
  * Fallback to client-side client if server-side client is not available.
  */
 export const client: ContractRouterClient<typeof contract> = globalThis.$client ?? createORPCClient(link)
+export const safeClient = createSafeClient(client)
 
 export const orpc = createTanstackQueryUtils(client)
