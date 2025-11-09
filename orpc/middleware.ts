@@ -13,10 +13,8 @@ export const authMiddleware = os.$context<{ session?: Session }>().middleware(as
 
 export const organizationMiddleware = os.$context<{ session?: Session }>().middleware(async ({ context, next }) => {
     if (!context.session?.session.activeOrganizationId) {
-        throw new ORPCError('Organization not found')
+        throw new ORPCError('User has no active organization')
     }
-
-    // TODO: check if user requests from his organization or not
 
     return await next({
         context: { organizationId: context.session.session.activeOrganizationId }
