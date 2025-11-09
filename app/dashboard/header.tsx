@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { authClient } from '@/lib/shared/better-auth'
 import { useState } from 'react'
 import { client } from '@/lib/orpc/orpc'
+import { safe } from '@orpc/client'
 import { toast } from 'sonner'
 
 export function DashboardHeader() {
@@ -24,10 +25,11 @@ export function DashboardHeader() {
             }
 
             const testResults = await response.json()
-            const result = await client.tests.syncReport(testResults)
+            const { data, error } = await safe(client.tests.syncReport(testResults))
+            if (error) throw error
 
             toast.success('Test results synced successfully', {
-                description: `Updated: ${result.updated}, Missing: ${result.missing}`
+                description: `Updated: ${data.updated}, Missing: ${data.missing}`
             })
         } catch (error) {
             toast.error('Failed to sync test results', {
