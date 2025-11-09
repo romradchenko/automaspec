@@ -2,8 +2,8 @@
 
 import { useQuery, type QueryClient, type Query } from '@tanstack/react-query'
 import { orpc } from '@/lib/orpc/orpc'
-import { type TestFolder, type TestSpec, type TestRequirement, type SpecStatus } from '@/lib/types'
-import { SPEC_STATUSES } from '@/lib/constants'
+import { type TestFolder, type TestSpec, type TestRequirement, } from '@/lib/types'
+
 
 export function useFolders(parentFolderId: TestFolder['parentFolderId']) {
     const { data: folders, isLoading: foldersLoading } = useQuery(
@@ -12,13 +12,8 @@ export function useFolders(parentFolderId: TestFolder['parentFolderId']) {
         })
     )
 
-    // const folderIds = folders.map((f) => f.id)
-    // const folderById = Object.fromEntries(folders.map((f) => [f.id, f]))
-
     return {
         folders: folders ?? [],
-        // folderIds,
-        // folderById,
         foldersLoading
     }
 }
@@ -30,9 +25,6 @@ export function useSpecs(folderId: TestSpec['folderId']) {
         })
     )
 
-    // const specIds = specs.map((s) => s.id)
-    // const specById = Object.fromEntries(specs.map((s) => [s.id, s]))
-
     return { specs: specs ?? [], specsLoading }
 }
 
@@ -43,9 +35,6 @@ export function useRequirements(specId: TestSpec['id']) {
         })
     )
 
-    // const requirementIds = requirements.map((r) => r.id)
-    // const requirementById = Object.fromEntries(requirements.map((r) => [r.id, r]))
-
     return { requirements: requirements ?? [], requirementsLoading }
 }
 
@@ -55,9 +44,6 @@ export function useTests(requirementId: TestRequirement['id']) {
             input: { requirementId }
         })
     )
-
-    // const testIds = tests.map((t) => t.id)
-    // const testById = Object.fromEntries(tests.map((t) => [t.id, t]))
 
     return { tests: tests ?? [], testsLoading }
 }
@@ -76,11 +62,4 @@ export async function invalidateAndRefetchQueries(queryClient: QueryClient, path
     const predicate = createQueryPredicate(path)
     queryClient.invalidateQueries({ predicate })
     await queryClient.refetchQueries({ predicate })
-}
-
-export function createDefaultSpecStatuses(): Record<SpecStatus, number> {
-    return Object.fromEntries(Object.values(SPEC_STATUSES).map((status: SpecStatus) => [status, 0])) as Record<
-        SpecStatus,
-        number
-    >
 }
