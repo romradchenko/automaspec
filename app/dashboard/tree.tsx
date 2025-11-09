@@ -10,10 +10,11 @@ import {
     createOnDropHandler
 } from '@headless-tree/core'
 import { useTree } from '@headless-tree/react'
-import { ChevronDown, ChevronRight, FileText, Folder } from 'lucide-react'
+import { ChevronDown, ChevronRight, FileText, Folder, Plus, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SPEC_STATUSES, STATUS_CONFIGS } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import type { FolderWithChildren, TestFolder, TestSpec, TestRequirement, Test, SpecStatus } from '@/lib/types'
 
 type ItemPayload = { type: 'folder'; folder: FolderWithChildren } | { type: 'spec'; spec: TestSpec }
@@ -25,9 +26,22 @@ interface TreeProps {
     tests: Test[]
     selectedSpecId: TestSpec['id'] | null
     onSelectSpec: (spec: TestSpec) => void
+    onCreateTest?: (folderId: string) => void
+    onDeleteFolder?: (folderId: string) => void
+    onDeleteSpec?: (specId: string) => void
 }
 
-export function Tree({ folders, specs, requirements, tests, selectedSpecId, onSelectSpec }: TreeProps) {
+export function Tree({
+    folders,
+    specs,
+    requirements,
+    tests,
+    selectedSpecId,
+    onSelectSpec,
+    onCreateTest,
+    onDeleteFolder,
+    onDeleteSpec
+}: TreeProps) {
     const buildHierarchy = useMemo(() => {
         const buildFolder = (folder: TestFolder): FolderWithChildren => {
             const childFolders = folders
@@ -172,57 +186,108 @@ export function Tree({ folders, specs, requirements, tests, selectedSpecId, onSe
                 }
 
                 return (
-                    <button
-                        {...item.getProps()}
-                        onClick={onClick}
+                    <div
                         key={item.getId()}
-                        className={cn(
-                            'group flex w-full cursor-pointer items-center gap-2 rounded-sm px-2 py-1 hover:bg-muted/50',
-                            isSelected && 'bg-muted'
-                        )}
+                        className="group flex items-center"
                         style={{ paddingLeft: `${level * 16}px` }}
-                        type="button"
                     >
-                        <div className="flex h-4 w-4 items-center justify-center">
-                            {isFolder ?
-                                isExpanded ?
-                                    <ChevronDown className="h-3 w-3" />
-                                :   <ChevronRight className="h-3 w-3" />
-                            :   <span className="w-3" />}
-                        </div>
-
-                        {isFolder ?
-                            <Folder className="h-4 w-4 text-muted-foreground" />
-                        :   <FileText className="h-4 w-4 text-muted-foreground" />}
-
-                        <span className="flex-1 text-left text-sm font-medium">{item.getItemName()}</span>
-
-                        {payload.type === 'spec' && (
-                            <div className="flex items-center gap-2">
-                                {payload.spec.statuses[SPEC_STATUSES.deactivated] &&
-                                    (() => {
-                                        const config = STATUS_CONFIGS[SPEC_STATUSES.deactivated]
-                                        return config?.badgeClassName ?
-                                                <Badge className={config.badgeClassName}>{config.label}</Badge>
-                                            :   null
-                                    })()}
-                                {payload.spec.numberOfTests > 0 && (
-                                    <div className="flex items-center gap-1 text-xs">
-                                        {Object.entries(STATUS_CONFIGS).map(([statusKey, config]) => {
-                                            const count = payload.spec.statuses[statusKey as SpecStatus]
-                                            const color = config.color
-                                            return (
-                                                <span key={statusKey} className={cn(color, 'font-medium')}>
-                                                    {count}
-                                                </span>
-                                            )
-                                        })}
-                                        <span className="text-muted-foreground">({payload.spec.numberOfTests})</span>
-                                    </div>
-                                )}
+                        <button
+                            {...item.getProps()}
+                            onClick={onClick}
+                            className={cn(
+                                'group/button flex flex-1 cursor-pointer items-center gap-2 rounded-sm px-2 py-1 hover:bg-muted/50',
+                                isSelected && 'bg-muted'
+                            )}
+                            type="button"
+                        >
+                            <div className="flex h-4 w-4 items-center justify-center">
+                                {isFolder ?
+                                    isExpanded ?
+                                        <ChevronDown className="h-3 w-3" />
+                                    :   <ChevronRight className="h-3 w-3" />
+                                :   <span className="w-3" />}
                             </div>
+
+                            {isFolder ?
+                                <Folder className="h-4 w-4 text-muted-foreground" />
+                            :   <FileText className="h-4 w-4 text-muted-foreground" />}
+
+                            <span className="flex-1 text-left text-sm font-medium">{item.getItemName()}</span>
+
+                            {payload.type === 'spec' && (
+                                <div className="flex items-center gap-2">
+                                    {payload.spec.statuses[SPEC_STATUSES.deactivated] &&
+                                        (() => {
+                                            const config = STATUS_CONFIGS[SPEC_STATUSES.deactivated]
+                                            return config?.badgeClassName ?
+                                                    <Badge className={config.badgeClassName}>{config.label}</Badge>
+                                                :   null
+                                        })()}
+                                    {payload.spec.numberOfTests > 0 && (
+                                        <div className="flex items-center gap-1 text-xs">
+                                            {Object.entries(STATUS_CONFIGS).map(([statusKey, config]) => {
+                                                const count = payload.spec.statuses[statusKey as SpecStatus]
+                                                const color = config.color
+                                                return (
+                                                    <span key={statusKey} className={cn(color, 'font-medium')}>
+                                                        {count}
+                                                    </span>
+                                                )
+                                            })}
+                                            <span className="text-muted-foreground">
+                                                ({payload.spec.numberOfTests})
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </button>
+                        {isFolder && onCreateTest && (
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    if (payload.type === 'folder') {
+                                        onCreateTest(payload.folder.id)
+                                    }
+                                }}
+                            >
+                                <Plus className="h-3 w-3" />
+                            </Button>
                         )}
-                    </button>
+                        {isFolder && onDeleteFolder && (
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100 text-destructive hover:text-destructive"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    if (payload.type === 'folder') {
+                                        onDeleteFolder(payload.folder.id)
+                                    }
+                                }}
+                            >
+                                <Trash2 className="h-3 w-3" />
+                            </Button>
+                        )}
+                        {!isFolder && onDeleteSpec && (
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100 text-destructive hover:text-destructive"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    if (payload.type === 'spec') {
+                                        onDeleteSpec(payload.spec.id)
+                                    }
+                                }}
+                            >
+                                <Trash2 className="h-3 w-3" />
+                            </Button>
+                        )}
+                    </div>
                 )
             })}
             <div

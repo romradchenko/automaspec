@@ -8,6 +8,22 @@ import { cn } from '@/lib/utils'
 import { Edit, FileText, Trash2, Check, Copy, Plus, Folder } from 'lucide-react'
 import { TestSpec, Test, TestRequirement, type TestStatus } from '@/lib/types'
 import { SPEC_STATUSES, STATUS_CONFIGS, TEST_STATUSES } from '@/lib/constants'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { client } from '@/lib/orpc/orpc'
+import { authClient } from '@/lib/shared/better-auth'
+import { toast } from 'sonner'
+import { invalidateAndRefetchQueries } from './hooks'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle
+} from '@/components/ui/alert-dialog'
+import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 
 interface TestDetailsPanelProps {
     selectedSpec: TestSpec | null
@@ -16,6 +32,7 @@ interface TestDetailsPanelProps {
     onEditSpec: (spec: TestSpec) => void
     onCreateGroup: () => void
     onCreateTest: () => void
+    onDeleteSpec?: (specId: string) => void
 }
 
 export function TestDetailsPanel({
@@ -24,11 +41,61 @@ export function TestDetailsPanel({
     selectedTests,
     onEditSpec,
     onCreateGroup,
-    onCreateTest
+    onCreateTest,
+    onDeleteSpec
 }: TestDetailsPanelProps) {
     const [copied, setCopied] = useState(false)
     const [editingRequirements, setEditingRequirements] = useState(false)
     const [, setRequirementsContent] = useState('')
+    const [deleteSpecDialogOpen, setDeleteSpecDialogOpen] = useState(false)
+    const { data: activeOrganization } = authClient.useActiveOrganization()
+    const queryClient = useQueryClient()
+
+    const createFolderMutation = useMutation({
+        mutationFn: async () => {
+            if (!activeOrganization?.id) {
+                throw new Error('No active organization')
+            }
+            return await client.testFolders.upsert({
+                id: crypto.randomUUID(),
+                name: 'New Folder',
+                organizationId: activeOrganization.id,
+                order: 0
+            })
+        },
+        onSuccess: async () => {
+            await invalidateAndRefetchQueries(queryClient, '/test-folders')
+            toast.success('Folder created successfully')
+            onCreateGroup?.()
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to create folder')
+        }
+    })
+
+    const createTestSpecMutation = useMutation({
+        mutationFn: async () => {
+            if (!activeOrganization?.id) {
+                throw new Error('No active organization')
+            }
+            return await client.testSpecs.upsert({
+                id: crypto.randomUUID(),
+                name: 'New Test',
+                folderId: null,
+                organizationId: activeOrganization.id,
+                statuses: DEFAULT_SPEC_STATUSES,
+                numberOfTests: 0
+            })
+        },
+        onSuccess: async () => {
+            await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            toast.success('Test created successfully')
+            onCreateTest?.()
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to create test')
+        }
+    })
 
     const copyTestCode = async () => {
         if (selectedSpec) {
@@ -80,14 +147,21 @@ ${requirements}
                 <div className="text-center">
                     <FileText className="mx-auto mb-4 h-12 w-12 opacity-50" />
                     <p>Select a spec to view details and requirements</p>
-                    <div className="mt-4 flex gap-2">
-                        <Button variant="outline" onClick={onCreateGroup}>
+                    <div className="mt-4 flex justify-around">
+                        <Button
+                            variant="outline"
+                            onClick={() => createFolderMutation.mutate()}
+                            disabled={createFolderMutation.isPending}
+                        >
                             <Folder className="mr-2 h-4 w-4" />
-                            Create Group
+                            New Folder
                         </Button>
-                        <Button onClick={onCreateTest}>
+                        <Button
+                            onClick={() => createTestSpecMutation.mutate()}
+                            disabled={createTestSpecMutation.isPending}
+                        >
                             <Plus className="mr-2 h-4 w-4" />
-                            Create Test
+                            New Test
                         </Button>
                     </div>
                 </div>
@@ -105,6 +179,16 @@ ${requirements}
                             <Button onClick={() => onEditSpec(selectedSpec)} size="sm" variant="ghost">
                                 <Edit className="h-4 w-4" />
                             </Button>
+                            {onDeleteSpec && (
+                                <Button
+                                    onClick={() => setDeleteSpecDialogOpen(true)}
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-destructive hover:text-destructive"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            )}
                         </div>
                         <p className="mb-2 text-muted-foreground text-sm">{selectedSpec.description}</p>
                         <div className="flex items-center gap-2">
@@ -304,6 +388,31 @@ ${requirements}
                     </TabsContent>
                 </Tabs>
             </div>
+
+            <AlertDialog open={deleteSpecDialogOpen} onOpenChange={setDeleteSpecDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Test Spec</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete this test spec? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={() => {
+                                if (selectedSpec && onDeleteSpec) {
+                                    onDeleteSpec(selectedSpec.id)
+                                    setDeleteSpecDialogOpen(false)
+                                }
+                            }}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     )
 }

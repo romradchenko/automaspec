@@ -6,7 +6,7 @@ import { SPEC_STATUSES } from '@/lib/constants'
 
 type SpecStatuses = Record<SpecStatus, number>
 
-const DEFAULT_SPEC_STATUSES: SpecStatuses = Object.fromEntries(
+export const DEFAULT_SPEC_STATUSES: SpecStatuses = Object.fromEntries(
     Object.values(SPEC_STATUSES).map((status: SpecStatus) => [status, 0])
 ) as SpecStatuses
 

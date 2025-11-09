@@ -90,17 +90,15 @@ const upsertTestSpec = os.testSpecs.upsert.handler(async ({ input }) => {
 const deleteTestSpec = os.testSpecs.delete.handler(async ({ input, context }) => {
     const organizationId = context.organizationId
 
-    const verification = await db
-        .select({ id: testSpec.id })
+    const spec = await db
+        .select({ id: testSpec.id, organizationId: testSpec.organizationId })
         .from(testSpec)
-        .innerJoin(testFolder, eq(testSpec.folderId, testFolder.id))
-        .where(and(eq(testSpec.id, input.id), eq(testFolder.organizationId, organizationId)))
+        .where(eq(testSpec.id, input.id))
         .limit(1)
 
-    if (!verification || verification.length === 0) {
+    if (!spec || spec.length === 0 || spec[0].organizationId !== organizationId) {
         throw new ORPCError('Spec not found or access denied')
     }
-
     await db.delete(testSpec).where(eq(testSpec.id, input.id))
     return { success: true }
 })
