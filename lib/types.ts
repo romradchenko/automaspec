@@ -2,7 +2,7 @@ import * as schema from '@/db/schema'
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod'
 import type { authClient } from './shared/better-auth'
 import * as z from 'zod'
-import { TEST_STATUSES, SPEC_STATUSES } from './constants'
+import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS } from './constants'
 
 // FIXME: will work after https://github.com/drizzle-team/drizzle-orm/pull/4820, removing all manual zod coercions
 // const { createInsertSchema, createSelectSchema } = createSchemaFactory({
@@ -41,11 +41,13 @@ export const testSelectSchema = createSelectSchema(schema.test, {
 })
 export const testInsertSchema = createInsertSchema(schema.test, {
     createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date()
+    updatedAt: z.coerce.date(),
+    status: z.enum(TEST_STATUSES),
+    framework: z.literal(TEST_FRAMEWORK)
 })
 
-export type TestFramework = 'vitest'
-export type OrganizationPlan = 'free' | 'pro' | 'enterprise'
+export type TestFramework = typeof TEST_FRAMEWORK
+export type OrganizationPlan = keyof typeof ORGANIZATION_PLANS
 export type TestStatus = keyof typeof TEST_STATUSES
 export type SpecStatus = keyof typeof SPEC_STATUSES
 export type TestFolder = z.infer<typeof testFolderSelectSchema>

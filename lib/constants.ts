@@ -3,6 +3,15 @@ import { CheckCircle, XCircle, Clock, MinusCircle, type LucideIcon } from 'lucid
 import type { JsonAssertionResult } from 'vitest/reporters'
 import type { SpecStatus } from './types'
 
+export const TEST_FRAMEWORK = 'vitest'
+export const ORGANIZATION_PLANS = {
+    free: 'free',
+    pro: 'pro',
+    enterprise: 'enterprise'
+} as const
+
+export type OrganizationPlan = keyof typeof ORGANIZATION_PLANS
+
 export const TEST_STATUSES = {
     passed: 'passed',
     skipped: 'skipped',

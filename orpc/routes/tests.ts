@@ -3,7 +3,6 @@ import { testsContract } from '@/orpc/contracts/tests'
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
 import { eq, and } from 'drizzle-orm'
-import { TestStatus, TestFramework } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
 
@@ -133,15 +132,15 @@ const upsertTest = os.tests.upsert.handler(async ({ input }) => {
         .values({
             id,
             ...updates,
-            status: updates.status as TestStatus,
-            framework: updates.framework as TestFramework
+            status: updates.status,
+            framework: updates.framework
         })
         .onConflictDoUpdate({
             target: test.id,
             set: {
                 ...updates,
-                status: updates.status as TestStatus,
-                framework: updates.framework as TestFramework
+                status: updates.status,
+                framework: updates.framework
             }
         })
         .returning()
