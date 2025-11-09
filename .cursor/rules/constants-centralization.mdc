@@ -10,7 +10,7 @@ alwaysApply: true
 - **FORBIDDEN**: Defining constants directly in component files, utility files, or any other location
 - **REQUIRED**: All constants must be defined in `lib/constants.ts` and imported where needed
 - **REQUIRED**: Use descriptive, UPPER_SNAKE_CASE names for constants
-- **REQUIRED**: Group related constants in objects when appropriate
+- **REQUIRED**: Folder related constants in objects when appropriate
 - **REQUIRED**: Export constants from `lib/constants.ts` using named exports
 
 ### Examples:
@@ -82,7 +82,7 @@ export function validateSize(size: number) {
 - Always move constants to `lib/constants.ts` before implementing features
 - When refactoring, identify and move any inline constants
 - Use TypeScript's `as const` assertion for better type safety
-- Group related constants in objects for better organization# Constants Centralization Rule
+- Folder related constants in objects for better organization# Constants Centralization Rule
 
 ## Rule: All constants must be defined in `lib/constants.ts`
 
@@ -90,7 +90,7 @@ export function validateSize(size: number) {
 - **FORBIDDEN**: Defining constants directly in component files, utility files, or any other location
 - **REQUIRED**: All constants must be defined in `lib/constants.ts` and imported where needed
 - **REQUIRED**: Use descriptive, UPPER_SNAKE_CASE names for constants
-- **REQUIRED**: Group related constants in objects when appropriate
+- **REQUIRED**: Folder related constants in objects when appropriate
 - **REQUIRED**: Export constants from `lib/constants.ts` using named exports
 
 ### Examples:

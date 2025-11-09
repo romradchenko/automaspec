@@ -43,7 +43,7 @@ export default function Dashboard() {
     return (
         <div className="flex h-screen bg-background">
             <div className="flex w-1/2 flex-col border-r">
-                <DashboardHeader onCreateGroup={() => {}} onCreateTest={() => {}} />
+                <DashboardHeader />
 
                 <div className="flex-1 overflow-auto p-2">
                     <Tree
@@ -67,20 +67,6 @@ export default function Dashboard() {
                     onCreateTest={() => {}}
                 />
             </div>
-
-            {/* <GroupEditorModal
-                group={editingGroup}
-                onOpenChange={setGroupEditorOpen}
-                onSave={handleSaveGroup}
-                open={groupEditorOpen}
-            />
-
-            <TestEditorModal
-                onOpenChange={setTestEditorOpen}
-                onSave={handleSaveTest}
-                open={testEditorOpen}
-                test={editingTest}
-            /> */}
         </div>
     )
 }

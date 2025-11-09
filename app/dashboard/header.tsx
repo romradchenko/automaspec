@@ -3,16 +3,11 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Folder, Plus, User, Settings, LogOut, Building2 } from 'lucide-react'
+import { User, Settings, LogOut, Building2 } from 'lucide-react'
 import Link from 'next/link'
 import { authClient } from '@/lib/shared/better-auth'
 
-interface DashboardHeaderProps {
-    onCreateGroup: () => void
-    onCreateTest: () => void
-}
-
-export function DashboardHeader({ onCreateGroup, onCreateTest }: DashboardHeaderProps) {
+export function DashboardHeader() {
     const { data: activeOrganization } = authClient.useActiveOrganization()
 
     return (
@@ -25,16 +20,6 @@ export function DashboardHeader({ onCreateGroup, onCreateTest }: DashboardHeader
                 <Badge variant="secondary">Free Plan</Badge>
             </div>
             <div className="flex items-center gap-2">
-                <Button onClick={onCreateGroup} size="sm" variant="outline">
-                    <Folder className="mr-2 h-4 w-4" />
-                    New Group
-                </Button>
-
-                <Button onClick={onCreateTest} size="sm">
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Test
-                </Button>
-
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button size="sm" variant="ghost">
