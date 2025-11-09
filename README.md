@@ -1,6 +1,55 @@
 # Automaspec
 
-Test management dashboard built with Next.js, Drizzle ORM, and Better Auth.
+## Development
+
+### Git Hooks
+
+This project uses [Lefthook](https://lefthook.dev/) for managing git hooks to ensure code quality and consistency.
+
+#### Pre-commit Hooks
+
+The following checks run on staged files before each commit:
+
+- **Database Schema Check**: Validates Drizzle schema changes (`drizzle-kit check`) on `db/schema/*.ts`
+- **Prettier**: Code formatting (`prettier --write`)
+- **Oxlint**: Code linting with auto-fix
+- **TODO/FIXME Check**: Warns about TODO/FIXME comments (non-blocking)
+
+#### Pre-push Hooks
+
+Pre-push hooks are currently disabled (commented out in `lefthook.yml`). Uncomment to enable if desired.
+
+#### Bypassing Hooks
+
+If you need to bypass hooks (use sparingly):
+
+```bash
+# Skip pre-commit hooks
+git commit --no-verify
+
+# Skip pre-push hooks
+git push --no-verify
+```
+
+#### Manual Hook Execution
+
+You can manually run hooks for testing:
+
+```bash
+# Run pre-commit checks
+pnpx lefthook run pre-commit
+
+# Run pre-push checks
+pnpx lefthook run pre-push
+```
+
+#### Setup
+
+Hooks are automatically installed when you run `pnpm install`. If needed, you can manually install them:
+
+```bash
+pnpx lefthook install
+```
 
 ## Overview
 
@@ -25,7 +74,6 @@ Automaspec helps organize test specifications, requirements, and individual test
 ## Setup
 
 1) Install dependencies
->>>>>>> 77c10dd (Update .gitignore, add AGENTS.md for coding rules, and enhance README.md)
 
 ```bash
 pnpm install
@@ -85,25 +133,6 @@ pnpm test __tests__/components/tree.test.tsx
 
 Notes:
 - Integration tests are skipped by default; to enable, set `NEXT_PUBLIC_DATABASE_URL` to a reachable libsql endpoint.
-
-## Git Hooks
-
-Managed with [Lefthook](https://lefthook.dev/). Hooks are installed automatically on `postinstall`.
-
-Pre-commit (configured in `lefthook.yml`):
-- Database schema check: `drizzle-kit check` on `db/schema/*.ts`
-- Format: Prettier write
-- Lint: Oxlint with autofix
-- TODO/FIXME notice (non-blocking)
-
-Pre-push: currently disabled (commented out in `lefthook.yml`). Uncomment to enable if desired.
-
-Manual execution examples:
-
-```bash
-pnpx lefthook run pre-commit
-# pnpx lefthook run pre-push   # if you enable it in lefthook.yml
-```
 
 ## Scripts
 
