@@ -205,9 +205,6 @@ const getReport = os.tests.getReport.handler(async () => {
 })
 
 const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
-    console.log('=== SYNC REPORT STARTED ===')
-    console.log('Organization ID:', context.organizationId)
-
     const titleToStatus: Record<string, TestStatus> = {}
     const report = input
 
@@ -223,11 +220,6 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         })
     }
 
-    console.log(`Found ${Object.keys(titleToStatus).length} tests in report:`)
-    Object.entries(titleToStatus).forEach(([title, status]) => {
-        console.log(`  - "${title}": ${status}`)
-    })
-
     const orgTests = await db
         .select({
             testId: test.id,
@@ -239,8 +231,6 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
         .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
         .where(eq(testSpec.organizationId, context.organizationId))
-
-    console.log(`Found ${orgTests.length} tests in database for organization`)
 
     const matchedIds: string[] = []
     const updates: Array<{ id: string; status: TestStatus; oldStatus: TestStatus; name: string }> = []
@@ -256,29 +246,17 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
                     oldStatus: orgTest.testStatus,
                     name: orgTest.requirementName
                 })
-                console.log(`  UPDATE: "${orgTest.requirementName}" ${orgTest.testStatus} → ${reportedStatus}`)
-            } else {
-                console.log(`  SKIP: "${orgTest.requirementName}" already ${reportedStatus}`)
             }
         }
     })
 
     const matchedSet = new Set(matchedIds)
     const missingIds: string[] = []
-    const missingLines: string[] = []
     for (const t of orgTests) {
         if (!matchedSet.has(t.testId)) {
             missingIds.push(t.testId)
-            missingLines.push(`  - "${t.requirementName}" (was: ${t.testStatus})`)
         }
     }
-
-    console.log(`\nTests to mark as MISSING (${missingIds.length}):`)
-    for (const line of missingLines) {
-        console.log(line)
-    }
-
-    console.log(`\nApplying ${updates.length} updates and ${missingIds.length} missing markers...`)
 
     if (updates.length > 0) {
         const updateIds: string[] = []
@@ -302,24 +280,24 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
             .where(inArray(test.id, missingIds))
     }
 
-    console.log('All test status updates applied')
-
     const affectedSpecIdSet = new Set<string>()
     for (const t of orgTests) {
         affectedSpecIdSet.add(t.specId)
     }
     const affectedSpecIds = Array.from(affectedSpecIdSet)
-    console.log(`\nRecalculating aggregates for ${affectedSpecIds.length} specs...`)
 
-    const allSpecTests = await db
-        .select({
-            specId: testRequirement.specId,
-            status: test.status
-        })
-        .from(test)
-        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
-        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
-        .where(eq(testSpec.organizationId, context.organizationId))
+    const allSpecTests =
+        affectedSpecIds.length === 0 ?
+            []
+        :   await db
+                .select({
+                    specId: testRequirement.specId,
+                    status: test.status
+                })
+                .from(test)
+                .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+                .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+                .where(and(eq(testSpec.organizationId, context.organizationId), inArray(testSpec.id, affectedSpecIds)))
 
     const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
 
@@ -339,13 +317,6 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
             specData[t.specId].counts[t.status as SpecStatus]++
             specData[t.specId].total++
         }
-    })
-
-    affectedSpecIds.forEach((specId) => {
-        const data = specData[specId]
-        console.log(
-            `  Spec ${specId}: Total=${data.total}, Passed=${data.counts.passed}, Failed=${data.counts.failed}, Missing=${data.counts.missing}`
-        )
     })
 
     if (affectedSpecIds.length > 0) {
@@ -368,10 +339,6 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
             })
             .where(inArray(testSpec.id, affectedSpecIds))
     }
-
-    console.log('Spec aggregates updated')
-    console.log('=== SYNC REPORT COMPLETED ===')
-    console.log(`Summary: Updated ${updates.length}, Missing ${missingIds.length}`)
 
     return { updated: updates.length, missing: missingIds.length }
 })

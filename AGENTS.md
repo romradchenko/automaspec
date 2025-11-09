@@ -62,3 +62,6 @@ These rules guide coding changes and reviews in this repo. They consolidate our 
 
 - Detailed rule files live in `.cursor/rules/` and are considered authoritative. If a rule here conflicts with a more specific `.cursor/rules/*`, the `.cursor` rule wins.
 
+
+# Simple and short commit messages
+Commit messages should be short and clear
