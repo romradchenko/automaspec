@@ -8,7 +8,8 @@ import {
     testRequirementSelectSchema,
     testRequirementInsertSchema,
     testSelectSchema,
-    testInsertSchema
+    testInsertSchema,
+    vitestReportSchema
 } from '@/lib/types'
 
 // FIXME: almost all contract schemes are bullshit here
@@ -78,6 +79,12 @@ const deleteTestContract = oc
     .input(testInsertSchema.pick({ id: true }))
     .output(z.object({ success: z.boolean() }))
 
+const syncReportContract = oc
+    .route({ method: 'POST', path: '/tests/sync-report' })
+    .output(z.object({ updated: z.number(), missing: z.number() }))
+
+const getReportContract = oc.route({ method: 'GET', path: '/tests/report' }).output(vitestReportSchema)
+
 export const testsContract = {
     testFolders: {
         get: getTestFolderContract,
@@ -98,6 +105,8 @@ export const testsContract = {
     tests: {
         list: listTestsContract,
         upsert: upsertTestContract,
-        delete: deleteTestContract
+        delete: deleteTestContract,
+        syncReport: syncReportContract,
+        getReport: getReportContract
     }
 }

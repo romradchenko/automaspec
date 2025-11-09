@@ -2,9 +2,12 @@ import { implement } from '@orpc/server'
 import { testsContract } from '@/orpc/contracts/tests'
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, inArray } from 'drizzle-orm'
+import { TestStatus, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
+import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import testResultsData from '@/test-results.json'
 
 const os = implement(testsContract).use(authMiddleware).use(organizationMiddleware)
 
@@ -22,12 +25,10 @@ const getTestFolder = os.testFolders.get.handler(async ({ input, context }) => {
     return folder[0]
 })
 
-// RIGHT
 const listTestFolders = os.testFolders.list.handler(async ({ context }) => {
     return await db.select().from(testFolder).where(eq(testFolder.organizationId, context.organizationId))
 })
 
-// WRONG
 const upsertTestFolder = os.testFolders.upsert.handler(async ({ input, context }) => {
     const { id = crypto.randomUUID(), ...updates } = input
 
@@ -89,7 +90,6 @@ const upsertTestSpec = os.testSpecs.upsert.handler(async ({ input }) => {
 const deleteTestSpec = os.testSpecs.delete.handler(async ({ input, context }) => {
     const organizationId = context.organizationId
 
-    // Verify the spec belongs to the organization before deletion
     const verification = await db
         .select({ id: testSpec.id })
         .from(testSpec)
@@ -189,6 +189,145 @@ const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input 
     return { success: true }
 })
 
+const getReport = os.tests.getReport.handler(async () => {
+    return testResultsData
+})
+
+const syncReport = os.tests.syncReport.handler(async ({ context }) => {
+    const titleToStatus: Record<string, TestStatus> = {}
+    const report = testResultsData
+
+    if (report.testResults) {
+        for (const result of report.testResults as VitestTestResult[]) {
+            if (result.assertionResults) {
+                for (const assertion of result.assertionResults) {
+                    if (assertion.title && assertion.status) {
+                        titleToStatus[assertion.title.toLowerCase()] = assertion.status as TestStatus
+                    }
+                }
+            }
+        }
+    }
+
+    const orgTests = await db
+        .select({
+            testId: test.id,
+            testStatus: test.status,
+            requirementName: testRequirement.name,
+            specId: testSpec.id
+        })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, context.organizationId))
+
+    const matchedIds: string[] = []
+    const updatesByStatus: Record<TestStatus, string[]> = {
+        passed: [],
+        failed: [],
+        skipped: [],
+        todo: [],
+        pending: [],
+        disabled: [],
+        missing: []
+    }
+    let updatedCount = 0
+
+    for (const orgTest of orgTests) {
+        const reportedStatus = titleToStatus[orgTest.requirementName.toLowerCase()]
+        if (reportedStatus) {
+            matchedIds.push(orgTest.testId)
+            if (orgTest.testStatus !== reportedStatus) {
+                updatesByStatus[reportedStatus].push(orgTest.testId)
+                updatedCount++
+            }
+        }
+    }
+
+    const matchedSet = new Set(matchedIds)
+    const missingIds: string[] = []
+    for (const t of orgTests) {
+        if (!matchedSet.has(t.testId)) {
+            missingIds.push(t.testId)
+        }
+    }
+
+    const updateTasks: Promise<unknown>[] = []
+    for (const status of Object.keys(updatesByStatus) as TestStatus[]) {
+        const ids = updatesByStatus[status]
+        if (ids.length > 0) {
+            updateTasks.push(db.update(test).set({ status }).where(inArray(test.id, ids)))
+        }
+    }
+    if (updateTasks.length > 0) {
+        await Promise.all(updateTasks)
+    }
+
+    if (missingIds.length > 0) {
+        await db
+            .update(test)
+            .set({ status: TEST_STATUSES.missing as TestStatus })
+            .where(inArray(test.id, missingIds))
+    }
+
+    const affectedSpecIdSet = new Set<string>()
+    for (const t of orgTests) {
+        affectedSpecIdSet.add(t.specId)
+    }
+    const affectedSpecIds = Array.from(affectedSpecIdSet)
+
+    const allSpecTests =
+        affectedSpecIds.length === 0 ?
+            []
+        :   await db
+                .select({
+                    specId: testRequirement.specId,
+                    status: test.status
+                })
+                .from(test)
+                .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+                .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+                .where(and(eq(testSpec.organizationId, context.organizationId), inArray(testSpec.id, affectedSpecIds)))
+
+    const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
+
+    for (const specId of affectedSpecIds) {
+        const counts = {} as Record<SpecStatus, number>
+        for (const status of Object.values(SPEC_STATUSES)) {
+            counts[status as SpecStatus] = 0
+        }
+        specData[specId] = {
+            counts,
+            total: 0
+        }
+    }
+
+    for (const t of allSpecTests) {
+        if (specData[t.specId] && t.status in specData[t.specId].counts) {
+            specData[t.specId].counts[t.status as SpecStatus]++
+            specData[t.specId].total++
+        }
+    }
+
+    if (affectedSpecIds.length > 0) {
+        const specUpdateTasks: Promise<unknown>[] = []
+        for (const sid of affectedSpecIds) {
+            specUpdateTasks.push(
+                db
+                    .update(testSpec)
+                    .set({
+                        statuses: specData[sid].counts as Record<SpecStatus, number>,
+                        numberOfTests: specData[sid].total
+                    })
+                    .where(eq(testSpec.id, sid))
+            )
+        }
+        await Promise.all(specUpdateTasks)
+    }
+
+    return { updated: updatedCount, missing: missingIds.length }
+})
+
 export const testsRouter = {
     testFolders: {
         get: getTestFolder,
@@ -209,6 +348,8 @@ export const testsRouter = {
     tests: {
         list: listTests,
         upsert: upsertTest,
-        delete: deleteTest
+        delete: deleteTest,
+        syncReport: syncReport,
+        getReport: getReport
     }
 }
