@@ -209,15 +209,15 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     const report = input
 
     if (report.testResults) {
-        report.testResults.forEach((result: VitestTestResult) => {
+        for (const result of report.testResults as VitestTestResult[]) {
             if (result.assertionResults) {
-                result.assertionResults.forEach((assertion) => {
+                for (const assertion of result.assertionResults) {
                     if (assertion.title && assertion.status) {
                         titleToStatus[assertion.title.toLowerCase()] = assertion.status as TestStatus
                     }
-                })
+                }
             }
-        })
+        }
     }
 
     const orgTests = await db
@@ -235,7 +235,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     const matchedIds: string[] = []
     const updates: Array<{ id: string; status: TestStatus; oldStatus: TestStatus; name: string }> = []
 
-    orgTests.forEach((orgTest) => {
+    for (const orgTest of orgTests) {
         const reportedStatus = titleToStatus[orgTest.requirementName.toLowerCase()]
         if (reportedStatus) {
             matchedIds.push(orgTest.testId)
@@ -248,7 +248,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
                 })
             }
         }
-    })
+    }
 
     const matchedSet = new Set(matchedIds)
     const missingIds: string[] = []
@@ -312,12 +312,12 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         }
     }
 
-    allSpecTests.forEach((t) => {
+    for (const t of allSpecTests) {
         if (specData[t.specId] && t.status in specData[t.specId].counts) {
             specData[t.specId].counts[t.status as SpecStatus]++
             specData[t.specId].total++
         }
-    })
+    }
 
     if (affectedSpecIds.length > 0) {
         const statusBranches: SQL[] = []
