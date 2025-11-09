@@ -7,7 +7,7 @@ import type { SQL } from 'drizzle-orm'
 import { TestStatus, TestFramework, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
-import { TEST_STATUSES, TEST_RESULTS_FILE } from '@/lib/constants'
+import { TEST_STATUSES, TEST_RESULTS_FILE, SPEC_STATUSES } from '@/lib/constants'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
@@ -323,16 +323,16 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
 
     const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
 
-    affectedSpecIds.forEach((specId) => {
-        const counts: any = {}
-        for (const status of Object.values(TEST_STATUSES)) {
-            counts[status] = 0
+    for (const specId of affectedSpecIds) {
+        const counts = {} as Record<SpecStatus, number>
+        for (const status of Object.values(SPEC_STATUSES)) {
+            counts[status as SpecStatus] = 0
         }
         specData[specId] = {
-            counts: counts as Record<SpecStatus, number>,
+            counts,
             total: 0
         }
-    })
+    }
 
     allSpecTests.forEach((t) => {
         if (specData[t.specId] && t.status in specData[t.specId].counts) {
