@@ -6,9 +6,8 @@ import { eq, and, inArray } from 'drizzle-orm'
 import { TestStatus, TestFramework, SpecStatus, VitestTestResult } from '@/lib/types'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { ORPCError } from '@orpc/server'
-import { TEST_STATUSES, TEST_RESULTS_FILE, SPEC_STATUSES } from '@/lib/constants'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import testResultsData from '@/test-results.json'
 
 const os = implement(testsContract).use(authMiddleware).use(organizationMiddleware)
 
@@ -191,13 +190,7 @@ const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input 
 })
 
 const getReport = os.tests.getReport.handler(async () => {
-    try {
-        const path = join(process.cwd(), TEST_RESULTS_FILE)
-        const content = await readFile(path, 'utf-8')
-        return JSON.parse(content)
-    } catch {
-        throw new ORPCError('NOT_FOUND', { message: 'Test results not found' })
-    }
+    return testResultsData
 })
 
 const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
