@@ -198,6 +198,7 @@ export default function ProfilePage() {
                                     setDeleting(true)
                                     try {
                                         await client.account.delete()
+                                        await authClient.signOut()
                                         setConfirmOpen(false)
                                         router.push('/login')
                                     } catch {
