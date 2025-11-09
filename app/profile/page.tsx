@@ -2,13 +2,16 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Mail, Calendar } from 'lucide-react'
+import { ArrowLeft, Mail, Calendar, Settings, Building2, LogOut } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/shared/better-auth'
+import { ModeToggle } from '@/components/theme-toggler'
 
 export default function ProfilePage() {
+    const router = useRouter()
     const { data: session } = authClient.useSession()
     const { data: activeOrganization } = authClient.useActiveOrganization()
 
@@ -33,13 +36,21 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-background">
             <div className="container max-w-4xl mx-auto py-8 px-4">
                 <div className="mb-8">
-                    <Link href="/dashboard">
-                        <Button variant="ghost" size="sm" className="mb-4">
-                            <ArrowLeft className="mr-2 size-4" />
-                            Back to Dashboard
-                        </Button>
-                    </Link>
-                    <h1 className="text-3xl font-bold">Profile</h1>
+                    <div className="flex items-center justify-between">
+                        <Link href="/dashboard">
+                            <Button variant="ghost" size="sm">
+                                <ArrowLeft className="mr-2 size-4" />
+                                Back to Dashboard
+                            </Button>
+                        </Link>
+                        <Link href="/settings">
+                            <Button size="sm" variant="outline">
+                                <Settings className="mr-2 size-4" />
+                                Settings
+                            </Button>
+                        </Link>
+                    </div>
+                    <h1 className="mt-4 text-3xl font-bold">Profile</h1>
                 </div>
 
                 <Card>
@@ -71,6 +82,63 @@ export default function ProfilePage() {
                         </div>
                     </CardContent>
                 </Card>
+
+                <div className="mt-8 grid gap-6 md:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <Building2 className="size-5" />
+                                <CardTitle>Organization</CardTitle>
+                            </div>
+                            <CardDescription>Active organization and plan</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <div className="font-medium">{activeOrganization?.name || '—'}</div>
+                                {planLabel ?
+                                    <Badge variant="secondary">{planLabel}</Badge>
+                                :   null}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <Settings className="size-5" />
+                                <CardTitle>Quick Preferences</CardTitle>
+                            </div>
+                            <CardDescription>Common appearance</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center justify-between">
+                                <div className="text-base">Theme</div>
+                                <ModeToggle />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <LogOut className="size-5" />
+                                <CardTitle>Session</CardTitle>
+                            </div>
+                            <CardDescription>Account session actions</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button
+                                variant="outline"
+                                onClick={async () => {
+                                    await authClient.signOut()
+                                    router.push('/login')
+                                }}
+                            >
+                                Sign out
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     )

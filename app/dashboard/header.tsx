@@ -3,7 +3,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { User, Settings, LogOut, Building2, RefreshCw } from 'lucide-react'
+import { User, LogOut, Building2, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { authClient } from '@/lib/shared/better-auth'
 import { useState } from 'react'
@@ -67,12 +67,6 @@ export function DashboardHeader() {
                             <Link href="/profile">
                                 <User className="mr-2 h-4 w-4" />
                                 Profile
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href="/settings">
-                                <Settings className="mr-2 h-4 w-4" />
-                                Settings
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
