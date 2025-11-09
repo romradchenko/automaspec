@@ -388,3 +388,5 @@ export const testsRouter = {
         syncReport: syncReport
     }
 }
+
+export { syncReport }
