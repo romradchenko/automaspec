@@ -156,6 +156,7 @@ interface AuthFormProps {
 function SignInForm({ onToggle }: AuthFormProps) {
     const [showPassword, setShowPassword] = useState(false)
     const { data: organizations } = authClient.useListOrganizations()
+    const router = useRouter()
 
     const form = useForm({
         defaultValues: {
@@ -171,13 +172,14 @@ function SignInForm({ onToggle }: AuthFormProps) {
                 {
                     email: value.email,
                     password: value.password,
-                    rememberMe: value.remember,
-                    callbackURL:
-                        organizations && organizations.length > 0 ? '/choose-organization' : '/create-organization'
+                    rememberMe: value.remember
                 },
                 {
                     onSuccess: async () => {
                         toast.success('Sign in successful')
+                        router.push(
+                            organizations && organizations.length > 0 ? '/choose-organization' : '/create-organization'
+                        )
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)
