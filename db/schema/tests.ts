@@ -1,8 +1,10 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 import { relations, sql } from 'drizzle-orm'
-import { TestFramework, SpecStatus, TestStatus } from '@/lib/types'
-import { organization } from './auth'
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
+
 import { SPEC_STATUSES } from '@/lib/constants'
+import { TestFramework, SpecStatus, TestStatus } from '@/lib/types'
+
+import { organization } from './auth'
 
 type SpecStatuses = Record<SpecStatus, number>
 
@@ -18,9 +20,7 @@ export const test = sqliteTable('test', {
     requirementId: text()
         .notNull()
         .references(() => testRequirement.id, { onDelete: 'cascade' }),
-    createdAt: text()
-        .notNull()
-        .default(sql`(CURRENT_TIMESTAMP)`),
+    createdAt: text().notNull().default(sql`(CURRENT_TIMESTAMP)`),
     updatedAt: text()
         .notNull()
         .default(sql`(CURRENT_TIMESTAMP)`)
@@ -36,9 +36,7 @@ export const testFolder = sqliteTable('test_folder', {
         .notNull()
         .references(() => organization.id, { onDelete: 'cascade' }),
     order: integer().notNull().default(0),
-    createdAt: text()
-        .notNull()
-        .default(sql`(CURRENT_TIMESTAMP)`),
+    createdAt: text().notNull().default(sql`(CURRENT_TIMESTAMP)`),
     updatedAt: text()
         .notNull()
         .default(sql`(CURRENT_TIMESTAMP)`)
@@ -53,9 +51,7 @@ export const testRequirement = sqliteTable('test_requirement', {
     specId: text()
         .notNull()
         .references(() => testSpec.id, { onDelete: 'cascade' }),
-    createdAt: text()
-        .notNull()
-        .default(sql`(CURRENT_TIMESTAMP)`),
+    createdAt: text().notNull().default(sql`(CURRENT_TIMESTAMP)`),
     updatedAt: text()
         .notNull()
         .default(sql`(CURRENT_TIMESTAMP)`)
@@ -73,9 +69,7 @@ export const testSpec = sqliteTable('test_spec', {
     organizationId: text()
         .notNull()
         .references(() => organization.id, { onDelete: 'cascade' }),
-    createdAt: text()
-        .notNull()
-        .default(sql`(CURRENT_TIMESTAMP)`),
+    createdAt: text().notNull().default(sql`(CURRENT_TIMESTAMP)`),
     updatedAt: text()
         .notNull()
         .default(sql`(CURRENT_TIMESTAMP)`)

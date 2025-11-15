@@ -1,16 +1,16 @@
 'use client'
 
+import { User, LogOut, Building2, RefreshCw } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { toast } from 'sonner'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { User, LogOut, Building2, RefreshCw } from 'lucide-react'
-import Link from 'next/link'
+import { safeClient, orpc } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth'
-import { useState } from 'react'
-import { client, orpc } from '@/lib/orpc/orpc'
 import { useQueryClient } from '@tanstack/react-query'
-import { safe } from '@orpc/client'
-import { toast } from 'sonner'
 
 export function DashboardHeader() {
     const { data: activeOrganization } = authClient.useActiveOrganization()
@@ -21,7 +21,7 @@ export function DashboardHeader() {
         try {
             setIsSyncing(true)
 
-            const { data, error } = await safe(client.tests.syncReport())
+            const { data, error } = await safeClient.tests.syncReport()
             if (error) throw error
 
             toast.success('Test results synced successfully', {

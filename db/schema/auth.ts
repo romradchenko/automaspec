@@ -1,6 +1,8 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 import { relations } from 'drizzle-orm/relations'
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
+
 import { OrganizationPlan } from '@/lib/types'
+
 import { testFolder, testSpec } from './tests'
 
 export const account = sqliteTable('account', {

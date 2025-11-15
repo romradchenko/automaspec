@@ -2,9 +2,9 @@
 
 import { OTPInput, OTPInputContext } from 'input-otp'
 import { Dot } from 'lucide-react'
+import { type ComponentProps, use } from 'react'
 
 import { cn } from '@/lib/utils'
-import { type ComponentProps, use } from 'react'
 
 const InputOTP = ({ ref, className, containerClassName, ...props }: ComponentProps<typeof OTPInput>) => (
     <OTPInput

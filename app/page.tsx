@@ -2,10 +2,11 @@
 
 import { ArrowRight, CheckCircle, Chrome, Code, Github, Shield, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { authClient } from '@/lib/shared/better-auth'
 
 export default function LandingPage() {
@@ -28,7 +29,7 @@ export default function LandingPage() {
                         <Link className="text-muted-foreground hover:text-foreground" href="#pricing">
                             Pricing
                         </Link>
-                        {session ?
+                        {session ? (
                             <div className="flex items-center gap-4">
                                 <Link href="/dashboard">
                                     <Button>Go to App</Button>
@@ -40,7 +41,8 @@ export default function LandingPage() {
                                     </AvatarFallback>
                                 </Avatar>
                             </div>
-                        :   <>
+                        ) : (
+                            <>
                                 <Link className="text-muted-foreground hover:text-foreground" href="/login">
                                     Login
                                 </Link>
@@ -48,7 +50,7 @@ export default function LandingPage() {
                                     <Button>Get Started</Button>
                                 </Link>
                             </>
-                        }
+                        )}
                     </nav>
                 </div>
             </header>

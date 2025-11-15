@@ -1,9 +1,11 @@
 'use client'
 
-import * as RechartsPrimitive from 'recharts'
-import { createContext, use, useMemo, useId, type ComponentType, type ReactNode, type ComponentProps } from 'react'
-import { cn } from '@/lib/utils'
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
+
+import { createContext, use, useMemo, useId, type ComponentType, type ReactNode, type ComponentProps } from 'react'
+import * as RechartsPrimitive from 'recharts'
+
+import { cn } from '@/lib/utils'
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const
@@ -129,9 +131,9 @@ const ChartTooltipContent = ({
         const key = `${labelKey || item?.dataKey || item?.name || 'value'}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
         const value =
-            !labelKey && typeof label === 'string' ?
-                config[label as keyof typeof config]?.label || label
-            :   itemConfig?.label
+            !labelKey && typeof label === 'string'
+                ? config[label as keyof typeof config]?.label || label
+                : itemConfig?.label
 
         if (labelFormatter) {
             return <div className={cn('font-medium', labelClassName)}>{labelFormatter(value, payload)}</div>
@@ -173,12 +175,14 @@ const ChartTooltipContent = ({
                                 indicator === 'dot' && 'items-center'
                             )}
                         >
-                            {formatter && item?.value !== undefined && item.name ?
+                            {formatter && item?.value !== undefined && item.name ? (
                                 formatter(item.value, item.name, item, index, item.payload)
-                            :   <>
-                                    {itemConfig?.icon ?
+                            ) : (
+                                <>
+                                    {itemConfig?.icon ? (
                                         <itemConfig.icon />
-                                    :   !hideIndicator && (
+                                    ) : (
+                                        !hideIndicator && (
                                             <div
                                                 className={cn(
                                                     'shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]',
@@ -198,7 +202,7 @@ const ChartTooltipContent = ({
                                                 }
                                             />
                                         )
-                                    }
+                                    )}
                                     <div
                                         className={cn(
                                             'flex flex-1 justify-between leading-none',
@@ -218,7 +222,7 @@ const ChartTooltipContent = ({
                                         )}
                                     </div>
                                 </>
-                            }
+                            )}
                         </div>
                     )
                 })}
@@ -267,15 +271,16 @@ const ChartLegendContent = ({
                             'flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground'
                         )}
                     >
-                        {itemConfig?.icon && !hideIcon ?
+                        {itemConfig?.icon && !hideIcon ? (
                             <itemConfig.icon />
-                        :   <div
+                        ) : (
+                            <div
                                 className="h-2 w-2 shrink-0 rounded-[2px]"
                                 style={{
                                     backgroundColor: item.color
                                 }}
                             />
-                        }
+                        )}
                         {itemConfig?.label}
                     </div>
                 )
@@ -292,9 +297,9 @@ function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key:
     }
 
     const payloadPayload =
-        'payload' in payload && typeof payload.payload === 'object' && payload.payload !== null ?
-            payload.payload
-        :   undefined
+        'payload' in payload && typeof payload.payload === 'object' && payload.payload !== null
+            ? payload.payload
+            : undefined
 
     let configLabelKey: string = key
 

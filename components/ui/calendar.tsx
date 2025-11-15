@@ -1,12 +1,13 @@
 'use client'
 
+import type { VariantProps } from 'class-variance-authority'
+
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { useEffect, useRef, type ComponentProps } from 'react'
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker'
 
-import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useEffect, useRef, type ComponentProps } from 'react'
-import type { VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
 
 function Calendar({
     className,
@@ -69,9 +70,9 @@ function Calendar({
                 dropdown: cn('bg-popover absolute inset-0 opacity-0', defaultClassNames.dropdown),
                 caption_label: cn(
                     'select-none font-medium',
-                    captionLayout === 'label' ? 'text-sm' : (
-                        '[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:size-3.5'
-                    ),
+                    captionLayout === 'label'
+                        ? 'text-sm'
+                        : '[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:size-3.5',
                     defaultClassNames.caption_label
                 ),
                 table: 'w-full border-collapse',

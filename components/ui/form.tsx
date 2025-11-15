@@ -1,7 +1,7 @@
 'use client'
 
 import { Label as LabelPrimitive, Slot as SlotPrimitive } from 'radix-ui'
-
+import { type ComponentProps, createContext, use, useId } from 'react'
 import {
     Controller,
     FormProvider,
@@ -11,9 +11,8 @@ import {
     type FieldValues
 } from 'react-hook-form'
 
-import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
-import { type ComponentProps, createContext, use, useId } from 'react'
+import { cn } from '@/lib/utils'
 
 const Form = FormProvider
 

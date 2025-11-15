@@ -1,10 +1,11 @@
 'use client'
 
-import { Accordion as AccordionPrimitive } from 'radix-ui'
+import type { ComponentProps } from 'react'
+
 import { ChevronDown } from 'lucide-react'
+import { Accordion as AccordionPrimitive } from 'radix-ui'
 
 import { cn } from '@/lib/utils'
-import type { ComponentProps } from 'react'
 
 const Accordion = AccordionPrimitive.Root
 

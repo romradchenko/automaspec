@@ -1,10 +1,10 @@
 'use client'
 
-import { Dialog as DialogPrimitive } from 'radix-ui'
 import { X } from 'lucide-react'
+import { Dialog as DialogPrimitive } from 'radix-ui'
+import { ComponentProps } from 'react'
 
 import { cn } from '@/lib/utils'
-import { ComponentProps } from 'react'
 
 const Dialog = DialogPrimitive.Root
 

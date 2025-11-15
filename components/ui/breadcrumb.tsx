@@ -1,8 +1,9 @@
-import { Slot as SlotPrimitive } from 'radix-ui'
+import type { ComponentProps } from 'react'
+
 import { ChevronRight, MoreHorizontal } from 'lucide-react'
+import { Slot as SlotPrimitive } from 'radix-ui'
 
 import { cn } from '@/lib/utils'
-import type { ComponentProps } from 'react'
 
 const Breadcrumb = ({ ref, ...props }: ComponentProps<'nav'>) => <nav ref={ref} aria-label="breadcrumb" {...props} />
 Breadcrumb.displayName = 'Breadcrumb'

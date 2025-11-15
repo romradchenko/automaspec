@@ -1,16 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2 } from 'lucide-react'
-import { type TestSpec, type Test, type TestRequirement } from '@/lib/types'
-import { DashboardHeader } from './header'
-import { Tree } from './tree'
-import { TestDetailsPanel } from './test-details-panel'
-import { useFolders, useSpecs, useRequirements, useTests, invalidateAndRefetchQueries } from './hooks'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { client } from '@/lib/orpc/orpc'
-import { authClient } from '@/lib/shared/better-auth'
 import { toast } from 'sonner'
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,6 +14,46 @@ import {
     AlertDialogTitle
 } from '@/components/ui/alert-dialog'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
+import { safeClient } from '@/lib/orpc/orpc'
+import { orpc } from '@/lib/orpc/orpc'
+import { authClient } from '@/lib/shared/better-auth'
+import { type TestSpec, type Test, type TestRequirement } from '@/lib/types'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+
+import { DashboardHeader } from './header'
+import { invalidateAndRefetchQueries } from './hooks'
+import { TestDetailsPanel } from './test-details-panel'
+import { Tree } from './tree'
+
+type DeleteConfirmDialogProps = {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    title: string
+    description: string
+    onConfirm: () => void
+}
+
+function DeleteConfirmDialog({ open, onOpenChange, title, description, onConfirm }: DeleteConfirmDialogProps) {
+    return (
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>{title}</AlertDialogTitle>
+                    <AlertDialogDescription>{description}</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={onConfirm}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                        Delete
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    )
+}
 
 export default function Dashboard() {
     const [selectedSpec, setSelectedSpec] = useState<TestSpec | null>(null)
@@ -32,21 +64,25 @@ export default function Dashboard() {
     const [folderToDelete, setFolderToDelete] = useState<string | null>(null)
     const [specToDelete, setSpecToDelete] = useState<string | null>(null)
 
-    const { folders, foldersLoading } = useFolders(null)
-    const { specs, specsLoading } = useSpecs(null)
-    const { requirements, requirementsLoading } = useRequirements('')
-    const { tests, testsLoading } = useTests('')
+    const { data: requirements = [] } = useQuery(
+        orpc.testRequirements.list.queryOptions({
+            input: {}
+        })
+    )
+    const { data: tests = [] } = useQuery(
+        orpc.tests.list.queryOptions({
+            input: {}
+        })
+    )
     const { data: activeOrganization } = authClient.useActiveOrganization()
     const queryClient = useQueryClient()
-
-    const loading = foldersLoading || specsLoading || requirementsLoading || testsLoading
 
     const createTestSpecMutation = useMutation({
         mutationFn: async (folderId: string) => {
             if (!activeOrganization?.id) {
                 throw new Error('No active organization')
             }
-            return await client.testSpecs.upsert({
+            const { data, error } = await safeClient.testSpecs.upsert({
                 id: crypto.randomUUID(),
                 name: 'New Test',
                 folderId,
@@ -54,6 +90,8 @@ export default function Dashboard() {
                 statuses: DEFAULT_SPEC_STATUSES,
                 numberOfTests: 0
             })
+            if (error) throw error
+            return data
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
@@ -79,7 +117,9 @@ export default function Dashboard() {
 
     const deleteFolderMutation = useMutation({
         mutationFn: async (folderId: string) => {
-            return await client.testFolders.delete({ id: folderId })
+            const { data, error } = await safeClient.testFolders.delete({ id: folderId })
+            if (error) throw error
+            return data
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-folders')
@@ -92,7 +132,9 @@ export default function Dashboard() {
 
     const deleteSpecMutation = useMutation({
         mutationFn: async (specId: string) => {
-            return await client.testSpecs.delete({ id: specId })
+            const { data, error } = await safeClient.testSpecs.delete({ id: specId })
+            if (error) throw error
+            return data
         },
         onSuccess: async () => {
             if (selectedSpec?.id) {
@@ -134,17 +176,6 @@ export default function Dashboard() {
         }
     }
 
-    if (loading) {
-        return (
-            <div className="flex h-screen items-center justify-center bg-background">
-                <div className="flex items-center gap-2">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                    <span>Loading...</span>
-                </div>
-            </div>
-        )
-    }
-
     return (
         <>
             <div className="flex h-screen bg-background">
@@ -153,10 +184,6 @@ export default function Dashboard() {
 
                     <div className="flex-1 overflow-auto p-2">
                         <Tree
-                            folders={folders}
-                            specs={specs}
-                            requirements={requirements}
-                            tests={tests}
                             selectedSpecId={selectedSpec?.id || null}
                             onSelectSpec={handleSpecSelect}
                             onCreateTest={handleCreateTest}
@@ -179,46 +206,21 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <AlertDialog open={deleteFolderDialogOpen} onOpenChange={setDeleteFolderDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Folder</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Are you sure you want to delete this folder? This will also delete all folders and tests
-                            inside it. This action cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={confirmDeleteFolder}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                            Delete
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteConfirmDialog
+                open={deleteFolderDialogOpen}
+                onOpenChange={setDeleteFolderDialogOpen}
+                title="Delete Folder"
+                description="Are you sure you want to delete this folder? This will also delete all folders and tests inside it. This action cannot be undone."
+                onConfirm={confirmDeleteFolder}
+            />
 
-            <AlertDialog open={deleteSpecDialogOpen} onOpenChange={setDeleteSpecDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Test Spec</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Are you sure you want to delete this test spec? This action cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={confirmDeleteSpec}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                            Delete
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteConfirmDialog
+                open={deleteSpecDialogOpen}
+                onOpenChange={setDeleteSpecDialogOpen}
+                title="Delete Test Spec"
+                description="Are you sure you want to delete this test spec? This action cannot be undone."
+                onConfirm={confirmDeleteSpec}
+            />
         </>
     )
 }

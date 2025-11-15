@@ -1,4 +1,5 @@
 import type { Session } from '@/lib/types'
+
 import { ORPCError, os } from '@orpc/server'
 
 export const authMiddleware = os.$context<{ session?: Session }>().middleware(async ({ context, next }) => {

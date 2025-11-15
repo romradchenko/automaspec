@@ -1,6 +1,8 @@
-import { CheckCircle, XCircle, Clock, MinusCircle, type LucideIcon } from 'lucide-react'
 // https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/node/reporters/json.ts
 import type { JsonAssertionResult } from 'vitest/reporters'
+
+import { CheckCircle, XCircle, Clock, MinusCircle, type LucideIcon } from 'lucide-react'
+
 import type { SpecStatus } from './types'
 
 export const TEST_FRAMEWORK = 'vitest'

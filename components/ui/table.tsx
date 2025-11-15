@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils'
 import type { ComponentProps } from 'react'
+
+import { cn } from '@/lib/utils'
 
 const Table = ({ ref, className, ...props }: ComponentProps<'table'>) => (
     <div className="relative w-full overflow-auto">

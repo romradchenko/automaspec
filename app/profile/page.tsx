@@ -1,16 +1,12 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ArrowLeft, Mail, Calendar, Building2, LogOut, AlertTriangle, Download, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { authClient } from '@/lib/shared/better-auth'
-import { ModeToggle } from '@/components/theme-toggler'
-import { client } from '@/lib/orpc/orpc'
+import { useState } from 'react'
 import { toast } from 'sonner'
+
+import { ModeToggle } from '@/components/theme-toggler'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -21,6 +17,11 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from '@/components/ui/alert-dialog'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { safeClient } from '@/lib/orpc/orpc'
+import { authClient } from '@/lib/shared/better-auth'
 
 export default function ProfilePage() {
     const router = useRouter()
@@ -115,11 +116,13 @@ export default function ProfilePage() {
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="text-base">Export my data (JSON)</div>
+                                {/* FIXME: rewrite in react way */}
                                 <Button
                                     size="sm"
                                     variant="outline"
                                     onClick={async () => {
-                                        const data = await client.account.export()
+                                        const { data, error } = await safeClient.account.export()
+                                        if (error) throw error
                                         const blob = new Blob([JSON.stringify(data, null, 2)], {
                                             type: 'application/json'
                                         })
@@ -197,7 +200,8 @@ export default function ProfilePage() {
                                     if (deleting) return
                                     setDeleting(true)
                                     try {
-                                        await client.account.delete()
+                                        const { error } = await safeClient.account.delete()
+                                        if (error) throw error
                                         await authClient.signOut()
                                         setConfirmOpen(false)
                                         router.push('/login')

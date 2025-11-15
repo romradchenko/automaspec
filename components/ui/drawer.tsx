@@ -1,8 +1,9 @@
 'use client'
 
+import type { ComponentProps } from 'react'
+
 import { Drawer as DrawerPrimitive } from 'vaul'
 
-import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 
 const Drawer = ({ shouldScaleBackground = true, ...props }: ComponentProps<typeof DrawerPrimitive.Root>) => (

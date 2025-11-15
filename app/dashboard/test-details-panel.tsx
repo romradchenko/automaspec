@@ -1,18 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
 import { Edit, FileText, Trash2, Check, Copy, Plus, Folder } from 'lucide-react'
-import { TestSpec, Test, TestRequirement, type TestStatus } from '@/lib/types'
-import { SPEC_STATUSES, STATUS_CONFIGS, TEST_STATUSES } from '@/lib/constants'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { client } from '@/lib/orpc/orpc'
-import { authClient } from '@/lib/shared/better-auth'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { invalidateAndRefetchQueries } from './hooks'
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -23,7 +14,18 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
+import { SPEC_STATUSES, STATUS_CONFIGS, TEST_STATUSES } from '@/lib/constants'
+import { safeClient } from '@/lib/orpc/orpc'
+import { authClient } from '@/lib/shared/better-auth'
+import { TestSpec, Test, TestRequirement, type TestStatus } from '@/lib/types'
+import { cn } from '@/lib/utils'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import { invalidateAndRefetchQueries } from './hooks'
 
 interface TestDetailsPanelProps {
     selectedSpec: TestSpec | null
@@ -56,12 +58,14 @@ export function TestDetailsPanel({
             if (!activeOrganization?.id) {
                 throw new Error('No active organization')
             }
-            return await client.testFolders.upsert({
+            const { data, error } = await safeClient.testFolders.upsert({
                 id: crypto.randomUUID(),
                 name: 'New Folder',
                 organizationId: activeOrganization.id,
                 order: 0
             })
+            if (error) throw error
+            return data
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-folders')
@@ -78,7 +82,7 @@ export function TestDetailsPanel({
             if (!activeOrganization?.id) {
                 throw new Error('No active organization')
             }
-            return await client.testSpecs.upsert({
+            const { data, error } = await safeClient.testSpecs.upsert({
                 id: crypto.randomUUID(),
                 name: 'New Test',
                 folderId: null,
@@ -86,6 +90,8 @@ export function TestDetailsPanel({
                 statuses: DEFAULT_SPEC_STATUSES,
                 numberOfTests: 0
             })
+            if (error) throw error
+            return data
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
@@ -246,7 +252,7 @@ ${requirements}
                                 </div>
                             )}
 
-                            {editingRequirements ?
+                            {editingRequirements ? (
                                 <div className="space-y-4">
                                     <div className="space-y-2">
                                         {requirementsToShow.map((req: TestRequirement, index: number) => (
@@ -315,7 +321,8 @@ ${requirements}
                                         <Button onClick={saveRequirements}>Save Requirements</Button>
                                     </div>
                                 </div>
-                            :   <div className="space-y-2">
+                            ) : (
+                                <div className="space-y-2">
                                     {requirementsToShow.map((req: TestRequirement, index: number) => {
                                         const config =
                                             STATUS_CONFIGS[
@@ -358,7 +365,7 @@ ${requirements}
                                         <div className="text-muted-foreground text-sm">No requirements defined</div>
                                     )}
                                 </div>
-                            }
+                            )}
                         </div>
                     </TabsContent>
 
@@ -367,16 +374,17 @@ ${requirements}
                             <div className="flex items-center justify-between">
                                 <h3 className="font-medium">Generated Test Code</h3>
                                 <Button onClick={copyTestCode} size="sm">
-                                    {copied ?
+                                    {copied ? (
                                         <>
                                             <Check className="mr-1 h-4 w-4" />
                                             Copied!
                                         </>
-                                    :   <>
+                                    ) : (
+                                        <>
                                             <Copy className="mr-1 h-4 w-4" />
                                             Copy Test Code
                                         </>
-                                    }
+                                    )}
                                 </Button>
                             </div>
                             <div className="max-h-[500px] overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-slate-50 text-sm">

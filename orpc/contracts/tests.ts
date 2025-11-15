@@ -1,5 +1,5 @@
-import { oc } from '@orpc/contract'
 import * as z from 'zod'
+
 import {
     testFolderSelectSchema,
     testFolderInsertSchema,
@@ -11,6 +11,7 @@ import {
     testInsertSchema,
     vitestReportSchema
 } from '@/lib/types'
+import { oc } from '@orpc/contract'
 
 // FIXME: almost all contract schemes are bullshit here
 
@@ -24,6 +25,33 @@ const listTestFoldersContract = oc
     .input(testFolderInsertSchema.pick({ parentFolderId: true }).partial({ parentFolderId: true }))
     .output(z.array(testFolderSelectSchema))
 
+const getFolderChildrenContract = oc
+    .route({ method: 'GET', path: '/test-folders/{id}/children' })
+    .input(
+        z.object({
+            folderId: z.string(),
+            depth: z.number().int().min(0).max(5).optional().default(0)
+        })
+    )
+    .output(
+        z.array(
+            z.object({
+                id: z.string(),
+                name: z.string(),
+                type: z.enum(['folder', 'spec']),
+                children: z
+                    .array(
+                        z.object({
+                            id: z.string(),
+                            name: z.string(),
+                            type: z.enum(['folder', 'spec'])
+                        })
+                    )
+                    .optional()
+            })
+        )
+    )
+
 const upsertTestFolderContract = oc
     .route({ method: 'POST', path: '/test-folders/{id}' })
     .input(testFolderInsertSchema.omit({ createdAt: true, updatedAt: true }).partial({ id: true }))
@@ -34,9 +62,14 @@ const deleteTestFolderContract = oc
     .input(testFolderInsertSchema.pick({ id: true }))
     .output(z.object({ success: z.boolean() }))
 
+const getTestSpecContract = oc
+    .route({ method: 'GET', path: '/test-specs/{id}' })
+    .input(testSpecInsertSchema.pick({ id: true }))
+    .output(testSpecSelectSchema.nullable())
+
 const listTestSpecsContract = oc
     .route({ method: 'GET', path: '/test-specs' })
-    .input(testSpecInsertSchema.pick({ folderId: true }))
+    .input(testSpecInsertSchema.pick({ folderId: true }).partial({ folderId: true }))
     .output(z.array(testSpecSelectSchema))
 
 const upsertTestSpecContract = oc
@@ -51,7 +84,7 @@ const deleteTestSpecContract = oc
 
 const listTestRequirementsContract = oc
     .route({ method: 'GET', path: '/test-requirements' })
-    .input(testRequirementInsertSchema.pick({ specId: true }))
+    .input(testRequirementInsertSchema.pick({ specId: true }).partial({ specId: true }))
     .output(z.array(testRequirementSelectSchema))
 
 const upsertTestRequirementContract = oc
@@ -66,7 +99,7 @@ const deleteTestRequirementContract = oc
 
 const listTestsContract = oc
     .route({ method: 'GET', path: '/tests' })
-    .input(testInsertSchema.pick({ requirementId: true }))
+    .input(testInsertSchema.pick({ requirementId: true }).partial({ requirementId: true }))
     .output(z.array(testSelectSchema))
 
 const upsertTestContract = oc
@@ -89,10 +122,12 @@ export const testsContract = {
     testFolders: {
         get: getTestFolderContract,
         list: listTestFoldersContract,
+        getChildren: getFolderChildrenContract,
         upsert: upsertTestFolderContract,
         delete: deleteTestFolderContract
     },
     testSpecs: {
+        get: getTestSpecContract,
         list: listTestSpecsContract,
         upsert: upsertTestSpecContract,
         delete: deleteTestSpecContract

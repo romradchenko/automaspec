@@ -1,10 +1,11 @@
 'use client'
 
+import type { ComponentProps } from 'react'
+
 import { GripVertical } from 'lucide-react'
 import * as ResizablePrimitive from 'react-resizable-panels'
 
 import { cn } from '@/lib/utils'
-import type { ComponentProps } from 'react'
 
 const ResizablePanelGroup = ({ className, ...props }: ComponentProps<typeof ResizablePrimitive.PanelGroup>) => (
     <ResizablePrimitive.PanelGroup
