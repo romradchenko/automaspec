@@ -42,36 +42,43 @@ export function DashboardHeader() {
     }
 
     return (
-        <div className="flex items-center justify-between border-b p-4">
-            <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-muted-foreground" />
-                    <h1 className="font-semibold text-lg">{activeOrganization?.name}</h1>
+                    <Building2 className="size-5 text-muted-foreground" />
+                    <h1 className="font-semibold text-base sm:text-lg">{activeOrganization?.name}</h1>
                 </div>
                 <Badge variant="secondary">Free Plan</Badge>
             </div>
             <div className="flex items-center gap-2">
-                <Button onClick={handleSyncClick} size="sm" variant="outline" disabled={isSyncing}>
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                    Sync Tests
+                <Button
+                    onClick={handleSyncClick}
+                    size="sm"
+                    variant="outline"
+                    disabled={isSyncing}
+                    className="flex-1 sm:flex-initial"
+                >
+                    <RefreshCw className={`mr-2 size-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">Sync Tests</span>
+                    <span className="sm:hidden">Sync</span>
                 </Button>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button size="sm" variant="ghost">
-                            <User className="h-4 w-4" />
+                            <User className="size-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
                             <Link href="/profile">
-                                <User className="mr-2 h-4 w-4" />
+                                <User className="mr-2 size-4" />
                                 Profile
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                             <Link href="/login" onClick={() => authClient.signOut()}>
-                                <LogOut className="mr-2 h-4 w-4" />
+                                <LogOut className="mr-2 size-4" />
                                 Logout
                             </Link>
                         </DropdownMenuItem>

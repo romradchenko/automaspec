@@ -149,24 +149,26 @@ ${requirements}
 
     if (!selectedSpec) {
         return (
-            <div className="flex flex-1 items-center justify-center text-muted-foreground">
-                <div className="text-center">
-                    <FileText className="mx-auto mb-4 h-12 w-12 opacity-50" />
-                    <p>Select a spec to view details and requirements</p>
-                    <div className="mt-4 flex justify-around">
+            <div className="flex flex-1 items-center justify-center text-muted-foreground p-4">
+                <div className="w-full max-w-md text-center">
+                    <FileText className="mx-auto mb-4 size-12 opacity-50" />
+                    <p className="text-sm sm:text-base">Select a spec to view details and requirements</p>
+                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-around">
                         <Button
                             variant="outline"
                             onClick={() => createFolderMutation.mutate()}
                             disabled={createFolderMutation.isPending}
+                            className="flex-1 sm:flex-initial"
                         >
-                            <Folder className="mr-2 h-4 w-4" />
+                            <Folder className="mr-2 size-4" />
                             New Folder
                         </Button>
                         <Button
                             onClick={() => createTestSpecMutation.mutate()}
                             disabled={createTestSpecMutation.isPending}
+                            className="flex-1 sm:flex-initial"
                         >
-                            <Plus className="mr-2 h-4 w-4" />
+                            <Plus className="mr-2 size-4" />
                             New Test
                         </Button>
                     </div>
@@ -177,58 +179,69 @@ ${requirements}
 
     return (
         <>
-            <div className="border-b p-4">
-                <div className="mb-2 flex items-start justify-between">
-                    <div>
-                        <div className="mb-1 flex items-center gap-2">
-                            <h2 className="font-semibold text-xl">{selectedSpec.name}</h2>
-                            <Button onClick={() => onEditSpec(selectedSpec)} size="sm" variant="ghost">
-                                <Edit className="h-4 w-4" />
-                            </Button>
-                            {onDeleteSpec && (
-                                <Button
-                                    onClick={() => setDeleteSpecDialogOpen(true)}
-                                    size="sm"
-                                    variant="ghost"
-                                    className="text-destructive hover:text-destructive"
-                                >
-                                    <Trash2 className="h-4 w-4" />
+            <div className="border-b p-3 sm:p-4">
+                <div className="mb-2 flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                            <h2 className="font-semibold text-lg sm:text-xl break-words">{selectedSpec.name}</h2>
+                            <div className="flex items-center gap-1">
+                                <Button onClick={() => onEditSpec(selectedSpec)} size="sm" variant="ghost">
+                                    <Edit className="size-4" />
                                 </Button>
-                            )}
+                                {onDeleteSpec && (
+                                    <Button
+                                        onClick={() => setDeleteSpecDialogOpen(true)}
+                                        size="sm"
+                                        variant="ghost"
+                                        className="text-destructive hover:text-destructive"
+                                    >
+                                        <Trash2 className="size-4" />
+                                    </Button>
+                                )}
+                            </div>
                         </div>
-                        <p className="mb-2 text-muted-foreground text-sm">{selectedSpec.description}</p>
-                        <div className="flex items-center gap-2">
+                        <p className="mb-2 text-muted-foreground text-xs sm:text-sm break-words">
+                            {selectedSpec.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
                             <Badge variant="outline">{selectedSpec.statuses[SPEC_STATUSES.deactivated]}</Badge>
-                            <Badge variant="outline">{selectedSpec.fileName || 'No file'}</Badge>
+                            <Badge variant="outline" className="break-all">
+                                {selectedSpec.fileName || 'No file'}
+                            </Badge>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-auto p-4">
+            <div className="flex-1 overflow-auto p-3 sm:p-4">
                 <Tabs className="h-full" defaultValue="requirements">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="requirements">Functional Requirements</TabsTrigger>
-                        <TabsTrigger value="vitest">Code</TabsTrigger>
+                        <TabsTrigger value="requirements" className="text-xs sm:text-sm">
+                            Functional Requirements
+                        </TabsTrigger>
+                        <TabsTrigger value="vitest" className="text-xs sm:text-sm">
+                            Code
+                        </TabsTrigger>
                     </TabsList>
 
                     <TabsContent className="mt-4 space-y-4" value="requirements">
                         <div>
-                            <div className="mb-3 flex items-center justify-between">
-                                <h3 className="font-medium">Test Requirements</h3>
+                            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                <h3 className="font-medium text-sm sm:text-base">Test Requirements</h3>
                                 <Button
                                     onClick={() => setEditingRequirements(!editingRequirements)}
                                     size="sm"
                                     variant="outline"
+                                    className="w-full sm:w-auto"
                                 >
-                                    <Edit className="mr-1 h-4 w-4" />
+                                    <Edit className="mr-1 size-4" />
                                     {editingRequirements ? 'Cancel' : 'Edit'}
                                 </Button>
                             </div>
 
                             {requirementsToShow.length > 0 && (
                                 <div className="mb-4 rounded-lg bg-muted/30 p-3">
-                                    <div className="flex items-center gap-4 text-sm">
+                                    <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
                                         {Object.values(TEST_STATUSES).map((status) => {
                                             const count = selectedTests.filter(
                                                 (test: Test) => test.status === status
@@ -241,7 +254,7 @@ ${requirements}
 
                                             return (
                                                 <div key={status} className="flex items-center gap-1">
-                                                    <IconComponent className={`h-4 w-4 ${statusConfig.color}`} />
+                                                    <IconComponent className={`size-4 ${statusConfig.color}`} />
                                                     <span className="font-medium">
                                                         {count} {statusConfig.label}
                                                     </span>
@@ -258,10 +271,10 @@ ${requirements}
                                         {requirementsToShow.map((req: TestRequirement, index: number) => (
                                             <div
                                                 key={req.id || index}
-                                                className="flex items-center gap-2 rounded-lg border p-3"
+                                                className="flex items-center gap-2 rounded-lg border p-2 sm:p-3"
                                             >
                                                 <input
-                                                    className="flex-1 bg-transparent outline-none"
+                                                    className="min-w-0 flex-1 bg-transparent text-xs sm:text-sm outline-none"
                                                     onChange={(e) => {
                                                         const updatedReqs = [...requirementsToShow]
                                                         updatedReqs[index] = {
@@ -286,8 +299,9 @@ ${requirements}
                                                     }}
                                                     size="sm"
                                                     variant="ghost"
+                                                    className="flex-shrink-0"
                                                 >
-                                                    <Trash2 className="h-4 w-4" />
+                                                    <Trash2 className="size-4" />
                                                 </Button>
                                             </div>
                                         ))}
@@ -309,16 +323,23 @@ ${requirements}
                                             }}
                                             size="sm"
                                             variant="outline"
+                                            className="w-full sm:w-auto"
                                         >
-                                            <Plus className="mr-2 h-4 w-4" />
+                                            <Plus className="mr-2 size-4" />
                                             Add Requirement
                                         </Button>
                                     </div>
-                                    <div className="flex justify-end gap-2">
-                                        <Button onClick={() => setEditingRequirements(false)} variant="outline">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                                        <Button
+                                            onClick={() => setEditingRequirements(false)}
+                                            variant="outline"
+                                            className="w-full sm:w-auto"
+                                        >
                                             Cancel
                                         </Button>
-                                        <Button onClick={saveRequirements}>Save Requirements</Button>
+                                        <Button onClick={saveRequirements} className="w-full sm:w-auto">
+                                            Save Requirements
+                                        </Button>
                                     </div>
                                 </div>
                             ) : (
@@ -332,21 +353,26 @@ ${requirements}
                                         const IconComponent = config.icon
                                         const badge = (
                                             <Badge className={config.requirementClassName}>
-                                                <IconComponent className="h-4 w-4 mr-1" />
+                                                <IconComponent className="mr-1 size-4" />
                                                 {config.label}
                                             </Badge>
                                         )
                                         const color = config.requirementClassName
                                         return (
                                             <div
-                                                className={cn('flex items-start gap-3 rounded-lg border p-3', color)}
+                                                className={cn(
+                                                    'flex items-start gap-2 rounded-lg border p-2 sm:gap-3 sm:p-3',
+                                                    color
+                                                )}
                                                 key={req.id || index}
                                             >
-                                                <div className="mt-0.5">{badge}</div>
-                                                <div className="flex-1">
-                                                    <span className="font-medium text-sm">{req.name}</span>
+                                                <div className="mt-0.5 flex-shrink-0">{badge}</div>
+                                                <div className="min-w-0 flex-1">
+                                                    <span className="font-medium text-xs sm:text-sm break-words">
+                                                        {req.name}
+                                                    </span>
                                                     {req.description && (
-                                                        <div className="mt-1 text-muted-foreground text-xs">
+                                                        <div className="mt-1 text-muted-foreground text-xs break-words">
                                                             {req.description}
                                                         </div>
                                                     )}
@@ -371,24 +397,25 @@ ${requirements}
 
                     <TabsContent className="mt-4" value="vitest">
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <h3 className="font-medium">Generated Test Code</h3>
-                                <Button onClick={copyTestCode} size="sm">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                <h3 className="font-medium text-sm sm:text-base">Generated Test Code</h3>
+                                <Button onClick={copyTestCode} size="sm" className="w-full sm:w-auto">
                                     {copied ? (
                                         <>
-                                            <Check className="mr-1 h-4 w-4" />
+                                            <Check className="mr-1 size-4" />
                                             Copied!
                                         </>
                                     ) : (
                                         <>
-                                            <Copy className="mr-1 h-4 w-4" />
-                                            Copy Test Code
+                                            <Copy className="mr-1 size-4" />
+                                            <span className="hidden sm:inline">Copy Test Code</span>
+                                            <span className="sm:hidden">Copy</span>
                                         </>
                                     )}
                                 </Button>
                             </div>
-                            <div className="max-h-[500px] overflow-auto rounded-lg bg-slate-950 p-4 font-mono text-slate-50 text-sm">
-                                <pre className="whitespace-pre-wrap">
+                            <div className="max-h-[300px] overflow-auto rounded-lg bg-slate-950 p-3 font-mono text-slate-50 text-xs sm:max-h-[500px] sm:p-4 sm:text-sm">
+                                <pre className="whitespace-pre-wrap break-words">
                                     {generateTestCode(selectedSpec, requirementsToShow, selectedTests)}
                                 </pre>
                             </div>

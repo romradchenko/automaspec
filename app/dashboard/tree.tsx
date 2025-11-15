@@ -313,84 +313,90 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                 return (
                     <div
                         key={item.getId()}
-                        className="group flex items-center"
+                        className="group relative flex items-center"
                         style={{ paddingLeft: `${level * 16}px` }}
                     >
                         <button
                             {...item.getProps()}
                             onClick={onClick}
                             className={cn(
-                                'group/button flex flex-1 cursor-pointer items-center gap-2 rounded-sm px-2 py-1 hover:bg-muted/50',
+                                'group/button flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-lg px-3 py-3 transition-colors active:bg-muted/70 sm:rounded-sm sm:px-2 sm:py-1 sm:hover:bg-muted/50',
                                 isSelected && 'bg-muted'
                             )}
                             type="button"
                         >
-                            <div className="flex h-4 w-4 items-center justify-center">
+                            <div className="flex size-5 flex-shrink-0 items-center justify-center sm:size-4">
                                 {isFolder ? (
                                     isExpanded ? (
-                                        <ChevronDown className="h-3 w-3" />
+                                        <ChevronDown className="size-4 sm:size-3" />
                                     ) : (
-                                        <ChevronRight className="h-3 w-3" />
+                                        <ChevronRight className="size-4 sm:size-3" />
                                     )
                                 ) : (
-                                    <span className="w-3" />
+                                    <span className="w-4 sm:w-3" />
                                 )}
                             </div>
 
                             {isFolder ? (
-                                <Folder className="h-4 w-4 text-muted-foreground" />
+                                <Folder className="size-6 flex-shrink-0 text-muted-foreground sm:size-4" />
                             ) : (
-                                <FileText className="h-4 w-4 text-muted-foreground" />
+                                <FileText className="size-6 flex-shrink-0 text-muted-foreground sm:size-4" />
                             )}
 
-                            <span className="flex-1 text-left text-sm font-medium">{item.getItemName()}</span>
-                            {item.isLoading() && <span className="text-xs text-muted-foreground">(loading...)</span>}
+                            <span className="min-w-0 flex-1 truncate text-left text-base font-medium sm:text-sm">
+                                {item.getItemName()}
+                            </span>
+                            {item.isLoading() && (
+                                <span className="flex-shrink-0 text-xs text-muted-foreground">(loading...)</span>
+                            )}
                         </button>
-                        {isFolder && onCreateTest && (
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    if (payload.type === 'folder') {
-                                        onCreateTest(payload.id)
-                                    }
-                                }}
-                            >
-                                <Plus className="h-3 w-3" />
-                            </Button>
-                        )}
-                        {isFolder && onDeleteFolder && (
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100 text-destructive hover:text-destructive"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    if (payload.type === 'folder') {
-                                        onDeleteFolder(payload.id)
-                                    }
-                                }}
-                            >
-                                <Trash2 className="h-3 w-3" />
-                            </Button>
-                        )}
-                        {!isFolder && onDeleteSpec && (
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100 text-destructive hover:text-destructive"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    if (payload.type === 'spec') {
-                                        onDeleteSpec(payload.id)
-                                    }
-                                }}
-                            >
-                                <Trash2 className="h-3 w-3" />
-                            </Button>
-                        )}
+                        <div className="absolute right-2 flex items-center gap-1 opacity-100 sm:relative sm:right-0 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
+                            {isFolder && onCreateTest && (
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="size-8 flex-shrink-0 touch-manipulation sm:size-6"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        if (payload.type === 'folder') {
+                                            onCreateTest(payload.id)
+                                        }
+                                    }}
+                                >
+                                    <Plus className="size-4 sm:size-3" />
+                                </Button>
+                            )}
+                            {isFolder && onDeleteFolder && (
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="size-8 flex-shrink-0 touch-manipulation text-destructive hover:text-destructive sm:size-6"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        if (payload.type === 'folder') {
+                                            onDeleteFolder(payload.id)
+                                        }
+                                    }}
+                                >
+                                    <Trash2 className="size-4 sm:size-3" />
+                                </Button>
+                            )}
+                            {!isFolder && onDeleteSpec && (
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="size-8 flex-shrink-0 touch-manipulation text-destructive hover:text-destructive sm:size-6"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        if (payload.type === 'spec') {
+                                            onDeleteSpec(payload.id)
+                                        }
+                                    }}
+                                >
+                                    <Trash2 className="size-4 sm:size-3" />
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 )
             })}

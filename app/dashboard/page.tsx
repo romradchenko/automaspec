@@ -178,11 +178,11 @@ export default function Dashboard() {
 
     return (
         <>
-            <div className="flex h-screen bg-background">
-                <div className="flex w-1/2 flex-col border-r">
+            <div className="flex h-screen flex-col bg-background lg:flex-row">
+                <div className="flex flex-col border-b lg:w-1/2 lg:border-b-0 lg:border-r">
                     <DashboardHeader />
 
-                    <div className="flex-1 overflow-auto p-2">
+                    <div className="flex-1 overflow-auto p-3 sm:p-2">
                         <Tree
                             selectedSpecId={selectedSpec?.id || null}
                             onSelectSpec={handleSpecSelect}
@@ -193,7 +193,7 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="flex w-1/2 flex-col">
+                <div className="flex flex-col lg:w-1/2">
                     <TestDetailsPanel
                         selectedSpec={selectedSpec}
                         selectedRequirements={selectedRequirements}
