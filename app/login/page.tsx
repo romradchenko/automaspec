@@ -55,7 +55,6 @@ const AuthSeparator = () => (
     </div>
 )
 
-// Reusable field components to avoid duplication between sign-in and sign-up forms
 function EmailField({ form, fieldName = 'email' }: { form: any; fieldName?: string }) {
     return (
         <div>
