@@ -64,7 +64,7 @@ AutomaSpec implements a fully responsive interface that adapts seamlessly across
 ### Login Page
 
 #### Desktop (1920×1080)
-![Login Desktop](docs/screenshots/login-desktop-1920x1080.png)
+![Login Desktop](screenshots/login-desktop-1920x1080.png){width=1.0\textwidth}
 
 **Features:**
 - Centered layout with optimal spacing
@@ -72,7 +72,7 @@ AutomaSpec implements a fully responsive interface that adapts seamlessly across
 - Clear visual hierarchy
 
 #### Tablet (768×1024)
-![Login Tablet](docs/screenshots/login-tablet-768x1024.png)
+![Login Tablet](screenshots/login-tablet-768x1024.png){width=0.95\textwidth}
 
 **Adaptations:**
 - Maintained centered layout
@@ -80,7 +80,7 @@ AutomaSpec implements a fully responsive interface that adapts seamlessly across
 - Readable typography
 
 #### Mobile (375×667)
-![Login Mobile](docs/screenshots/login-mobile-375x667.png)
+![Login Mobile](screenshots/login-mobile-375x667.png){width=0.95\textwidth}
 
 **Adaptations:**
 - Full-width form
@@ -92,7 +92,7 @@ AutomaSpec implements a fully responsive interface that adapts seamlessly across
 ### Dashboard Page
 
 #### Desktop (1920×1080)
-![Dashboard Desktop](docs/screenshots/dashboard-desktop-1920x1080.png)
+![Dashboard Desktop](screenshots/dashboard-desktop-1920x1080.png){width=1.0\textwidth}
 
 **Layout:**
 - Two-panel layout (50/50 split)
@@ -100,7 +100,7 @@ AutomaSpec implements a fully responsive interface that adapts seamlessly across
 - Full header navigation
 
 #### Tablet (768×1024)
-![Dashboard Tablet](docs/screenshots/dashboard-tablet-768x1024.png)
+![Dashboard Tablet](screenshots/dashboard-tablet-768x1024.png){width=0.95\textwidth}
 
 **Adaptations:**
 - Responsive panel widths
@@ -108,7 +108,7 @@ AutomaSpec implements a fully responsive interface that adapts seamlessly across
 - Touch-optimized interactions
 
 #### Mobile (375×667)
-![Dashboard Mobile](docs/screenshots/dashboard-mobile-375x667.png)
+![Dashboard Mobile](screenshots/dashboard-mobile-375x667.png){width=0.95\textwidth}
 
 **Adaptations:**
 - Single-column stacked layout
