@@ -1,7 +1,7 @@
-import { describe, test, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-describe('Session Management', () => {
-    test('should maintain session across page reloads', () => {
-        expect(true).toBe(true)
+describe('session management', () => {
+    it('should maintain session across page reloads', () => {
+        expect(true).toBeTruthy()
     })
 })

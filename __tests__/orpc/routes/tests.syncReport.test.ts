@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { test as testTable, testSpec as testSpecTable } from '@/db/schema'
+import { testSpec as testSpecTable, test as testTable } from '@/db/schema'
 import { TEST_STATUSES } from '@/lib/constants'
 import { safeClient } from '@/lib/orpc/orpc'
 

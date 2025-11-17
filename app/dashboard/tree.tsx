@@ -33,7 +33,7 @@ async function getFolderContent(
     folderId: string,
     depth: number = 0
 ): Promise<
-    {
+    Array<{
         id: string
         data: {
             name: string
@@ -41,7 +41,7 @@ async function getFolderContent(
             id: string
             children?: Array<{ id: string; name: string; type: 'folder' | 'spec' }>
         }
-    }[]
+    }>
 > {
     const { data: children, error } = await safeClient.testFolders.getChildren({ folderId, depth })
 
@@ -143,7 +143,8 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                     for (const child of children) {
                         overrideMap.set(child.id, child)
                     }
-                    const result: { id: string; data: { name: string; type: 'folder' | 'spec'; id: string } }[] = []
+                    const result: Array<{ id: string; data: { name: string; type: 'folder' | 'spec'; id: string } }> =
+                        []
                     for (const id of overrides[itemId]) {
                         const existing = overrideMap.get(id)
                         if (existing) {
@@ -190,7 +191,7 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                     const { data: allSpecs, error: error2 } = await safeClient.testSpecs.list({})
                     if (error2) throw error2
 
-                    const updatePromises: Promise<unknown>[] = []
+                    const updatePromises: Array<Promise<unknown>> = []
 
                     for (const itemId of movedItems) {
                         const folder = allFolders.find((f) => f.id === itemId)

@@ -13,7 +13,7 @@ export const auth = betterAuth({
         provider: 'sqlite',
         schema: schema
     }),
-    trustedOrigins: [...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : [])],
+    trustedOrigins: process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : [],
     emailAndPassword: {
         enabled: true
     },

@@ -3,8 +3,13 @@
     "env": {
         "browser": true
     },
-    // eslint, typescript, unicorn and oxc plugins enabled by default
+    // TODO: enable type-aware when it's ready
     "plugins": [
+        "eslint",
+        "typescript",
+        "unicorn",
+        "oxc",
+
         "react",
         "react-perf",
         "nextjs",
@@ -16,4 +21,17 @@
         "jest",
         "vitest"
     ],
+    "categories": {
+        // "perf": "error",
+        // "restriction": "error",
+        // "suspicious": "error",
+        // "pedantic": "warn",
+        // "style": "warn"
+    },
+    "rules": {
+        "eslint/no-undefined": "allow", // too strict
+        "eslint-plugin-jest/no-conditional-in-test": "allow", // too strict
+
+        "typescript/array-type": ["error", { "default": "array-simple" }],
+    }
 }

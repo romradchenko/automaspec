@@ -369,7 +369,7 @@ const syncReport = os.tests.syncReport.handler(async ({ context }) => {
         }
     }
 
-    const updateTasks: Promise<unknown>[] = []
+    const updateTasks: Array<Promise<unknown>> = []
     for (const status of Object.keys(updatesByStatus) as TestStatus[]) {
         const ids = updatesByStatus[status]
         if (ids.length > 0) {
@@ -429,7 +429,7 @@ const syncReport = os.tests.syncReport.handler(async ({ context }) => {
     }
 
     if (affectedSpecIds.length > 0) {
-        const specUpdateTasks: Promise<unknown>[] = []
+        const specUpdateTasks: Array<Promise<unknown>> = []
         for (const sid of affectedSpecIds) {
             specUpdateTasks.push(
                 db
