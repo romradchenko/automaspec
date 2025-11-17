@@ -24,8 +24,10 @@ const Alert = ({ ref, className, variant, ...props }: ComponentProps<'div'> & Va
 )
 Alert.displayName = 'Alert'
 
-const AlertTitle = ({ ref, className, ...props }: ComponentProps<'h5'>) => (
-    <h5 ref={ref} className={cn('mb-1 font-medium leading-none tracking-tight', className)} {...props} />
+const AlertTitle = ({ ref, className, children, ...props }: ComponentProps<'h5'>) => (
+    <h5 ref={ref} className={cn('mb-1 font-medium leading-none tracking-tight', className)} {...props}>
+        {children}
+    </h5>
 )
 AlertTitle.displayName = 'AlertTitle'
 

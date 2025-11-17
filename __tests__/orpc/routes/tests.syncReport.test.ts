@@ -8,7 +8,7 @@ let orgTests: Array<Record<string, unknown>> = []
 let allSpecTests: Array<Record<string, unknown>> = []
 
 vi.mock('@/db', () => {
-    const update = vi.fn((table: unknown) => ({
+    const update = vi.fn((_table: unknown) => ({
         set: () => ({
             where: () => Promise.resolve()
         })

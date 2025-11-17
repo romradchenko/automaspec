@@ -2,35 +2,36 @@ pre-commit:
     jobs:
         - name: db-check
           glob: 'db/schema/*.ts'
-          run: pnpm drizzle-kit check
+          run: pnpm dbc
           fail_text: '❌ Database schema validation failed'
 
         - name: format
           glob: '*.{ts,tsx,mts}'
-          run: pnpx oxfmt {staged_files}
+          run: pnpm format {staged_files}
           stage_fixed: true
-          fail_text: '❌ Oxfmt failed'
+          fail_text: '❌ oxfmt failed'
 
         - name: lint
-          run: pnpx oxlint {staged_files} --fix --fix-suggestions --fix-dangerously --deny-warnings
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm lint {staged_files}
           stage_fixed: true
-          fail_text: '❌ Oxlint failed'
+          fail_text: '❌ oxlint failed'
 
         - name: todo-check
-          glob: '*.{ts,tsx,mts}'
+          glob: '*.{ts,tsx,mts,md,!lefthook.yml}'
           run: |
               if grep -n "TODO\|FIXME" {staged_files}; then
                 echo "⚠️  TODO/FIXME comments found. Consider addressing them."
               fi
 
-# TODO: Enable this
-# pre-push:
-#     parallel: true
-#     jobs:
-#         - name: typecheck
-#           run: pnpx next typegen && pnpx --package=typescript tsc --noEmit
-#           fail_text: '❌ TypeScript type checking failed'
+pre-push:
+    parallel: true
+    jobs:
+        - name: typecheck
+          run: pnpm typecheck
+          fail_text: '❌ TypeScript type checking failed'
 
+# TODO: Enable this
 #         - name: test
 #           run: pnpm test
 #           fail_text: '❌ Test failed'

@@ -32,15 +32,16 @@ const BreadcrumbLink = ({ ref, asChild, className, ...props }: ComponentProps<'a
 }
 BreadcrumbLink.displayName = 'BreadcrumbLink'
 
-const BreadcrumbPage = ({ ref, className, ...props }: ComponentProps<'span'>) => (
-    <span
+const BreadcrumbPage = ({ ref, className, children, ...props }: ComponentProps<'a'>) => (
+    <a
         ref={ref}
-        role="link"
         aria-disabled="true"
         aria-current="page"
         className={cn('font-normal text-foreground', className)}
         {...props}
-    />
+    >
+        {children}
+    </a>
 )
 BreadcrumbPage.displayName = 'BreadcrumbPage'
 
