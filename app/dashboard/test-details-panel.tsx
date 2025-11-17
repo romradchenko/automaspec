@@ -183,7 +183,7 @@ ${requirements}
                 <div className="mb-2 flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                         <div className="mb-1 flex flex-wrap items-center gap-2">
-                            <h2 className="font-semibold text-lg sm:text-xl break-words">{selectedSpec.name}</h2>
+                            <h2 className="font-semibold text-lg sm:text-xl wrap-break-words">{selectedSpec.name}</h2>
                             <div className="flex items-center gap-1">
                                 <Button onClick={() => onEditSpec(selectedSpec)} size="sm" variant="ghost">
                                     <Edit className="size-4" />
@@ -200,7 +200,7 @@ ${requirements}
                                 )}
                             </div>
                         </div>
-                        <p className="mb-2 text-muted-foreground text-xs sm:text-sm break-words">
+                        <p className="mb-2 text-muted-foreground text-xs sm:text-sm wrap-break-words">
                             {selectedSpec.description}
                         </p>
                         <div className="flex flex-wrap items-center gap-2">
@@ -299,7 +299,7 @@ ${requirements}
                                                     }}
                                                     size="sm"
                                                     variant="ghost"
-                                                    className="flex-shrink-0"
+                                                    className="shrink-0"
                                                 >
                                                     <Trash2 className="size-4" />
                                                 </Button>
@@ -366,13 +366,13 @@ ${requirements}
                                                 )}
                                                 key={req.id || index}
                                             >
-                                                <div className="mt-0.5 flex-shrink-0">{badge}</div>
+                                                <div className="mt-0.5 shrink-0">{badge}</div>
                                                 <div className="min-w-0 flex-1">
-                                                    <span className="font-medium text-xs sm:text-sm break-words">
+                                                    <span className="font-medium text-xs sm:text-sm wrap-break-words">
                                                         {req.name}
                                                     </span>
                                                     {req.description && (
-                                                        <div className="mt-1 text-muted-foreground text-xs break-words">
+                                                        <div className="mt-1 text-muted-foreground text-xs wrap-break-words">
                                                             {req.description}
                                                         </div>
                                                     )}
@@ -415,7 +415,7 @@ ${requirements}
                                 </Button>
                             </div>
                             <div className="max-h-[300px] overflow-auto rounded-lg bg-slate-950 p-3 font-mono text-slate-50 text-xs sm:max-h-[500px] sm:p-4 sm:text-sm">
-                                <pre className="whitespace-pre-wrap break-words">
+                                <pre className="whitespace-pre-wrap wrap-break-words">
                                     {generateTestCode(selectedSpec, requirementsToShow, selectedTests)}
                                 </pre>
                             </div>

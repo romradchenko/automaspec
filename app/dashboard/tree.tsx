@@ -325,7 +325,7 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                             )}
                             type="button"
                         >
-                            <div className="flex size-5 flex-shrink-0 items-center justify-center sm:size-4">
+                            <div className="flex size-5 shrink-0 items-center justify-center sm:size-4">
                                 {isFolder ? (
                                     isExpanded ? (
                                         <ChevronDown className="size-4 sm:size-3" />
@@ -338,16 +338,16 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                             </div>
 
                             {isFolder ? (
-                                <Folder className="size-6 flex-shrink-0 text-muted-foreground sm:size-4" />
+                                <Folder className="size-6 shrink-0 text-muted-foreground sm:size-4" />
                             ) : (
-                                <FileText className="size-6 flex-shrink-0 text-muted-foreground sm:size-4" />
+                                <FileText className="size-6 shrink-0 text-muted-foreground sm:size-4" />
                             )}
 
                             <span className="min-w-0 flex-1 truncate text-left text-base font-medium sm:text-sm">
                                 {item.getItemName()}
                             </span>
                             {item.isLoading() && (
-                                <span className="flex-shrink-0 text-xs text-muted-foreground">(loading...)</span>
+                                <span className="shrink-0 text-xs text-muted-foreground">(loading...)</span>
                             )}
                         </button>
                         <div className="absolute right-2 flex items-center gap-1 opacity-100 sm:relative sm:right-0 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
@@ -355,7 +355,7 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                                 <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="size-8 flex-shrink-0 touch-manipulation sm:size-6"
+                                    className="size-8 shrink-0 touch-manipulation sm:size-6"
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         if (payload.type === 'folder') {
@@ -370,7 +370,7 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                                 <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="size-8 flex-shrink-0 touch-manipulation text-destructive hover:text-destructive sm:size-6"
+                                    className="size-8 shrink-0 touch-manipulation text-destructive hover:text-destructive sm:size-6"
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         if (payload.type === 'folder') {
@@ -385,7 +385,7 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                                 <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="size-8 flex-shrink-0 touch-manipulation text-destructive hover:text-destructive sm:size-6"
+                                    className="size-8 shrink-0 touch-manipulation text-destructive hover:text-destructive sm:size-6"
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         if (payload.type === 'spec') {
