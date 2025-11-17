@@ -18,7 +18,7 @@ export default function ChooseOrganizationPage() {
             toast.error('No organizations available. Please create an organization first.')
             router.push('/create-organization')
         }
-    }, [organizations])
+    }, [organizations, router])
 
     const handleSetActiveOrganization = async (orgId: string) => {
         const { data, error } = await authClient.organization.setActive({

@@ -21,7 +21,7 @@ export default function CreateOrganizationPage() {
     useEffect(() => {
         if (activeOrganization) router.push('/dashboard')
         else if (organizations && organizations.length > 0) router.push('/choose-organization')
-    }, [activeOrganization, organizations])
+    }, [activeOrganization, organizations, router])
 
     const form = useForm({
         defaultValues: {

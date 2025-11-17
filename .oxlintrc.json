@@ -3,7 +3,8 @@
     "env": {
         "browser": true
     },
-    "plugins": ["nextjs"],
+    // eslint, typescript, unicorn and oxc plugins enabled by default
+    "plugins": ["react", "nextjs"],
     "rules": {
         "typescript/no-floating-promises": "error",
         "typescript/no-misused-promises": "error"
