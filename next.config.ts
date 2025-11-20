@@ -20,4 +20,5 @@ const nextConfig: NextConfig = {
     }
 }
 
+// oxlint-disable-next-line no-commonjs
 module.exports = nextConfig

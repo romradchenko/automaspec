@@ -3,7 +3,7 @@ import * as z from 'zod'
 
 import * as schema from '@/db/schema'
 
-import type { authClient } from './shared/better-auth'
+import type { authClient } from './shared/better-auth-client'
 
 import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS } from './constants'
 

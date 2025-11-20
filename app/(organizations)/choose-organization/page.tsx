@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { authClient } from '@/lib/shared/better-auth'
+import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function ChooseOrganizationPage() {
     const router = useRouter()
@@ -52,7 +52,8 @@ export default function ChooseOrganizationPage() {
 
                         <div className="space-y-3">
                             {organizations && organizations.length > 0 ? (
-                                organizations.map((org: any) => (
+                                // TODO: use Organization type when better-auth fixes its authClient types
+                                organizations.map((org: { id: string; name: string; slug: string }) => (
                                     <div key={org.id} className="flex items-center justify-between p-3 rounded border">
                                         <div>
                                             <div className="font-medium">{org.name}</div>

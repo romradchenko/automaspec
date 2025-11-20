@@ -3,7 +3,7 @@
 import { Code, Eye, EyeOff, Chrome, Github } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
@@ -15,9 +15,9 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { authClient } from '@/lib/shared/better-auth'
+import { authClient } from '@/lib/shared/better-auth-client'
 import { FieldInfo } from '@/lib/shared/tanstack-form'
-import { useForm } from '@tanstack/react-form'
+import { useForm, type AnyFieldApi } from '@tanstack/react-form'
 
 const SignInSchema = z.object({
     email: z.email('Invalid email address'),
@@ -30,6 +30,10 @@ const SignUpSchema = z.object({
     email: z.email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters')
 })
+
+type FormWithField = {
+    Field: (props: { name: string; children: (field: AnyFieldApi) => ReactNode }) => ReactNode
+}
 
 const SocialAuthButtons = () => (
     <div className="grid grid-cols-2 gap-4">
@@ -55,11 +59,11 @@ const AuthSeparator = () => (
     </div>
 )
 
-function EmailField({ form, fieldName = 'email' }: { form: any; fieldName?: string }) {
+function EmailField({ form, fieldName = 'email' }: { form: FormWithField; fieldName?: string }) {
     return (
         <div>
             <form.Field name={fieldName}>
-                {(field: any) => (
+                {(field: AnyFieldApi) => (
                     <div className="space-y-2">
                         <Label htmlFor={field.name}>Email</Label>
                         <Input
@@ -79,11 +83,11 @@ function EmailField({ form, fieldName = 'email' }: { form: any; fieldName?: stri
     )
 }
 
-function NameField({ form, fieldName = 'name' }: { form: any; fieldName?: string }) {
+function NameField({ form, fieldName = 'name' }: { form: FormWithField; fieldName?: string }) {
     return (
         <div>
             <form.Field name={fieldName}>
-                {(field: any) => (
+                {(field: AnyFieldApi) => (
                     <div className="space-y-2">
                         <Label htmlFor={field.name}>Name</Label>
                         <Input
@@ -108,7 +112,7 @@ function PasswordField({
     showPassword,
     setShowPassword
 }: {
-    form: any
+    form: FormWithField
     fieldName?: string
     showPassword: boolean
     setShowPassword: (v: boolean) => void
@@ -116,7 +120,7 @@ function PasswordField({
     return (
         <div>
             <form.Field name={fieldName}>
-                {(field: any) => (
+                {(field: AnyFieldApi) => (
                     <div className="space-y-2">
                         <Label htmlFor={field.name}>Password</Label>
                         <div className="relative">

@@ -29,6 +29,7 @@ const handler = new OpenAPIHandler(router, {
         })
     ],
     interceptors: [
+        // oxlint-disable-next-line no-explicit-any
         onError((error: any) => {
             console.error('RPC Error:', error)
             if (error.cause && error.cause.issues) {

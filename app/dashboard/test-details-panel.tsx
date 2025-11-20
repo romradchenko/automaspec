@@ -20,7 +20,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { SPEC_STATUSES, STATUS_CONFIGS, TEST_STATUSES } from '@/lib/constants'
 import { safeClient } from '@/lib/orpc/orpc'
-import { authClient } from '@/lib/shared/better-auth'
+import { authClient } from '@/lib/shared/better-auth-client'
 import { TestSpec, Test, TestRequirement, type TestStatus } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -291,7 +291,7 @@ ${requirements}
                                                 <Button
                                                     onClick={() => {
                                                         const updatedReqs = requirementsToShow.filter(
-                                                            (_: any, i: number) => i !== index
+                                                            (_: unknown, i: number) => i !== index
                                                         )
                                                         setRequirementsContent(
                                                             updatedReqs.map((r: TestRequirement) => r.name).join('\n')

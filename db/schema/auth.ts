@@ -1,9 +1,6 @@
-import { relations } from 'drizzle-orm/relations'
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 
-import { OrganizationPlan } from '@/lib/types'
-
-import { testFolder, testSpec } from './tests'
+import type { OrganizationPlan } from '@/lib/types'
 
 export const account = sqliteTable('account', {
     id: text().primaryKey().notNull(),
@@ -94,53 +91,3 @@ export const verification = sqliteTable('verification', {
     createdAt: integer({ mode: 'timestamp' }),
     updatedAt: integer({ mode: 'timestamp' })
 })
-
-export const accountRelations = relations(account, ({ one }) => ({
-    user: one(user, {
-        fields: [account.userId],
-        references: [user.id]
-    })
-}))
-
-export const userRelations = relations(user, ({ many }) => ({
-    accounts: many(account),
-    invitations: many(invitation),
-    members: many(member),
-    sessions: many(session)
-}))
-
-export const invitationRelations = relations(invitation, ({ one }) => ({
-    user: one(user, {
-        fields: [invitation.inviterId],
-        references: [user.id]
-    }),
-    organization: one(organization, {
-        fields: [invitation.organizationId],
-        references: [organization.id]
-    })
-}))
-
-export const organizationRelations = relations(organization, ({ many }) => ({
-    invitations: many(invitation),
-    members: many(member),
-    testFolders: many(testFolder),
-    testSpecs: many(testSpec)
-}))
-
-export const memberRelations = relations(member, ({ one }) => ({
-    user: one(user, {
-        fields: [member.userId],
-        references: [user.id]
-    }),
-    organization: one(organization, {
-        fields: [member.organizationId],
-        references: [organization.id]
-    })
-}))
-
-export const sessionRelations = relations(session, ({ one }) => ({
-    user: one(user, {
-        fields: [session.userId],
-        references: [user.id]
-    })
-}))

@@ -1,6 +1,6 @@
 'use client'
 
-import { type QueryClient, type Query } from '@tanstack/react-query'
+import type { QueryClient, Query } from '@tanstack/react-query'
 
 // TODO: Delete this file
 function createQueryPredicate(path: string) {

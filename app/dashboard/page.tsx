@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import type { TestSpec, Test, TestRequirement } from '@/lib/types'
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,8 +18,7 @@ import {
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { safeClient } from '@/lib/orpc/orpc'
 import { orpc } from '@/lib/orpc/orpc'
-import { authClient } from '@/lib/shared/better-auth'
-import { type TestSpec, type Test, type TestRequirement } from '@/lib/types'
+import { authClient } from '@/lib/shared/better-auth-client'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 
 import { DashboardHeader } from './header'
@@ -198,9 +199,15 @@ export default function Dashboard() {
                         selectedSpec={selectedSpec}
                         selectedRequirements={selectedRequirements}
                         selectedTests={selectedTests}
-                        onEditSpec={() => {}}
-                        onCreateGroup={() => {}}
-                        onCreateTest={() => {}}
+                        onEditSpec={() => {
+                            // TODO: Implement edit spec
+                        }}
+                        onCreateGroup={() => {
+                            // TODO: Implement create group
+                        }}
+                        onCreateTest={() => {
+                            // TODO: Implement create test
+                        }}
                         onDeleteSpec={handleDeleteSpec}
                     />
                 </div>

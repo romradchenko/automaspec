@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { authClient } from '@/lib/shared/better-auth'
+import { authClient } from '@/lib/shared/better-auth-client'
 
 interface InvitationWithDetails extends Invitation {
     organization: Organization
@@ -45,8 +45,7 @@ export default function InvitationsPage() {
             toast.success('Invitation accepted successfully!')
             router.push('/dashboard')
         } catch (err) {
-            toast.error('An unexpected error occurred')
-            console.error('Accept invitation error:', err)
+            toast.error('An unexpected error occurred', { description: (err as Error).message })
         } finally {
             setProcessingId(null)
         }
@@ -74,8 +73,7 @@ export default function InvitationsPage() {
                 router.push('/create-organization')
             }
         } catch (err) {
-            toast.error('An unexpected error occurred')
-            console.error('Reject invitation error:', err)
+            toast.error('An unexpected error occurred', { description: (err as Error).message })
         } finally {
             setProcessingId(null)
         }

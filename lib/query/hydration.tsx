@@ -4,6 +4,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 
 import { createQueryClient } from './client'
 
+// oxlint-disable-next-line only-export-components
 export const getQueryClient = cache(createQueryClient)
 
 /**

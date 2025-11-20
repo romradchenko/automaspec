@@ -28,27 +28,27 @@ describe('Constants', () => {
         })
 
         it('should include all test statuses', () => {
-            Object.keys(TEST_STATUSES).forEach((key) => {
+            for (const key of Object.keys(TEST_STATUSES)) {
                 expect(SPEC_STATUSES).toHaveProperty(key)
-            })
+            }
         })
     })
 
     describe('STATUS_CONFIGS', () => {
         it('should have config for each status', () => {
-            Object.keys(SPEC_STATUSES).forEach((status) => {
+            for (const status of Object.keys(SPEC_STATUSES)) {
                 expect(STATUS_CONFIGS).toHaveProperty(status)
-            })
+            }
         })
 
         it('should have required properties for each config', () => {
-            Object.values(STATUS_CONFIGS).forEach((config) => {
+            for (const config of Object.values(STATUS_CONFIGS)) {
                 expect(config).toHaveProperty('icon')
                 expect(config).toHaveProperty('color')
                 expect(config).toHaveProperty('label')
                 expect(config).toHaveProperty('badgeClassName')
                 expect(config).toHaveProperty('requirementClassName')
-            })
+            }
         })
 
         it('should have correct labels', () => {

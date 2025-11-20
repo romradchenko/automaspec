@@ -1,4 +1,4 @@
-import { relations, sql } from 'drizzle-orm'
+import { sql } from 'drizzle-orm'
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 
 import { SPEC_STATUSES } from '@/lib/constants'
@@ -75,38 +75,3 @@ export const testSpec = sqliteTable('test_spec', {
         .default(sql`(CURRENT_TIMESTAMP)`)
         .$onUpdate(() => sql`(CURRENT_TIMESTAMP)`)
 })
-
-export const testRelations = relations(test, ({ one }) => ({
-    testRequirement: one(testRequirement, {
-        fields: [test.requirementId],
-        references: [testRequirement.id]
-    })
-}))
-
-export const testRequirementRelations = relations(testRequirement, ({ one, many }) => ({
-    tests: many(test),
-    testSpec: one(testSpec, {
-        fields: [testRequirement.specId],
-        references: [testSpec.id]
-    })
-}))
-
-export const testFolderRelations = relations(testFolder, ({ one, many }) => ({
-    organization: one(organization, {
-        fields: [testFolder.organizationId],
-        references: [organization.id]
-    }),
-    testSpecs: many(testSpec)
-}))
-
-export const testSpecRelations = relations(testSpec, ({ one, many }) => ({
-    testRequirements: many(testRequirement),
-    organization: one(organization, {
-        fields: [testSpec.organizationId],
-        references: [organization.id]
-    }),
-    testFolder: one(testFolder, {
-        fields: [testSpec.folderId],
-        references: [testFolder.id]
-    })
-}))

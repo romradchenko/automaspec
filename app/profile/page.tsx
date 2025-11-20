@@ -21,7 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { safeClient } from '@/lib/orpc/orpc'
-import { authClient } from '@/lib/shared/better-auth'
+import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function ProfilePage() {
     const router = useRouter()

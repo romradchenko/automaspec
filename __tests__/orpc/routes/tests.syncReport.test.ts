@@ -10,7 +10,9 @@ let allSpecTests: Array<Record<string, unknown>> = []
 vi.mock('@/db', () => {
     const update = vi.fn((_table: unknown) => ({
         set: () => ({
-            where: () => Promise.resolve()
+            where: () => {
+                return Promise.resolve()
+            }
         })
     }))
 

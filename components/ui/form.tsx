@@ -1,7 +1,7 @@
 'use client'
 
 import { Label as LabelPrimitive, Slot as SlotPrimitive } from 'radix-ui'
-import { type ComponentProps, createContext, use, useId } from 'react'
+import { type ComponentProps, type ReactElement, createContext, use, useId } from 'react'
 import {
     Controller,
     FormProvider,
@@ -30,7 +30,7 @@ const FormField = <
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
     ...props
-}: ControllerProps<TFieldValues, TName>) => {
+}: ControllerProps<TFieldValues, TName>): ReactElement => {
     return (
         <FormFieldContext value={{ name: props.name }}>
             <Controller {...props} />
@@ -123,4 +123,5 @@ const FormMessage = ({ ref, className, children, ...props }: ComponentProps<'p'>
 }
 FormMessage.displayName = 'FormMessage'
 
+// oxlint-disable-next-line only-export-components
 export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField }

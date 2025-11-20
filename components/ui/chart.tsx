@@ -75,6 +75,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
     return (
         <style
+            // oxlint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
                 __html: Object.entries(THEMES)
                     .map(
@@ -156,7 +157,7 @@ const ChartTooltipContent = ({
         <div
             ref={ref}
             className={cn(
-                'grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl',
+                'grid min-w-32 items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl',
                 className
             )}
         >

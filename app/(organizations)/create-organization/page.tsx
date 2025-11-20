@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { authClient } from '@/lib/shared/better-auth'
+import { authClient } from '@/lib/shared/better-auth-client'
 import { useForm } from '@tanstack/react-form'
 
 export default function CreateOrganizationPage() {
@@ -19,6 +19,12 @@ export default function CreateOrganizationPage() {
     const { data: organizations } = authClient.useListOrganizations()
 
     useEffect(() => {
+        // const fetchOrganizations = async () => {
+        //     const { data, error } = await authClient.organization.list()
+        //     const { data: activeOrganization } = await authClient.organization.getActive()
+        //     console.log(data, error)
+        // }
+        // fetchOrganizations()
         if (activeOrganization) router.push('/dashboard')
         else if (organizations && organizations.length > 0) router.push('/choose-organization')
     }, [activeOrganization, organizations, router])
@@ -138,7 +144,7 @@ export default function CreateOrganizationPage() {
                                                 return 'This slug is already taken'
                                             }
                                         } catch (err) {
-                                            console.error('Slug check error:', err)
+                                            console.error(err)
                                         }
                                     }
                                 }}

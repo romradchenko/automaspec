@@ -40,4 +40,5 @@ const Toggle = ({
 
 Toggle.displayName = TogglePrimitive.Root.displayName
 
+// oxlint-disable-next-line only-export-components
 export { Toggle, toggleVariants }

@@ -1,9 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { organizationClient, inferOrgAdditionalFields } from 'better-auth/client/plugins'
 import { nextCookies } from 'better-auth/next-js'
 import { organization } from 'better-auth/plugins/organization'
-import { createAuthClient } from 'better-auth/react'
 
 import { db } from '@/db'
 import * as schema from '@/db/schema'
@@ -20,19 +18,21 @@ export const auth = betterAuth({
     plugins: [
         organization({
             allowUserToCreateOrganization: true,
-            organizationLimit: 1,
+            organizationLimit: 2,
             membershipLimit: 1,
-            creatorRole: 'owner'
+            creatorRole: 'owner',
+            schema: {
+                organization: {
+                    additionalFields: {
+                        plan: {
+                            type: 'string',
+                            input: true,
+                            required: false
+                        }
+                    }
+                }
+            }
         }),
-        nextCookies()
-    ]
-})
-
-export const authClient = createAuthClient({
-    baseURL: typeof window !== 'undefined' ? window.location.origin : undefined,
-    plugins: [
-        organizationClient({
-            schema: inferOrgAdditionalFields<typeof auth>()
-        })
+        nextCookies() // Should be last plugin
     ]
 })
