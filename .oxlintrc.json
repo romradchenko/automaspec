@@ -6,10 +6,9 @@
     // TODO: enable type-aware when it's ready
     "plugins": [
         "eslint",
-        "typescript",
+        // "typescript", TODO
         "unicorn",
         "oxc",
-
         "react",
         "react-perf",
         "nextjs",
@@ -22,16 +21,32 @@
         "vitest"
     ],
     "categories": {
-        // "perf": "error",
-        // "restriction": "error",
+        // "perf": "warn",
+        // "restriction": "error", TODO:
         // "suspicious": "error",
         // "pedantic": "warn",
         // "style": "warn"
     },
     "rules": {
         "eslint/no-undefined": "allow", // too strict
+        "eslint/no-plusplus": "allow", // too strict
         "eslint-plugin-jest/no-conditional-in-test": "allow", // too strict
+        "oxc/no-async-await": "allow", // this is stupid
+        "oxc/no-rest-spread-properties": "allow", // this is stupid
+        "oxc/no-optional-chaining": "allow", // this is stupid
 
-        "typescript/array-type": ["error", { "default": "array-simple" }],
+        "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+        "typescript/array-type": [
+            "error",
+            {
+                "default": "array-simple"
+            }
+        ],
+        "typescript/explicit-function-return-type": [
+            "error",
+            {
+                "allowConciseArrowFunctionExpressionsStartingWithVoid": true
+            }
+        ],
     }
 }

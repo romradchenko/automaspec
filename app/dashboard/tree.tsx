@@ -59,16 +59,14 @@ async function getSpecById(specId: string): Promise<TestSpec | null> {
 }
 
 async function getFolderItemData(itemId: string): Promise<{ name: string; type: 'folder' | 'spec'; id: string }> {
-    try {
-        const { data: folder, error } = await safeClient.testFolders.get({ id: itemId })
-        if (error) throw error
-        if (folder) {
-            return { name: folder.name, type: 'folder', id: folder.id }
-        }
-    } catch {}
-
-    const { data: spec, error } = await safeClient.testSpecs.get({ id: itemId })
+    const { data: folder, error } = await safeClient.testFolders.get({ id: itemId })
     if (error) throw error
+    if (folder) {
+        return { name: folder.name, type: 'folder', id: folder.id }
+    }
+
+    const { data: spec, error: error2 } = await safeClient.testSpecs.get({ id: itemId })
+    if (error2) throw error2
     if (spec) {
         return { name: spec.name, type: 'spec', id: spec.id }
     }
@@ -271,11 +269,6 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                     previousChildrenRef.current[targetId] = newChildren
                 } catch (error) {
                     toast.error(error instanceof Error ? error.message : 'Failed to move items')
-                    setOverrides((prev) => {
-                        const updated = { ...prev }
-                        delete updated[targetId]
-                        return updated
-                    })
                 }
             } else {
                 previousChildrenRef.current[targetId] = newChildren
