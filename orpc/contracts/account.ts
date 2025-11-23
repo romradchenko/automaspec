@@ -26,7 +26,7 @@ const exportAccountContract = oc
     .output(exportDataOutput)
 
 const deleteAccountContract = oc
-    .route({ method: 'DELETE', path: '/account/{userId}/delete', tags: ['account'], description: 'Delete account' })
+    .route({ method: 'DELETE', path: '/account/{userId}', tags: ['account'], description: 'Delete account' })
     .input(memberSelectSchema.pick({ userId: true }))
     .output(z.object({ success: z.boolean() }))
 
