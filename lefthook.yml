@@ -17,13 +17,6 @@ pre-commit:
           stage_fixed: true
           fail_text: '❌ oxlint failed'
 
-        - name: todo-check
-          glob: '*.{ts,tsx,mts,md,!lefthook.yml}'
-          run: |
-              if grep -n "TODO\|FIXME" {staged_files}; then
-                echo "⚠️  TODO/FIXME comments found. Consider addressing them."
-              fi
-
 pre-push:
     parallel: true
     jobs:

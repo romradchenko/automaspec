@@ -157,7 +157,6 @@ interface AuthFormProps {
 
 function SignInForm({ onToggle }: AuthFormProps) {
     const [showPassword, setShowPassword] = useState(false)
-    const { data: organizations } = authClient.useListOrganizations()
     const router = useRouter()
 
     const form = useForm({
@@ -179,6 +178,7 @@ function SignInForm({ onToggle }: AuthFormProps) {
                 {
                     onSuccess: async () => {
                         toast.success('Sign in successful')
+                        const { data: organizations } = await authClient.organization.list()
                         router.push(
                             organizations && organizations.length > 0 ? '/choose-organization' : '/create-organization'
                         )
@@ -268,7 +268,6 @@ function SignInForm({ onToggle }: AuthFormProps) {
 function SignUpForm({ onToggle }: AuthFormProps) {
     const [showPassword, setShowPassword] = useState(false)
     const router = useRouter()
-    const { data: organizations } = authClient.useListOrganizations()
 
     const form = useForm({
         defaultValues: {
@@ -290,6 +289,7 @@ function SignUpForm({ onToggle }: AuthFormProps) {
                 {
                     onSuccess: async () => {
                         toast.success('Sign up successful')
+                        const { data: organizations } = await authClient.organization.list()
                         router.push(
                             organizations && organizations.length > 0 ? '/choose-organization' : '/create-organization'
                         )
