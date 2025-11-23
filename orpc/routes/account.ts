@@ -45,7 +45,7 @@ const deleteAccount = os.account.delete.handler(async ({ input }) => {
     const result = await db.delete(user).where(eq(user.id, userId)).returning()
 
     if (result.length === 0) {
-        throw new ORPCError('User not found')
+        throw new ORPCError({ code: 'NOT_FOUND', message: 'User not found' })
     }
 
     return { success: true }
