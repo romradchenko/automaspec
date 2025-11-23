@@ -15,19 +15,18 @@ import { useForm } from '@tanstack/react-form'
 
 export default function CreateOrganizationPage() {
     const router = useRouter()
-    const { data: activeOrganization, isPending, error } = authClient.useActiveOrganization()
-    const { data: organizations } = authClient.useListOrganizations()
+    const {
+        data: activeOrganization,
+        isPending: isPendingActiveOrganization,
+        error
+    } = authClient.useActiveOrganization()
+    const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
 
     useEffect(() => {
-        // const fetchOrganizations = async () => {
-        //     const { data, error } = await authClient.organization.list()
-        //     const { data: activeOrganization } = await authClient.organization.getActive()
-        //     console.log(data, error)
-        // }
-        // fetchOrganizations()
+        if (isPendingActiveOrganization || isPendingOrganizations) return
         if (activeOrganization) router.push('/dashboard')
         else if (organizations && organizations.length > 0) router.push('/choose-organization')
-    }, [activeOrganization, organizations, router])
+    }, [activeOrganization, organizations, router, isPendingActiveOrganization, isPendingOrganizations])
 
     const form = useForm({
         defaultValues: {
@@ -35,21 +34,22 @@ export default function CreateOrganizationPage() {
             slug: ''
         },
         onSubmit: async ({ value }) => {
-            await authClient.organization.create(
-                {
-                    name: value.name,
-                    slug: value.slug
-                },
-                {
-                    onSuccess: () => {
-                        toast.success('Organization created successfully!')
-                        router.push('/choose-organization')
-                    },
-                    onError: (ctx) => {
-                        toast.error(ctx.error.message)
-                    }
-                }
-            )
+            const { data: createdOrg, error: createError } = await authClient.organization.create({
+                name: value.name,
+                slug: value.slug
+            })
+
+            if (createError) {
+                toast.error(createError.message)
+                return
+            }
+
+            if (!createdOrg?.id) {
+                toast.error('Failed to create organization')
+                return
+            }
+            toast.success('Organization created successfully!')
+            router.push('/dashboard')
         }
     })
 
@@ -60,7 +60,8 @@ export default function CreateOrganizationPage() {
             .replace(/^-+|-+$/g, '')
     }
 
-    // TODO: recheck form state and validation
+    const isPending = isPendingActiveOrganization || isPendingOrganizations
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
             {isPending ? (

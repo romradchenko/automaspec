@@ -42,13 +42,15 @@ export function DashboardHeader() {
     }
 
     return (
-        <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-b border-primary/20 p-4 sm:flex-row sm:items-center sm:justify-between bg-gradient-to-r from-background to-primary/5">
             <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-2">
-                    <Building2 className="size-5 text-muted-foreground" />
-                    <h1 className="font-semibold text-base sm:text-lg">{activeOrganization?.name}</h1>
+                    <Building2 className="size-5 text-primary" />
+                    <h1 className="font-semibold text-base sm:text-lg text-foreground">{activeOrganization?.name}</h1>
                 </div>
-                <Badge variant="secondary">Free Plan</Badge>
+                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                    Free Plan
+                </Badge>
             </div>
             <div className="flex items-center gap-2">
                 <Button
