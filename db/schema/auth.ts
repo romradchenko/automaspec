@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
 
-import type { OrganizationPlan } from '@/lib/types'
+import type { MemberRole, OrganizationPlan } from '@/lib/types'
 
 export const account = sqliteTable('account', {
     id: text().primaryKey().notNull(),
@@ -43,7 +43,7 @@ export const member = sqliteTable('member', {
     userId: text()
         .notNull()
         .references(() => user.id, { onDelete: 'cascade' }),
-    role: text().default('member').notNull(),
+    role: text().$type<MemberRole>().default('member').notNull(),
     createdAt: integer({ mode: 'timestamp' }),
     updatedAt: integer({ mode: 'timestamp' })
 })

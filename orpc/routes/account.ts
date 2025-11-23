@@ -3,42 +3,51 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/db'
 import { user, member, organization } from '@/db/schema/auth'
 import { accountContract } from '@/orpc/contracts/account'
-import { authMiddleware } from '@/orpc/middleware'
-import { implement } from '@orpc/server'
+import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
+import { implement, ORPCError } from '@orpc/server'
 
-const os = implement(accountContract).use(authMiddleware)
+const os = implement(accountContract).use(authMiddleware).use(organizationMiddleware)
 
-const exportAccount = os.account.export.handler(async ({ context }) => {
-    const u = await db
+const exportAccount = os.account.export.handler(async ({ input }) => {
+    const { userId } = input
+
+    const userData = await db
         .select({ id: user.id, name: user.name, email: user.email, image: user.image, createdAt: user.createdAt })
         .from(user)
-        .where(eq(user.id, context.session.user.id))
+        .where(eq(user.id, userId))
         .limit(1)
 
     const rawMemberships = await db
         .select({ organizationId: member.organizationId, role: member.role, organizationName: organization.name })
         .from(member)
         .leftJoin(organization, eq(member.organizationId, organization.id))
-        .where(eq(member.userId, context.session.user.id))
+        .where(eq(member.userId, userId))
 
     return {
         user: {
-            id: u[0]?.id ?? context.session.user.id,
-            name: u[0]?.name ?? context.session.user.name ?? '',
-            email: u[0]?.email ?? context.session.user.email ?? '',
-            image: u[0]?.image ?? context.session.user.image ?? null,
-            createdAt: new Date(u[0]?.createdAt ?? context.session.user.createdAt ?? Date.now()).toISOString()
+            id: userData[0].id,
+            name: userData[0].name,
+            email: userData[0].email,
+            image: userData[0].image,
+            createdAt: new Date(userData[0].createdAt).toISOString()
         },
         memberships: rawMemberships.map((m) => ({
             organizationId: m.organizationId,
             organizationName: m.organizationName ?? '',
-            role: m.role ?? null
+            role: m.role
         }))
     }
 })
 
-const deleteAccount = os.account.delete.handler(async ({ context }) => {
-    await db.delete(user).where(eq(user.id, context.session.user.id))
+const deleteAccount = os.account.delete.handler(async ({ input }) => {
+    const { userId } = input
+
+    const result = await db.delete(user).where(eq(user.id, userId)).returning()
+
+    if (result.length === 0) {
+        throw new ORPCError('User not found')
+    }
+
     return { success: true }
 })
 
