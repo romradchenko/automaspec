@@ -5,7 +5,7 @@ import * as schema from '@/db/schema'
 
 import type { authClient } from './shared/better-auth-client'
 
-import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS } from './constants'
+import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS, type MEMBER_ROLES } from './constants'
 
 // FIXME: will work after https://github.com/drizzle-team/drizzle-orm/pull/4820, removing all manual zod coercions
 // const { createInsertSchema, createSelectSchema } = createSchemaFactory({
@@ -73,11 +73,18 @@ export type CreateTestInput = Omit<Test, 'id' | 'createdAt' | 'updatedAt'>
 export type CreateTestRequirementInput = Omit<TestRequirement, 'id' | 'createdAt' | 'updatedAt'>
 
 // Use organization types directly from database schema
-export const organizationSelectSchema = createSelectSchema(schema.organization)
-export const memberSelectSchema = createSelectSchema(schema.member)
-export const invitationSelectSchema = createSelectSchema(schema.invitation)
+export const organizationSelectSchema = createSelectSchema(schema.organization).meta({
+    description: 'Organization data'
+})
+export const memberSelectSchema = createSelectSchema(schema.member).meta({
+    description: 'Member data'
+})
+export const invitationSelectSchema = createSelectSchema(schema.invitation).meta({
+    description: 'Invitation data'
+})
 export type Organization = z.infer<typeof organizationSelectSchema>
 export type Member = z.infer<typeof memberSelectSchema>
+export type MemberRole = keyof typeof MEMBER_ROLES
 export type Invitation = z.infer<typeof invitationSelectSchema>
 // Session has user and session
 export type Session = typeof authClient.$Infer.Session

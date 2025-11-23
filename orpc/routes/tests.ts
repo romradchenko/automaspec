@@ -1,9 +1,10 @@
 import { eq, and, inArray, isNull } from 'drizzle-orm'
 
+import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestSpec } from '@/lib/types'
+
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
 import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
-import { TestStatus, SpecStatus, VitestTestResult } from '@/lib/types'
 import { testsContract } from '@/orpc/contracts/tests'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import testResultsData from '@/test-results.json'
@@ -47,14 +48,14 @@ const getFolderChildren = os.testFolders.getChildren.handler(async ({ input, con
     const { folderId, depth = 0 } = input
 
     async function fetchChildren(
-        parentId: string,
+        parentId: TestFolder['id'],
         currentDepth: number
     ): Promise<
         Array<{
-            id: string
+            id: TestFolder['id'] | TestSpec['id']
             name: string
             type: 'folder' | 'spec'
-            children?: Array<{ id: string; name: string; type: 'folder' | 'spec' }>
+            children?: Array<{ id: TestFolder['id'] | TestSpec['id']; name: string; type: 'folder' | 'spec' }>
         }>
     > {
         let folders
@@ -114,7 +115,7 @@ const getFolderChildren = os.testFolders.getChildren.handler(async ({ input, con
         return result
     }
 
-    return await fetchChildren(folderId, 0)
+    return await fetchChildren(folderId, depth)
 })
 
 const upsertTestFolder = os.testFolders.upsert.handler(async ({ input, context }) => {

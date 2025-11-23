@@ -161,7 +161,7 @@ export default function CreateOrganizationPage() {
                                             placeholder="acme-inc"
                                         />
                                         <p className="text-xs text-muted-foreground">
-                                            Used in URLs: AutomaSpec.com/{field.state.value || 'your-slug'}
+                                            Used in URLs: automaspec.com/{field.state.value || 'your-slug'}
                                         </p>
                                         {field.state.meta.errors && (
                                             <p className="text-sm text-destructive">{field.state.meta.errors[0]}</p>

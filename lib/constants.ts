@@ -12,6 +12,12 @@ export const ORGANIZATION_PLANS = {
     enterprise: 'enterprise'
 } as const
 
+export const MEMBER_ROLES = {
+    owner: 'owner',
+    admin: 'admin',
+    member: 'member'
+} as const
+
 export type OrganizationPlan = keyof typeof ORGANIZATION_PLANS
 
 export const TEST_STATUSES = {

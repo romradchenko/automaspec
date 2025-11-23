@@ -7,6 +7,7 @@ import { router } from '@/orpc/routes'
 import { LoggingHandlerPlugin } from '@orpc/experimental-pino'
 import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from '@orpc/json-schema'
 import { OpenAPIHandler } from '@orpc/openapi/fetch'
+import { OpenAPIReferencePlugin } from '@orpc/openapi/plugins'
 import { onError } from '@orpc/server'
 import { CORSPlugin } from '@orpc/server/plugins'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
@@ -26,6 +27,17 @@ const handler = new OpenAPIHandler(router, {
             generateId: () => crypto.randomUUID(), // Custom ID generator
             logRequestResponse: true, // Log request start/end (disabled by default)
             logRequestAbort: true // Log when requests are aborted (disabled by default)
+        }),
+        new OpenAPIReferencePlugin({
+            docsPath: '/docs',
+            specPath: '/spec',
+            schemaConverters: [new ZodToJsonSchemaConverter()],
+            specGenerateOptions: {
+                info: {
+                    title: 'Automaspec API',
+                    version: '1.0.0'
+                }
+            }
         })
     ],
     interceptors: [

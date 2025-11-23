@@ -121,7 +121,10 @@ export default function ProfilePage() {
                                     size="sm"
                                     variant="outline"
                                     onClick={async () => {
-                                        const { data, error } = await safeClient.account.export()
+                                        const { data, error } = await safeClient.account.export({
+                                            userId: session?.user.id ?? ''
+                                        })
+
                                         if (error) throw error
                                         const blob = new Blob([JSON.stringify(data, null, 2)], {
                                             type: 'application/json'
@@ -199,17 +202,18 @@ export default function ProfilePage() {
                                 onClick={async () => {
                                     if (deleting) return
                                     setDeleting(true)
-                                    try {
-                                        const { error } = await safeClient.account.delete()
-                                        if (error) throw error
-                                        await authClient.signOut()
-                                        setConfirmOpen(false)
-                                        router.push('/login')
-                                    } catch {
-                                        toast.error('Failed to delete account')
-                                    } finally {
+                                    const { error } = await safeClient.account.delete({
+                                        userId: session?.user.id ?? ''
+                                    })
+                                    if (error) {
+                                        toast.error(error.message || 'Failed to delete account')
                                         setDeleting(false)
+                                        return
                                     }
+                                    await authClient.signOut()
+                                    router.push('/login')
+                                    setDeleting(false)
+                                    setConfirmOpen(false)
                                 }}
                             >
                                 Confirm
