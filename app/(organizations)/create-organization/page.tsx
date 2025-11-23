@@ -48,6 +48,16 @@ export default function CreateOrganizationPage() {
                 toast.error('Failed to create organization')
                 return
             }
+
+            const { error: setActiveError } = await authClient.organization.setActive({
+                organizationId: createdOrg.id
+            })
+
+            if (setActiveError) {
+                toast.error(setActiveError.message || 'Failed to set active organization')
+                return
+            }
+
             toast.success('Organization created successfully!')
             router.push('/dashboard')
         }
