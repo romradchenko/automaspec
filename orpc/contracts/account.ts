@@ -21,7 +21,7 @@ const exportDataOutput = z.object({
 })
 
 const exportAccountContract = oc
-    .route({ method: 'GET', path: '/account/{userId}/export', tags: ['account'], description: 'Export account data' })
+    .route({ method: 'GET', path: '/account/{userId}', tags: ['account'], description: 'Export account data' })
     .input(memberSelectSchema.pick({ userId: true }))
     .output(exportDataOutput)
 
