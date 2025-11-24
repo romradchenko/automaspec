@@ -3,7 +3,14 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 
 const Card = ({ ref, className, ...props }: ComponentProps<'div'>) => (
-    <div ref={ref} className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)} {...props} />
+    <div
+        ref={ref}
+        className={cn(
+            'rounded-lg border bg-card text-card-foreground shadow-sm shadow-colored transition-smooth border-primary/10',
+            className
+        )}
+        {...props}
+    />
 )
 Card.displayName = 'Card'
 

@@ -12,7 +12,7 @@ import { onError } from '@orpc/server'
 import { CORSPlugin } from '@orpc/server/plugins'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
 
-const logger = pino(pretty({ colorize: true }))
+const logger = pino(pretty({ colorize: true, translateTime: 'HH:MM:ss.l' }))
 
 const handler = new OpenAPIHandler(router, {
     plugins: [
