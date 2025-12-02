@@ -148,6 +148,6 @@ describe('Test Details Panel', () => {
         // Should show empty state with the actual text from the component
         expect(screen.getByText('Select a spec to view details and requirements')).toBeDefined()
         expect(screen.getByText('New Folder')).toBeDefined()
-        expect(screen.getByText('New Test')).toBeDefined()
+        expect(screen.getByText('New Spec')).toBeDefined()
     })
 })

@@ -34,7 +34,7 @@ export function TestDetailsEmptyState({
                     </Button>
                     <Button onClick={onCreateTest} disabled={isCreatingTest} className="flex-1 sm:flex-initial">
                         <Plus className="mr-2 size-4" />
-                        New Test
+                        New Spec
                     </Button>
                 </div>
             </div>

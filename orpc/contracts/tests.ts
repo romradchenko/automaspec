@@ -159,6 +159,7 @@ const deleteTestContract = oc
 
 const syncReportContract = oc
     .route({ method: 'POST', path: '/tests/sync-report', tags: ['tests'], description: 'Sync the test report' })
+    .input(vitestReportSchema.optional())
     .output(z.object({ updated: z.number(), missing: z.number() }))
 
 const getReportContract = oc
