@@ -1,30 +1,20 @@
 'use client'
 
-import { Edit, FileText, Trash2, Check, Copy, Plus, Folder } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle
-} from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
-import { SPEC_STATUSES, STATUS_CONFIGS, TEST_STATUSES } from '@/lib/constants'
 import { safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
-import { TestSpec, Test, TestRequirement, type TestStatus } from '@/lib/types'
-import { cn } from '@/lib/utils'
+import { TestSpec, Test, TestRequirement } from '@/lib/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
+import { RequirementsTab } from './components/requirements-tab'
+import { TestDetailsEmptyState } from './components/test-details-empty-state'
+import { TestDetailsHeader } from './components/test-details-header'
+import { VitestCodeTab } from './components/vitest-code-tab'
 import { invalidateAndRefetchQueries } from './hooks'
 
 interface TestDetailsPanelProps {
@@ -35,6 +25,7 @@ interface TestDetailsPanelProps {
     onCreateGroup: () => void
     onCreateTest: () => void
     onDeleteSpec?: (specId: string) => void
+    onConfirmDeleteSpec: (specId: string) => void
 }
 
 export function TestDetailsPanel({
@@ -44,11 +35,9 @@ export function TestDetailsPanel({
     onEditSpec,
     onCreateGroup,
     onCreateTest,
-    onDeleteSpec
+    onDeleteSpec,
+    onConfirmDeleteSpec
 }: TestDetailsPanelProps) {
-    const [copied, setCopied] = useState(false)
-    const [editingRequirements, setEditingRequirements] = useState(false)
-    const [, setRequirementsContent] = useState('')
     const [deleteSpecDialogOpen, setDeleteSpecDialogOpen] = useState(false)
     const { data: activeOrganization } = authClient.useActiveOrganization()
     const queryClient = useQueryClient()
@@ -103,15 +92,6 @@ export function TestDetailsPanel({
         }
     })
 
-    const copyTestCode = async () => {
-        if (selectedSpec) {
-            const testCode = generateTestCode(selectedSpec, requirementsToShow, selectedTests)
-            await navigator.clipboard.writeText(testCode)
-            setCopied(true)
-            setTimeout(() => setCopied(false), 2000)
-        }
-    }
-
     const generateTestCode = (spec: TestSpec, reqs: TestRequirement[], tests: Test[]): string => {
         const requirements = reqs
             .map((req) => {
@@ -135,83 +115,28 @@ ${requirements}
 })`
     }
 
-    const requirementsToShow: TestRequirement[] = selectedRequirements
-
-    const saveRequirements = () => {
-        // In real app, would save to database
-        if (selectedSpec) {
-            // This would update the requirements in the database
-            // For now, we'll just close the editing mode
-            // console.log('Saving requirements:', requirementsContent)
-        }
-        setEditingRequirements(false)
+    const handleSaveRequirements = (_requirements: TestRequirement[]) => {
+        return undefined
     }
 
     if (!selectedSpec) {
         return (
-            <div className="flex flex-1 items-center justify-center text-muted-foreground p-4">
-                <div className="w-full max-w-md text-center">
-                    <FileText className="mx-auto mb-4 size-12 opacity-50" />
-                    <p className="text-sm sm:text-base">Select a spec to view details and requirements</p>
-                    <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-around">
-                        <Button
-                            variant="outline"
-                            onClick={() => createFolderMutation.mutate()}
-                            disabled={createFolderMutation.isPending}
-                            className="flex-1 sm:flex-initial"
-                        >
-                            <Folder className="mr-2 size-4" />
-                            New Folder
-                        </Button>
-                        <Button
-                            onClick={() => createTestSpecMutation.mutate()}
-                            disabled={createTestSpecMutation.isPending}
-                            className="flex-1 sm:flex-initial"
-                        >
-                            <Plus className="mr-2 size-4" />
-                            New Test
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            <TestDetailsEmptyState
+                onCreateFolder={() => createFolderMutation.mutate()}
+                onCreateTest={() => createTestSpecMutation.mutate()}
+                isCreatingFolder={createFolderMutation.isPending}
+                isCreatingTest={createTestSpecMutation.isPending}
+            />
         )
     }
 
     return (
         <>
-            <div className="border-b p-3 sm:p-4">
-                <div className="mb-2 flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex flex-wrap items-center gap-2">
-                            <h2 className="font-semibold text-lg sm:text-xl wrap-break-words">{selectedSpec.name}</h2>
-                            <div className="flex items-center gap-1">
-                                <Button onClick={() => onEditSpec(selectedSpec)} size="sm" variant="ghost">
-                                    <Edit className="size-4" />
-                                </Button>
-                                {onDeleteSpec && (
-                                    <Button
-                                        onClick={() => setDeleteSpecDialogOpen(true)}
-                                        size="sm"
-                                        variant="ghost"
-                                        className="text-destructive hover:text-destructive"
-                                    >
-                                        <Trash2 className="size-4" />
-                                    </Button>
-                                )}
-                            </div>
-                        </div>
-                        <p className="mb-2 text-muted-foreground text-xs sm:text-sm wrap-break-words">
-                            {selectedSpec.description}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline">{selectedSpec.statuses[SPEC_STATUSES.deactivated]}</Badge>
-                            <Badge variant="outline" className="break-all">
-                                {selectedSpec.fileName || 'No file'}
-                            </Badge>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <TestDetailsHeader
+                spec={selectedSpec}
+                onEdit={onEditSpec}
+                onDelete={onDeleteSpec ? () => setDeleteSpecDialogOpen(true) : undefined}
+            />
 
             <div className="flex-1 overflow-auto p-3 sm:p-4">
                 <Tabs className="h-full" defaultValue="requirements">
@@ -225,229 +150,37 @@ ${requirements}
                     </TabsList>
 
                     <TabsContent className="mt-4 space-y-4" value="requirements">
-                        <div>
-                            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                <h3 className="font-medium text-sm sm:text-base">Test Requirements</h3>
-                                <Button
-                                    onClick={() => setEditingRequirements(!editingRequirements)}
-                                    size="sm"
-                                    variant="outline"
-                                    className="w-full sm:w-auto"
-                                >
-                                    <Edit className="mr-1 size-4" />
-                                    {editingRequirements ? 'Cancel' : 'Edit'}
-                                </Button>
-                            </div>
-
-                            {requirementsToShow.length > 0 && (
-                                <div className="mb-4 rounded-lg bg-muted/30 p-3">
-                                    <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-                                        {Object.values(TEST_STATUSES).map((status) => {
-                                            const count = selectedTests.filter(
-                                                (test: Test) => test.status === status
-                                            ).length
-
-                                            if (count === 0) return null
-
-                                            const statusConfig = STATUS_CONFIGS[status]
-                                            const IconComponent = statusConfig.icon
-
-                                            return (
-                                                <div key={status} className="flex items-center gap-1">
-                                                    <IconComponent className={`size-4 ${statusConfig.color}`} />
-                                                    <span className="font-medium">
-                                                        {count} {statusConfig.label}
-                                                    </span>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-
-                            {editingRequirements ? (
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        {requirementsToShow.map((req: TestRequirement, index: number) => (
-                                            <div
-                                                key={req.id || index}
-                                                className="flex items-center gap-2 rounded-lg border p-2 sm:p-3"
-                                            >
-                                                <input
-                                                    className="min-w-0 flex-1 bg-transparent text-xs sm:text-sm outline-none"
-                                                    onChange={(e) => {
-                                                        const updatedReqs = [...requirementsToShow]
-                                                        updatedReqs[index] = {
-                                                            ...req,
-                                                            name: e.target.value
-                                                        } as TestRequirement
-                                                        setRequirementsContent(
-                                                            updatedReqs.map((r: TestRequirement) => r.name).join('\n')
-                                                        )
-                                                    }}
-                                                    placeholder="Enter requirement..."
-                                                    value={req.name || ''}
-                                                />
-                                                <Button
-                                                    onClick={() => {
-                                                        const updatedReqs = requirementsToShow.filter(
-                                                            (_: unknown, i: number) => i !== index
-                                                        )
-                                                        setRequirementsContent(
-                                                            updatedReqs.map((r: TestRequirement) => r.name).join('\n')
-                                                        )
-                                                    }}
-                                                    size="sm"
-                                                    variant="ghost"
-                                                    className="shrink-0"
-                                                >
-                                                    <Trash2 className="size-4" />
-                                                </Button>
-                                            </div>
-                                        ))}
-                                        <Button
-                                            onClick={() => {
-                                                const newReq: TestRequirement = {
-                                                    id: `req-${Date.now()}`,
-                                                    name: '',
-                                                    description: null,
-                                                    order: requirementsToShow.length,
-                                                    specId: selectedSpec.id,
-                                                    createdAt: new Date(),
-                                                    updatedAt: new Date()
-                                                }
-                                                const updatedReqs = [...requirementsToShow, newReq]
-                                                setRequirementsContent(
-                                                    updatedReqs.map((r: TestRequirement) => r.name).join('\n')
-                                                )
-                                            }}
-                                            size="sm"
-                                            variant="outline"
-                                            className="w-full sm:w-auto"
-                                        >
-                                            <Plus className="mr-2 size-4" />
-                                            Add Requirement
-                                        </Button>
-                                    </div>
-                                    <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                                        <Button
-                                            onClick={() => setEditingRequirements(false)}
-                                            variant="outline"
-                                            className="w-full sm:w-auto"
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button onClick={saveRequirements} className="w-full sm:w-auto">
-                                            Save Requirements
-                                        </Button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="space-y-2">
-                                    {requirementsToShow.map((req: TestRequirement, index: number) => {
-                                        const config =
-                                            STATUS_CONFIGS[
-                                                (selectedTests.find((t) => t.requirementId === req.id)?.status ||
-                                                    'pending') as TestStatus
-                                            ]
-                                        const IconComponent = config.icon
-                                        const badge = (
-                                            <Badge className={config.requirementClassName}>
-                                                <IconComponent className="mr-1 size-4" />
-                                                {config.label}
-                                            </Badge>
-                                        )
-                                        const color = config.requirementClassName
-                                        return (
-                                            <div
-                                                className={cn(
-                                                    'flex items-start gap-2 rounded-lg border p-2 sm:gap-3 sm:p-3',
-                                                    color
-                                                )}
-                                                key={req.id || index}
-                                            >
-                                                <div className="mt-0.5 shrink-0">{badge}</div>
-                                                <div className="min-w-0 flex-1">
-                                                    <span className="font-medium text-xs sm:text-sm wrap-break-words">
-                                                        {req.name}
-                                                    </span>
-                                                    {req.description && (
-                                                        <div className="mt-1 text-muted-foreground text-xs wrap-break-words">
-                                                            {req.description}
-                                                        </div>
-                                                    )}
-                                                    <div className="mt-1 text-muted-foreground text-xs">
-                                                        Status:{' '}
-                                                        <span className="capitalize">
-                                                            {selectedTests.find((t) => t.requirementId === req.id)
-                                                                ?.status || 'pending'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                    {requirementsToShow.length === 0 && (
-                                        <div className="text-muted-foreground text-sm">No requirements defined</div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
+                        <RequirementsTab
+                            requirements={selectedRequirements}
+                            tests={selectedTests}
+                            specId={selectedSpec.id}
+                            onSaveRequirements={handleSaveRequirements}
+                        />
                     </TabsContent>
 
                     <TabsContent className="mt-4" value="vitest">
-                        <div className="space-y-4">
-                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                <h3 className="font-medium text-sm sm:text-base">Generated Test Code</h3>
-                                <Button onClick={copyTestCode} size="sm" className="w-full sm:w-auto">
-                                    {copied ? (
-                                        <>
-                                            <Check className="mr-1 size-4" />
-                                            Copied!
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy className="mr-1 size-4" />
-                                            <span className="hidden sm:inline">Copy Test Code</span>
-                                            <span className="sm:hidden">Copy</span>
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                            <div className="max-h-[300px] overflow-auto rounded-lg bg-slate-950 p-3 font-mono text-slate-50 text-xs sm:max-h-[500px] sm:p-4 sm:text-sm">
-                                <pre className="whitespace-pre-wrap wrap-break-words">
-                                    {generateTestCode(selectedSpec, requirementsToShow, selectedTests)}
-                                </pre>
-                            </div>
-                        </div>
+                        <VitestCodeTab
+                            spec={selectedSpec}
+                            requirements={selectedRequirements}
+                            tests={selectedTests}
+                            generateTestCode={generateTestCode}
+                        />
                     </TabsContent>
                 </Tabs>
             </div>
 
-            <AlertDialog open={deleteSpecDialogOpen} onOpenChange={setDeleteSpecDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Test Spec</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Are you sure you want to delete this test spec? This action cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => {
-                                if (selectedSpec && onDeleteSpec) {
-                                    onDeleteSpec(selectedSpec.id)
-                                    setDeleteSpecDialogOpen(false)
-                                }
-                            }}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                            Delete
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteConfirmDialog
+                open={deleteSpecDialogOpen}
+                onOpenChange={setDeleteSpecDialogOpen}
+                title="Delete Test Spec"
+                description="Are you sure you want to delete this test spec? This action cannot be undone."
+                onConfirm={() => {
+                    if (selectedSpec) {
+                        onConfirmDeleteSpec(selectedSpec.id)
+                        setDeleteSpecDialogOpen(false)
+                    }
+                }}
+            />
         </>
     )
 }

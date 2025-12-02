@@ -5,65 +5,23 @@ import { toast } from 'sonner'
 
 import type { TestSpec, Test, TestRequirement } from '@/lib/types'
 
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle
-} from '@/components/ui/alert-dialog'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { safeClient } from '@/lib/orpc/orpc'
 import { orpc } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 
+import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
 import { DashboardHeader } from './header'
 import { invalidateAndRefetchQueries } from './hooks'
 import { TestDetailsPanel } from './test-details-panel'
 import { Tree } from './tree'
 
-type DeleteConfirmDialogProps = {
-    open: boolean
-    onOpenChange: (open: boolean) => void
-    title: string
-    description: string
-    onConfirm: () => void
-}
-
-function DeleteConfirmDialog({ open, onOpenChange, title, description, onConfirm }: DeleteConfirmDialogProps) {
-    return (
-        <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>{title}</AlertDialogTitle>
-                    <AlertDialogDescription>{description}</AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                        onClick={onConfirm}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                        Delete
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
-    )
-}
-
 export default function Dashboard() {
     const [selectedSpec, setSelectedSpec] = useState<TestSpec | null>(null)
     const [selectedRequirements, setSelectedRequirements] = useState<TestRequirement[]>([])
     const [selectedTests, setSelectedTests] = useState<Test[]>([])
-    const [deleteFolderDialogOpen, setDeleteFolderDialogOpen] = useState(false)
-    const [deleteSpecDialogOpen, setDeleteSpecDialogOpen] = useState(false)
-    const [folderToDelete, setFolderToDelete] = useState<string | null>(null)
-    const [specToDelete, setSpecToDelete] = useState<string | null>(null)
+    const [deleteDialog, setDeleteDialog] = useState<{ type: 'folder' | 'spec'; id: string } | null>(null)
 
     const { data: requirements = [] } = useQuery(
         orpc.testRequirements.list.queryOptions({
@@ -152,29 +110,22 @@ export default function Dashboard() {
     })
 
     const handleDeleteFolder = (folderId: string) => {
-        setFolderToDelete(folderId)
-        setDeleteFolderDialogOpen(true)
+        setDeleteDialog({ type: 'folder', id: folderId })
     }
 
     const handleDeleteSpec = (specId: string) => {
-        setSpecToDelete(specId)
-        setDeleteSpecDialogOpen(true)
+        setDeleteDialog({ type: 'spec', id: specId })
     }
 
-    const confirmDeleteFolder = () => {
-        if (folderToDelete) {
-            deleteFolderMutation.mutate(folderToDelete)
-            setDeleteFolderDialogOpen(false)
-            setFolderToDelete(null)
-        }
-    }
+    const handleConfirmDelete = () => {
+        if (!deleteDialog) return
 
-    const confirmDeleteSpec = () => {
-        if (specToDelete) {
-            deleteSpecMutation.mutate(specToDelete)
-            setDeleteSpecDialogOpen(false)
-            setSpecToDelete(null)
+        if (deleteDialog.type === 'folder') {
+            deleteFolderMutation.mutate(deleteDialog.id)
+        } else {
+            deleteSpecMutation.mutate(deleteDialog.id)
         }
+        setDeleteDialog(null)
     }
 
     return (
@@ -209,25 +160,30 @@ export default function Dashboard() {
                             // TODO: Implement create test
                         }}
                         onDeleteSpec={handleDeleteSpec}
+                        onConfirmDeleteSpec={(specId: string) => {
+                            deleteSpecMutation.mutate(specId)
+                        }}
                     />
                 </div>
             </div>
 
-            <DeleteConfirmDialog
-                open={deleteFolderDialogOpen}
-                onOpenChange={setDeleteFolderDialogOpen}
-                title="Delete Folder"
-                description="Are you sure you want to delete this folder? This will also delete all folders and tests inside it. This action cannot be undone."
-                onConfirm={confirmDeleteFolder}
-            />
-
-            <DeleteConfirmDialog
-                open={deleteSpecDialogOpen}
-                onOpenChange={setDeleteSpecDialogOpen}
-                title="Delete Test Spec"
-                description="Are you sure you want to delete this test spec? This action cannot be undone."
-                onConfirm={confirmDeleteSpec}
-            />
+            {deleteDialog && (
+                <DeleteConfirmDialog
+                    open={true}
+                    onOpenChange={(open) => {
+                        if (!open) {
+                            setDeleteDialog(null)
+                        }
+                    }}
+                    title={deleteDialog.type === 'folder' ? 'Delete Folder' : 'Delete Test Spec'}
+                    description={
+                        deleteDialog.type === 'folder'
+                            ? 'Are you sure you want to delete this folder? This will also delete all folders and tests inside it. This action cannot be undone.'
+                            : 'Are you sure you want to delete this test spec? This action cannot be undone.'
+                    }
+                    onConfirm={handleConfirmDelete}
+                />
+            )}
         </>
     )
 }

@@ -1,11 +1,41 @@
+import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 
 import type { TestSpec, TestRequirement } from '@/lib/types'
 
 import { TestDetailsPanel } from '@/app/dashboard/test-details-panel'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 
+vi.mock('@/lib/shared/better-auth-client', () => ({
+    authClient: {
+        useActiveOrganization: () => ({ data: { id: 'org-1' } })
+    }
+}))
+
+vi.mock('@/lib/orpc/orpc', () => ({
+    safeClient: {
+        testFolders: {
+            upsert: vi.fn()
+        },
+        testSpecs: {
+            upsert: vi.fn()
+        }
+    }
+}))
+
 describe('Test Details Panel', () => {
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: { retry: false },
+            mutations: { retry: false }
+        }
+    })
+
+    const renderWithProviders = (component: React.ReactElement) => {
+        return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>)
+    }
+
     it('should display test spec details', () => {
         const mockSpec: TestSpec = {
             id: 'spec-1',
@@ -30,7 +60,7 @@ describe('Test Details Panel', () => {
             updatedAt: new Date()
         }
 
-        render(
+        renderWithProviders(
             <TestDetailsPanel
                 selectedSpec={mockSpec}
                 selectedRequirements={[]}
@@ -38,6 +68,7 @@ describe('Test Details Panel', () => {
                 onEditSpec={vi.fn()}
                 onCreateGroup={vi.fn()}
                 onCreateTest={vi.fn()}
+                onConfirmDeleteSpec={vi.fn()}
             />
         )
 
@@ -81,7 +112,7 @@ describe('Test Details Panel', () => {
             }
         ]
 
-        render(
+        renderWithProviders(
             <TestDetailsPanel
                 selectedSpec={mockSpec}
                 selectedRequirements={mockRequirements}
@@ -89,6 +120,7 @@ describe('Test Details Panel', () => {
                 onEditSpec={vi.fn()}
                 onCreateGroup={vi.fn()}
                 onCreateTest={vi.fn()}
+                onConfirmDeleteSpec={vi.fn()}
             />
         )
 
@@ -101,7 +133,7 @@ describe('Test Details Panel', () => {
     })
 
     it('should handle no spec selected', () => {
-        render(
+        renderWithProviders(
             <TestDetailsPanel
                 selectedSpec={null}
                 selectedRequirements={[]}
@@ -109,12 +141,13 @@ describe('Test Details Panel', () => {
                 onEditSpec={vi.fn()}
                 onCreateGroup={vi.fn()}
                 onCreateTest={vi.fn()}
+                onConfirmDeleteSpec={vi.fn()}
             />
         )
 
         // Should show empty state with the actual text from the component
         expect(screen.getByText('Select a spec to view details and requirements')).toBeDefined()
-        expect(screen.getByText('Create Folder')).toBeDefined()
-        expect(screen.getByText('Create Test')).toBeDefined()
+        expect(screen.getByText('New Folder')).toBeDefined()
+        expect(screen.getByText('New Test')).toBeDefined()
     })
 })
