@@ -3,22 +3,23 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import type { TestSpec, Test, TestRequirement } from '@/lib/types'
+import type { TestSpec, Test, TestRequirement, TestFolder } from '@/lib/types'
 
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
-import { safeClient } from '@/lib/orpc/orpc'
-import { orpc } from '@/lib/orpc/orpc'
+import { orpc, safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 
 import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
-import { DashboardHeader } from './header'
+import { FolderDetailsPanel } from './components/folder-details-panel'
+import { DashboardHeader } from './components/header'
+import { TestDetailsPanel } from './components/test-details-panel'
 import { invalidateAndRefetchQueries } from './hooks'
-import { TestDetailsPanel } from './test-details-panel'
 import { Tree } from './tree'
 
 export default function Dashboard() {
     const [selectedSpec, setSelectedSpec] = useState<TestSpec | null>(null)
+    const [selectedFolder, setSelectedFolder] = useState<TestFolder | null>(null)
     const [selectedRequirements, setSelectedRequirements] = useState<TestRequirement[]>([])
     const [selectedTests, setSelectedTests] = useState<Test[]>([])
     const [deleteDialog, setDeleteDialog] = useState<{ type: 'folder' | 'spec'; id: string } | null>(null)
@@ -66,12 +67,23 @@ export default function Dashboard() {
         const specTests = tests.filter((test) => test.requirementId === spec.id)
 
         setSelectedSpec(spec)
+        setSelectedFolder(null)
         setSelectedRequirements(specRequirements)
         setSelectedTests(specTests)
     }
 
-    const handleCreateTest = (folderId: string) => {
-        createTestSpecMutation.mutate(folderId)
+    const handleFolderSelect = async (folderId: string) => {
+        const { data: folder, error } = await safeClient.testFolders.get({ id: folderId })
+        if (error) {
+            toast.error(error.message || 'Failed to load folder')
+            return
+        }
+        if (folder) {
+            setSelectedFolder(folder)
+            setSelectedSpec(null)
+            setSelectedRequirements([])
+            setSelectedTests([])
+        }
     }
 
     const deleteFolderMutation = useMutation({
@@ -81,6 +93,9 @@ export default function Dashboard() {
             return data
         },
         onSuccess: async () => {
+            if (selectedFolder?.id) {
+                setSelectedFolder(null)
+            }
             await invalidateAndRefetchQueries(queryClient, '/test-folders')
             toast.success('Folder deleted successfully')
         },
@@ -110,10 +125,18 @@ export default function Dashboard() {
     })
 
     const handleDeleteFolder = (folderId: string) => {
-        setDeleteDialog({ type: 'folder', id: folderId })
+        deleteFolderMutation.mutate(folderId)
     }
 
     const handleDeleteSpec = (specId: string) => {
+        deleteSpecMutation.mutate(specId)
+    }
+
+    const handleDeleteFolderFromTree = (folderId: string) => {
+        setDeleteDialog({ type: 'folder', id: folderId })
+    }
+
+    const handleDeleteSpecFromTree = (specId: string) => {
         setDeleteDialog({ type: 'spec', id: specId })
     }
 
@@ -137,33 +160,27 @@ export default function Dashboard() {
                     <div className="flex-1 overflow-auto p-3 sm:p-2">
                         <Tree
                             selectedSpecId={selectedSpec?.id || null}
+                            selectedFolderId={selectedFolder?.id || null}
                             onSelectSpec={handleSpecSelect}
-                            onCreateTest={handleCreateTest}
-                            onDeleteFolder={handleDeleteFolder}
-                            onDeleteSpec={handleDeleteSpec}
+                            onSelectFolder={handleFolderSelect}
+                            onCreateTest={createTestSpecMutation.mutate}
+                            onDeleteFolder={handleDeleteFolderFromTree}
+                            onDeleteSpec={handleDeleteSpecFromTree}
                         />
                     </div>
                 </div>
 
                 <div className="flex flex-col lg:w-1/2">
-                    <TestDetailsPanel
-                        selectedSpec={selectedSpec}
-                        selectedRequirements={selectedRequirements}
-                        selectedTests={selectedTests}
-                        onEditSpec={() => {
-                            // TODO: Implement edit spec
-                        }}
-                        onCreateGroup={() => {
-                            // TODO: Implement create group
-                        }}
-                        onCreateTest={() => {
-                            // TODO: Implement create test
-                        }}
-                        onDeleteSpec={handleDeleteSpec}
-                        onConfirmDeleteSpec={(specId: string) => {
-                            deleteSpecMutation.mutate(specId)
-                        }}
-                    />
+                    {selectedFolder ? (
+                        <FolderDetailsPanel selectedFolder={selectedFolder} onDeleteFolder={handleDeleteFolder} />
+                    ) : (
+                        <TestDetailsPanel
+                            selectedSpec={selectedSpec}
+                            selectedRequirements={selectedRequirements}
+                            selectedTests={selectedTests}
+                            onDeleteSpec={handleDeleteSpec}
+                        />
+                    )}
                 </div>
             </div>
 

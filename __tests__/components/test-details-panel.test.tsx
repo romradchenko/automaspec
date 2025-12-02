@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 
 import type { TestSpec, TestRequirement } from '@/lib/types'
 
-import { TestDetailsPanel } from '@/app/dashboard/test-details-panel'
+import { TestDetailsPanel } from '@/app/dashboard/components/test-details-panel'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 
@@ -65,10 +65,7 @@ describe('Test Details Panel', () => {
                 selectedSpec={mockSpec}
                 selectedRequirements={[]}
                 selectedTests={[]}
-                onEditSpec={vi.fn()}
-                onCreateGroup={vi.fn()}
-                onCreateTest={vi.fn()}
-                onConfirmDeleteSpec={vi.fn()}
+                onDeleteSpec={vi.fn()}
             />
         )
 
@@ -117,10 +114,7 @@ describe('Test Details Panel', () => {
                 selectedSpec={mockSpec}
                 selectedRequirements={mockRequirements}
                 selectedTests={[]}
-                onEditSpec={vi.fn()}
-                onCreateGroup={vi.fn()}
-                onCreateTest={vi.fn()}
-                onConfirmDeleteSpec={vi.fn()}
+                onDeleteSpec={vi.fn()}
             />
         )
 
@@ -134,15 +128,7 @@ describe('Test Details Panel', () => {
 
     it('should handle no spec selected', () => {
         renderWithProviders(
-            <TestDetailsPanel
-                selectedSpec={null}
-                selectedRequirements={[]}
-                selectedTests={[]}
-                onEditSpec={vi.fn()}
-                onCreateGroup={vi.fn()}
-                onCreateTest={vi.fn()}
-                onConfirmDeleteSpec={vi.fn()}
-            />
+            <TestDetailsPanel selectedSpec={null} selectedRequirements={[]} selectedTests={[]} onDeleteSpec={vi.fn()} />
         )
 
         // Should show empty state with the actual text from the component

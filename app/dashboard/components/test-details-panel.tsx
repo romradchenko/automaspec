@@ -10,33 +10,25 @@ import { authClient } from '@/lib/shared/better-auth-client'
 import { TestSpec, Test, TestRequirement } from '@/lib/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
-import { RequirementsTab } from './components/requirements-tab'
-import { TestDetailsEmptyState } from './components/test-details-empty-state'
-import { TestDetailsHeader } from './components/test-details-header'
-import { VitestCodeTab } from './components/vitest-code-tab'
-import { invalidateAndRefetchQueries } from './hooks'
+import { invalidateAndRefetchQueries } from '../hooks'
+import { DeleteConfirmDialog } from './delete-confirm-dialog'
+import { RequirementsTab } from './requirements-tab'
+import { TestDetailsEmptyState } from './test-details-empty-state'
+import { TestDetailsHeader } from './test-details-header'
+import { VitestCodeTab } from './vitest-code-tab'
 
 interface TestDetailsPanelProps {
     selectedSpec: TestSpec | null
     selectedRequirements: TestRequirement[]
     selectedTests: Test[]
-    onEditSpec: (spec: TestSpec) => void
-    onCreateGroup: () => void
-    onCreateTest: () => void
-    onDeleteSpec?: (specId: string) => void
-    onConfirmDeleteSpec: (specId: string) => void
+    onDeleteSpec: (specId: string) => void
 }
 
 export function TestDetailsPanel({
     selectedSpec,
     selectedRequirements,
     selectedTests,
-    onEditSpec,
-    onCreateGroup,
-    onCreateTest,
-    onDeleteSpec,
-    onConfirmDeleteSpec
+    onDeleteSpec
 }: TestDetailsPanelProps) {
     const [deleteSpecDialogOpen, setDeleteSpecDialogOpen] = useState(false)
     const { data: activeOrganization } = authClient.useActiveOrganization()
@@ -59,7 +51,6 @@ export function TestDetailsPanel({
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-folders')
             toast.success('Folder created successfully')
-            onCreateGroup?.()
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to create folder')
@@ -85,7 +76,6 @@ export function TestDetailsPanel({
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
             toast.success('Test created successfully')
-            onCreateTest?.()
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to create test')
@@ -132,11 +122,7 @@ ${requirements}
 
     return (
         <>
-            <TestDetailsHeader
-                spec={selectedSpec}
-                onEdit={onEditSpec}
-                onDelete={onDeleteSpec ? () => setDeleteSpecDialogOpen(true) : undefined}
-            />
+            <TestDetailsHeader spec={selectedSpec} onDelete={() => setDeleteSpecDialogOpen(true)} />
 
             <div className="flex-1 overflow-auto p-3 sm:p-4">
                 <Tabs className="h-full" defaultValue="requirements">
@@ -175,8 +161,8 @@ ${requirements}
                 title="Delete Test Spec"
                 description="Are you sure you want to delete this test spec? This action cannot be undone."
                 onConfirm={() => {
-                    if (selectedSpec) {
-                        onConfirmDeleteSpec(selectedSpec.id)
+                    if (selectedSpec && onDeleteSpec) {
+                        onDeleteSpec(selectedSpec.id)
                         setDeleteSpecDialogOpen(false)
                     }
                 }}
