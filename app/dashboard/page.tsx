@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import type { TestSpec, Test, TestRequirement, TestFolder } from '@/lib/types'
@@ -23,6 +24,23 @@ export default function Dashboard() {
     const [selectedRequirements, setSelectedRequirements] = useState<TestRequirement[]>([])
     const [selectedTests, setSelectedTests] = useState<Test[]>([])
     const [deleteDialog, setDeleteDialog] = useState<{ type: 'folder' | 'spec'; id: string } | null>(null)
+    const router = useRouter()
+
+    const { data: activeOrganization, isPending: isPendingActiveOrg } = authClient.useActiveOrganization()
+    const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
+    const queryClient = useQueryClient()
+
+    useEffect(() => {
+        if (isPendingActiveOrg || isPendingOrganizations) return
+
+        if (!activeOrganization) {
+            if (organizations && organizations.length > 0) {
+                router.push('/choose-organization')
+            } else {
+                router.push('/create-organization')
+            }
+        }
+    }, [activeOrganization, organizations, isPendingActiveOrg, isPendingOrganizations, router])
 
     const { data: requirements = [] } = useQuery(
         orpc.testRequirements.list.queryOptions({
@@ -34,9 +52,6 @@ export default function Dashboard() {
             input: {}
         })
     )
-    const { data: activeOrganization } = authClient.useActiveOrganization()
-    const queryClient = useQueryClient()
-
     const createTestSpecMutation = useMutation({
         mutationFn: async (folderId: string) => {
             if (!activeOrganization?.id) {
@@ -149,6 +164,10 @@ export default function Dashboard() {
             deleteSpecMutation.mutate(deleteDialog.id)
         }
         setDeleteDialog(null)
+    }
+
+    if (isPendingActiveOrg || isPendingOrganizations || !activeOrganization) {
+        return null
     }
 
     return (
