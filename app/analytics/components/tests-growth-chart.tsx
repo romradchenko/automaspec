@@ -34,9 +34,23 @@ export function TestsGrowthChart({ testsGrowth }: TestsGrowthChartProps) {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
                                 dataKey="date"
-                                tickFormatter={(value) => {
-                                    const date = new Date(value)
-                                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                tickFormatter={(value: string) => {
+                                    const [, month, day] = value.split('-')
+                                    const monthNames = [
+                                        'Jan',
+                                        'Feb',
+                                        'Mar',
+                                        'Apr',
+                                        'May',
+                                        'Jun',
+                                        'Jul',
+                                        'Aug',
+                                        'Sep',
+                                        'Oct',
+                                        'Nov',
+                                        'Dec'
+                                    ]
+                                    return `${monthNames[Number.parseInt(month, 10) - 1]} ${Number.parseInt(day, 10)}`
                                 }}
                             />
                             <YAxis allowDecimals={false} />

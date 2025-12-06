@@ -1,4 +1,4 @@
-import { FileText, ClipboardList, FolderOpen, Users } from 'lucide-react'
+import { FileText, ClipboardList, FolderOpen, Users, type LucideIcon } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -9,8 +9,15 @@ interface MetricsCardsProps {
     activeMembers: number
 }
 
+interface MetricCard {
+    title: string
+    value: number
+    icon: LucideIcon
+    description: string
+}
+
 export function MetricsCards({ totalTests, totalRequirements, totalSpecs, activeMembers }: MetricsCardsProps) {
-    const cards = [
+    const cards: MetricCard[] = [
         {
             title: 'Total Tests',
             value: totalTests,
@@ -39,18 +46,21 @@ export function MetricsCards({ totalTests, totalRequirements, totalSpecs, active
 
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {cards.map((card) => (
-                <Card key={card.title}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
-                        <card.icon className="size-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{card.value}</div>
-                        <p className="text-xs text-muted-foreground">{card.description}</p>
-                    </CardContent>
-                </Card>
-            ))}
+            {cards.map((card) => {
+                const Icon = card.icon
+                return (
+                    <Card key={card.title}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+                            <Icon className="size-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{card.value}</div>
+                            <p className="text-xs text-muted-foreground">{card.description}</p>
+                        </CardContent>
+                    </Card>
+                )
+            })}
         </div>
     )
 }
