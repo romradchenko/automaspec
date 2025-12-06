@@ -32,7 +32,7 @@ const SignUpSchema = z.object({
 })
 
 type FormWithField = {
-    Field: (props: { name: string; children: (field: AnyFieldApi) => ReactNode }) => ReactNode
+    Field: (props: { name: string; children: (field: AnyFieldApi) => ReactNode }) => ReactNode | Promise<ReactNode>
 }
 
 const SocialAuthButtons = () => (

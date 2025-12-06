@@ -1,10 +1,11 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+    output: 'standalone',
     experimental: {
         browserDebugInfoInTerminal: true,
         typedEnv: true,
-        useLightningcss: true,
+        // useLightningcss: true,
         turbopackFileSystemCacheForDev: true
     },
     logging: {

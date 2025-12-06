@@ -21,12 +21,12 @@ pre-push:
     parallel: true
     jobs:
         - name: typecheck
+          glob: '*.{ts,tsx,mts}'
           run: pnpm typecheck
           fail_text: '❌ TypeScript type checking failed'
-
-# TODO: Enable this
-#         - name: test
-#           run: pnpm test
-#           fail_text: '❌ Test failed'
+        - name: tests
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm test run
+          fail_text: '❌ Tests failed'
 
 colors: true

@@ -23,7 +23,9 @@ import { invalidateAndRefetchQueries } from './hooks'
 
 interface TreeProps {
     selectedSpecId: TestSpec['id'] | null
+    selectedFolderId: string | null
     onSelectSpec: (spec: TestSpec) => void
+    onSelectFolder?: (folderId: string) => void
     onCreateTest?: (folderId: string) => void
     onDeleteFolder?: (folderId: string) => void
     onDeleteSpec?: (specId: string) => void
@@ -58,6 +60,12 @@ async function getSpecById(specId: string): Promise<TestSpec | null> {
     return spec
 }
 
+async function getFolderById(folderId: string) {
+    const { data: folder, error } = await safeClient.testFolders.get({ id: folderId })
+    if (error) throw error
+    return folder
+}
+
 async function getFolderItemData(itemId: string): Promise<{ name: string; type: 'folder' | 'spec'; id: string }> {
     const { data: folder, error } = await safeClient.testFolders.get({ id: itemId })
     if (error) throw error
@@ -74,7 +82,15 @@ async function getFolderItemData(itemId: string): Promise<{ name: string; type: 
     throw new Error(`Item with id ${itemId} not found`)
 }
 
-export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolder, onDeleteSpec }: TreeProps) {
+export function Tree({
+    selectedSpecId,
+    selectedFolderId,
+    onSelectSpec,
+    onSelectFolder,
+    onCreateTest,
+    onDeleteFolder,
+    onDeleteSpec
+}: TreeProps) {
     const queryClient = useQueryClient()
     const [loadingItemData, setLoadingItemData] = useState<string[]>([])
     const [loadingItemChildrens, setLoadingItemChildrens] = useState<string[]>([])
@@ -291,7 +307,12 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                 const level = item.getItemMeta().level
                 const isFolder = item.isFolder()
                 const isExpanded = item.isExpanded()
-                const isSelected = payload.type === 'spec' ? selectedSpecId === payload.id : item.isSelected()
+                const isSelected =
+                    payload.type === 'spec'
+                        ? selectedSpecId === payload.id
+                        : payload.type === 'folder'
+                          ? selectedFolderId === payload.id
+                          : item.isSelected()
 
                 const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
                     item.getProps().onClick?.(e)
@@ -300,6 +321,8 @@ export function Tree({ selectedSpecId, onSelectSpec, onCreateTest, onDeleteFolde
                         if (spec) {
                             onSelectSpec(spec)
                         }
+                    } else if (payload.type === 'folder' && onSelectFolder) {
+                        onSelectFolder(payload.id)
                     }
                     setSelectedItems([item.getId()])
                 }
