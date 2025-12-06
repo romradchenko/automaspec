@@ -1,6 +1,6 @@
-import { sql, eq, and, lt, count } from 'drizzle-orm'
+import { sql, eq, and, count } from 'drizzle-orm'
 
-import type { AnalyticsPeriod, TestsGrowthItem, StaleTest, SpecStatus } from '@/lib/types'
+import type { AnalyticsPeriod, TestsGrowthItem, StaleTest } from '@/lib/types'
 
 import { db } from '@/db'
 import { testSpec, testRequirement, test, member } from '@/db/schema'
