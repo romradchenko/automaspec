@@ -5,7 +5,7 @@ import { createRouterClient } from '@orpc/server'
 
 let mockSpecs: Array<Record<string, unknown>> = []
 let mockTests: Array<Record<string, unknown>> = []
-let mockMembers: Array<Record<string, unknown>> = []
+let _mockMembers: Array<Record<string, unknown>> = []
 
 vi.mock('@/db', () => {
     let callIndex = 0
@@ -90,7 +90,7 @@ describe('analytics.getMetrics', () => {
             { id: 't2', status: 'passed', createdAt: new Date().toISOString() },
             { id: 't3', status: 'failed', createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() }
         ]
-        mockMembers = [{ id: 'member-1', userId: 'user-1' }]
+        _mockMembers = [{ id: 'member-1', userId: 'user-1' }]
         const m = (await import('@/db')) as unknown as { reset: () => void }
         m.reset()
     })
