@@ -60,12 +60,6 @@ async function getSpecById(specId: string): Promise<TestSpec | null> {
     return spec
 }
 
-async function getFolderById(folderId: string) {
-    const { data: folder, error } = await safeClient.testFolders.get({ id: folderId })
-    if (error) throw error
-    return folder
-}
-
 async function getFolderItemData(itemId: string): Promise<{ name: string; type: 'folder' | 'spec'; id: string }> {
     const { data: folder, error } = await safeClient.testFolders.get({ id: itemId })
     if (error) throw error
