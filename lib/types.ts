@@ -5,7 +5,14 @@ import * as schema from '@/db/schema'
 
 import type { authClient } from './shared/better-auth-client'
 
-import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS, type MEMBER_ROLES } from './constants'
+import {
+    TEST_STATUSES,
+    SPEC_STATUSES,
+    TEST_FRAMEWORK,
+    ORGANIZATION_PLANS,
+    ANALYTICS_PERIODS,
+    type MEMBER_ROLES
+} from './constants'
 
 // FIXME: will work after https://github.com/drizzle-team/drizzle-orm/pull/4820, removing all manual zod coercions
 // const { createInsertSchema, createSelectSchema } = createSchemaFactory({
@@ -119,3 +126,35 @@ export const vitestReportSchema = z.object({
 export type VitestAssertion = z.infer<typeof vitestAssertionSchema>
 export type VitestTestResult = z.infer<typeof vitestTestResultSchema>
 export type VitestReport = z.infer<typeof vitestReportSchema>
+
+export type AnalyticsPeriod = keyof typeof ANALYTICS_PERIODS
+
+export const analyticsMetricsInputSchema = z.object({
+    period: z.enum(['7d', '30d', '90d'])
+})
+
+export const testsGrowthItemSchema = z.object({
+    date: z.string(),
+    count: z.number()
+})
+
+export const staleTestSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    updatedAt: z.string()
+})
+
+export const analyticsMetricsOutputSchema = z.object({
+    totalTests: z.number(),
+    totalRequirements: z.number(),
+    totalSpecs: z.number(),
+    activeMembers: z.number(),
+    testsByStatus: z.record(z.string(), z.number()),
+    testsGrowth: z.array(testsGrowthItemSchema),
+    staleTests: z.array(staleTestSchema)
+})
+
+export type AnalyticsMetricsInput = z.infer<typeof analyticsMetricsInputSchema>
+export type AnalyticsMetricsOutput = z.infer<typeof analyticsMetricsOutputSchema>
+export type TestsGrowthItem = z.infer<typeof testsGrowthItemSchema>
+export type StaleTest = z.infer<typeof staleTestSchema>
