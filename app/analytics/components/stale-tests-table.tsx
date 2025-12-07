@@ -1,16 +1,19 @@
 import { formatDistanceToNow } from 'date-fns'
 import { AlertTriangle } from 'lucide-react'
 
-import type { StaleTest } from '@/lib/types'
+import type { AnalyticsPeriod, StaleTest } from '@/lib/types'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { ANALYTICS_PERIODS } from '@/lib/constants'
 
 interface StaleTestsTableProps {
     staleTests: StaleTest[]
+    period: AnalyticsPeriod
 }
 
-export function StaleTestsTable({ staleTests }: StaleTestsTableProps) {
+export function StaleTestsTable({ staleTests, period }: StaleTestsTableProps) {
+    const days = ANALYTICS_PERIODS[period]
     return (
         <Card>
             <CardHeader>
@@ -18,7 +21,7 @@ export function StaleTestsTable({ staleTests }: StaleTestsTableProps) {
                     <AlertTriangle className="size-5 text-amber-500" />
                     <CardTitle>Stale Tests</CardTitle>
                 </div>
-                <CardDescription>Specifications not updated in the last 30 days</CardDescription>
+                <CardDescription>Specifications not updated in the last {days} days</CardDescription>
             </CardHeader>
             <CardContent>
                 {staleTests.length > 0 ? (
@@ -44,7 +47,7 @@ export function StaleTestsTable({ staleTests }: StaleTestsTableProps) {
                     <div className="flex flex-col items-center justify-center py-8 text-center">
                         <div className="text-muted-foreground">No stale tests found</div>
                         <p className="text-sm text-muted-foreground/70">
-                            All specifications have been updated within the last 30 days
+                            All specifications have been updated within the last {days} days
                         </p>
                     </div>
                 )}

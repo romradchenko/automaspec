@@ -60,7 +60,8 @@ export function TestsGrowthChart({ testsGrowth }: TestsGrowthChartProps) {
                                 dataKey="count"
                                 stroke="var(--color-count)"
                                 strokeWidth={2}
-                                dot={false}
+                                dot={{ fill: 'var(--color-count)', strokeWidth: 2, r: 4 }}
+                                activeDot={{ r: 6 }}
                             />
                         </LineChart>
                     </ChartContainer>

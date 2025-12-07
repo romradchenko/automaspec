@@ -4,7 +4,7 @@ import type { AnalyticsPeriod, TestsGrowthItem, StaleTest } from '@/lib/types'
 
 import { db } from '@/db'
 import { testSpec, testRequirement, test, member } from '@/db/schema'
-import { ANALYTICS_PERIODS, STALE_THRESHOLD_DAYS, SPEC_STATUSES } from '@/lib/constants'
+import { ANALYTICS_PERIODS, SPEC_STATUSES } from '@/lib/constants'
 import { analyticsContract } from '@/orpc/contracts/analytics'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import { implement } from '@orpc/server'
@@ -15,7 +15,7 @@ const getMetrics = os.analytics.getMetrics.handler(async ({ input, context }) =>
     const period = input.period as AnalyticsPeriod
     const days = ANALYTICS_PERIODS[period]
     const periodStart = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-    const staleThreshold = new Date(Date.now() - STALE_THRESHOLD_DAYS * 24 * 60 * 60 * 1000)
+    const staleThreshold = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
 
     const specsResult = await db
         .select({ count: count() })
