@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
                                 <StatusDistributionChart testsByStatus={data.testsByStatus} />
                             </div>
 
-                            <StaleTestsTable staleTests={data.staleTests} />
+                            <StaleTestsTable staleTests={data.staleTests} period={period} />
                         </>
                     )}
                 </div>
