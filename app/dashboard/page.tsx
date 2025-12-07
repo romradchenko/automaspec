@@ -1,12 +1,15 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 
-import type { TestSpec, Test, TestRequirement, TestFolder } from '@/lib/types'
+import type { AiChatMessage, AiProvider, TestSpec, Test, TestRequirement, TestFolder } from '@/lib/types'
 
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
+import { AI_MODELS, AI_PROVIDER_LABELS, AI_PROVIDERS } from '@/lib/constants'
 import { orpc, safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
@@ -24,6 +27,13 @@ export default function Dashboard() {
     const [selectedRequirements, setSelectedRequirements] = useState<TestRequirement[]>([])
     const [selectedTests, setSelectedTests] = useState<Test[]>([])
     const [deleteDialog, setDeleteDialog] = useState<{ type: 'folder' | 'spec'; id: string } | null>(null)
+    const [aiOpen, setAiOpen] = useState(false)
+    const [aiMessages, setAiMessages] = useState<AiChatMessage[]>([])
+    const [aiInput, setAiInput] = useState('')
+    const [aiProvider, setAiProvider] = useState<AiProvider>(AI_PROVIDERS.google)
+    const [aiModel, setAiModel] = useState<string>(AI_MODELS[AI_PROVIDERS.google])
+    const [aiIsLoading, setAiIsLoading] = useState(false)
+    const [aiError, setAiError] = useState<string | null>(null)
     const router = useRouter()
 
     const { data: activeOrganization, isPending: isPendingActiveOrg } = authClient.useActiveOrganization()
@@ -41,6 +51,23 @@ export default function Dashboard() {
             }
         }
     }, [activeOrganization, organizations, isPendingActiveOrg, isPendingOrganizations, router])
+
+    useEffect(() => {
+        if (!aiOpen) {
+            return
+        }
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setAiOpen(false)
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [aiOpen])
 
     const { data: requirements = [] } = useQuery(
         orpc.testRequirements.list.queryOptions({
@@ -139,6 +166,19 @@ export default function Dashboard() {
         }
     })
 
+    const aiMessageItems = useMemo(() => {
+        const items: Array<{ role: AiChatMessage['role']; content: string; key: string }> = []
+        for (let index = 0; index < aiMessages.length; index += 1) {
+            const message = aiMessages[index]
+            items.push({
+                role: message.role,
+                content: message.content,
+                key: `${message.role}-${index}`
+            })
+        }
+        return items
+    }, [aiMessages])
+
     const handleDeleteFolder = (folderId: string) => {
         deleteFolderMutation.mutate(folderId)
     }
@@ -164,6 +204,53 @@ export default function Dashboard() {
             deleteSpecMutation.mutate(deleteDialog.id)
         }
         setDeleteDialog(null)
+    }
+
+    const handleProviderChange = (value: string) => {
+        if (value === AI_PROVIDERS.openrouter) {
+            setAiProvider(AI_PROVIDERS.openrouter)
+            setAiModel(AI_MODELS[AI_PROVIDERS.openrouter])
+            return
+        }
+
+        setAiProvider(AI_PROVIDERS.google)
+        setAiModel(AI_MODELS[AI_PROVIDERS.google])
+    }
+
+    const handleAiSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const trimmedInput = aiInput.trim()
+        if (trimmedInput === '') {
+            return
+        }
+
+        const nextMessages: AiChatMessage[] = [...aiMessages, { role: 'user', content: trimmedInput }]
+        setAiMessages(nextMessages)
+        setAiInput('')
+        setAiIsLoading(true)
+        setAiError(null)
+
+        const { data, error } = await safeClient.ai.chat({
+            messages: nextMessages,
+            provider: aiProvider,
+            model: aiModel
+        })
+
+        if (error) {
+            setAiError(error.message || 'Request failed')
+            setAiIsLoading(false)
+            return
+        }
+
+        if (!data?.text || data.text.trim() === '') {
+            setAiError('No response received')
+            setAiIsLoading(false)
+            return
+        }
+
+        const assistantMessage: AiChatMessage = { role: 'assistant', content: data.text }
+        setAiMessages([...nextMessages, assistantMessage])
+        setAiIsLoading(false)
     }
 
     if (isPendingActiveOrg || isPendingOrganizations || !activeOrganization) {
@@ -220,6 +307,64 @@ export default function Dashboard() {
                     onConfirm={handleConfirmDelete}
                 />
             )}
+            <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
+                {aiOpen ? (
+                    <div className="w-80 rounded-lg border bg-background shadow-lg">
+                        <div className="flex items-center justify-between border-b px-3 py-2">
+                            <div className="flex gap-2">
+                                <select
+                                    className="h-9 rounded-md border bg-background px-2 text-xs"
+                                    value={aiProvider}
+                                    onChange={(event) => handleProviderChange(event.target.value)}
+                                >
+                                    <option value={AI_PROVIDERS.google}>{AI_PROVIDER_LABELS.google}</option>
+                                    <option value={AI_PROVIDERS.openrouter}>{AI_PROVIDER_LABELS.openrouter}</option>
+                                </select>
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    onClick={() => {
+                                        setAiMessages([])
+                                        setAiError(null)
+                                    }}
+                                >
+                                    New Chat
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-3 px-3 py-3">
+                            {aiMessageItems.length > 0 ? (
+                                <div className="max-h-64 space-y-2 overflow-auto rounded-md border bg-muted p-2 text-sm">
+                                    {aiMessageItems.map((message) => (
+                                        <div key={message.key} className="rounded-md bg-background p-2">
+                                            <p className="text-[11px] font-semibold uppercase text-muted-foreground">
+                                                {message.role}
+                                            </p>
+                                            <p className="whitespace-pre-line">{message.content}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : null}
+                            {aiIsLoading ? <p className="text-xs text-muted-foreground">Thinking...</p> : null}
+                            <form className="space-y-2" onSubmit={handleAiSubmit}>
+                                <Textarea
+                                    value={aiInput}
+                                    onChange={(event) => setAiInput(event.target.value)}
+                                    rows={3}
+                                    placeholder="Ask about your tests or requirements"
+                                />
+                                {aiError ? <p className="text-xs text-red-600">{aiError}</p> : null}
+                                <Button type="submit" size="sm" disabled={aiIsLoading} className="w-full">
+                                    {aiIsLoading ? 'Thinking...' : 'Send'}
+                                </Button>
+                            </form>
+                        </div>
+                    </div>
+                ) : null}
+                <Button size="lg" className="rounded-full shadow-lg" onClick={() => setAiOpen(!aiOpen)}>
+                    {aiOpen ? 'Hide Chat' : 'Chat with AI'}
+                </Button>
+            </div>
         </>
     )
 }
