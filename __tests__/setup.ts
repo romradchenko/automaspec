@@ -2,11 +2,11 @@ import { cleanup } from '@testing-library/react'
 import { afterEach, vi } from 'vitest'
 import '@testing-library/jest-dom/vitest'
 
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn()
-}))
+global.ResizeObserver = vi.fn(function (this: ResizeObserver) {
+    this.observe = vi.fn()
+    this.unobserve = vi.fn()
+    this.disconnect = vi.fn()
+}) as unknown as typeof ResizeObserver
 
 afterEach(() => {
     cleanup()
