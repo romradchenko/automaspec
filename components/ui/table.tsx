@@ -50,7 +50,7 @@ const TableCell = ({
     className,
     ...props
 }: React.TdHTMLAttributes<HTMLTableCellElement> & {
-    ref: React.RefObject<HTMLTableCellElement>
+    ref?: React.RefObject<HTMLTableCellElement>
 }) => <td ref={ref} className={cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', className)} {...props} />
 TableCell.displayName = 'TableCell'
 
@@ -59,7 +59,7 @@ const TableCaption = ({
     className,
     ...props
 }: React.HTMLAttributes<HTMLTableCaptionElement> & {
-    ref: React.RefObject<HTMLTableCaptionElement>
+    ref?: React.RefObject<HTMLTableCaptionElement>
 }) => <caption ref={ref} className={cn('mt-4 text-sm text-muted-foreground', className)} {...props} />
 TableCaption.displayName = 'TableCaption'
 

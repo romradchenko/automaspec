@@ -105,7 +105,7 @@ describe('Analytics Page Components', () => {
 
     it('renders stale tests table with items', async () => {
         const { StaleTestsTable } = await import('@/app/analytics/components/stale-tests-table')
-        renderWithProviders(<StaleTestsTable staleTests={mockMetrics.staleTests} />)
+        renderWithProviders(<StaleTestsTable staleTests={mockMetrics.staleTests} period="30d" />)
 
         expect(screen.getByText('Stale Tests')).toBeDefined()
         expect(screen.getByText('Old Auth Tests')).toBeDefined()
@@ -113,7 +113,7 @@ describe('Analytics Page Components', () => {
 
     it('displays empty state when no stale tests', async () => {
         const { StaleTestsTable } = await import('@/app/analytics/components/stale-tests-table')
-        renderWithProviders(<StaleTestsTable staleTests={[]} />)
+        renderWithProviders(<StaleTestsTable staleTests={[]} period="30d" />)
 
         expect(screen.getByText('No stale tests found')).toBeDefined()
     })
