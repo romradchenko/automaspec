@@ -11,6 +11,10 @@ import { implement } from '@orpc/server'
 
 const os = implement(analyticsContract).use(authMiddleware).use(organizationMiddleware)
 
+const formatDateForSqlite = (date: Date): string => {
+    return date.toISOString().replace('T', ' ').slice(0, 19)
+}
+
 const getMetrics = os.analytics.getMetrics.handler(async ({ input, context }) => {
     const period = input.period as AnalyticsPeriod
     const days = ANALYTICS_PERIODS[period]
@@ -73,13 +77,13 @@ const getMetrics = os.analytics.getMetrics.handler(async ({ input, context }) =>
         .where(
             and(
                 eq(testSpec.organizationId, context.organizationId),
-                sql`${test.createdAt} >= ${periodStart.toISOString()}`
+                sql`${test.createdAt} >= ${formatDateForSqlite(periodStart)}`
             )
         )
 
     const growthMap: Record<string, number> = {}
     for (const t of testsWithDates) {
-        const date = t.createdAt.split('T')[0]
+        const date = t.createdAt.slice(0, 10)
         growthMap[date] = (growthMap[date] || 0) + 1
     }
 
