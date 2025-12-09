@@ -1,6 +1,6 @@
 'use client'
 import { ChevronDown, ChevronRight, FileText, Folder, Plus, Trash2 } from 'lucide-react'
-import { useState, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import type { TestSpec } from '@/lib/types'
@@ -27,8 +27,12 @@ interface TreeProps {
     onSelectSpec: (spec: TestSpec) => void
     onSelectFolder?: (folderId: string) => void
     onCreateTest?: (folderId: string) => void
-    onDeleteFolder?: (folderId: string) => void
-    onDeleteSpec?: (specId: string) => void
+    onDeleteFolder?: (folderId: string, parentFolderId: string | null) => void
+    onDeleteSpec?: (specId: string, parentFolderId: string | null) => void
+}
+
+export type TreeHandle = {
+    refreshItemChildren: (itemId: string) => Promise<void>
 }
 
 async function getFolderContent(
@@ -76,15 +80,10 @@ async function getFolderItemData(itemId: string): Promise<{ name: string; type: 
     throw new Error(`Item with id ${itemId} not found`)
 }
 
-export function Tree({
-    selectedSpecId,
-    selectedFolderId,
-    onSelectSpec,
-    onSelectFolder,
-    onCreateTest,
-    onDeleteFolder,
-    onDeleteSpec
-}: TreeProps) {
+export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
+    { selectedSpecId, selectedFolderId, onSelectSpec, onSelectFolder, onCreateTest, onDeleteFolder, onDeleteSpec },
+    ref
+) {
     const queryClient = useQueryClient()
     const [loadingItemData, setLoadingItemData] = useState<string[]>([])
     const [loadingItemChildrens, setLoadingItemChildrens] = useState<string[]>([])
@@ -294,11 +293,31 @@ export function Tree({
         ]
     })
 
+    const refreshItemChildren = async (itemId: string) => {
+        const { [itemId]: _cached, ...restCached } = preloadedChildrenCache.current
+        preloadedChildrenCache.current = restCached
+        const { [itemId]: _previous, ...restPrevious } = previousChildrenRef.current
+        previousChildrenRef.current = restPrevious
+        const instance = tree.getItemInstance(itemId) as unknown as {
+            invalidateChildrenIds?: (optimistic?: boolean) => Promise<void>
+        }
+        if (instance.invalidateChildrenIds) {
+            await instance.invalidateChildrenIds()
+        } else {
+            await tree.loadChildrenIds(itemId)
+        }
+    }
+
+    useImperativeHandle(ref, () => ({
+        refreshItemChildren
+    }))
+
     return (
         <div {...tree.getContainerProps()} className="flex flex-col">
             {tree.getItems().map((item) => {
                 const payload = item.getItemData()
                 const level = item.getItemMeta().level
+                const parentId = item.getItemMeta().parentId
                 const isFolder = item.isFolder()
                 const isExpanded = item.isExpanded()
                 const isSelected =
@@ -385,7 +404,7 @@ export function Tree({
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         if (payload.type === 'folder') {
-                                            onDeleteFolder(payload.id)
+                                            onDeleteFolder(payload.id, parentId === 'root' ? null : parentId)
                                         }
                                     }}
                                 >
@@ -400,7 +419,7 @@ export function Tree({
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         if (payload.type === 'spec') {
-                                            onDeleteSpec(payload.id)
+                                            onDeleteSpec(payload.id, parentId === 'root' ? null : parentId)
                                         }
                                     }}
                                 >
@@ -417,4 +436,4 @@ export function Tree({
             />
         </div>
     )
-}
+})
