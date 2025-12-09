@@ -110,6 +110,8 @@ export type AiChatRequest = {
 export type AiChatResponse = {
     text?: string
     error?: string
+    toolMessages?: string[]
+    refreshItemIds?: string[]
 }
 export const aiChatMessageSchema = z.object({
     role: z.enum(['user', 'assistant', 'system']),
@@ -122,7 +124,9 @@ export const aiChatRequestSchema = z.object({
 })
 export const aiChatResponseSchema = z.object({
     text: z.string().optional(),
-    error: z.string().optional()
+    error: z.string().optional(),
+    toolMessages: z.array(z.string()).optional(),
+    refreshItemIds: z.array(z.string()).optional()
 })
 
 // Update input types

@@ -14,7 +14,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { implement, ORPCError } from '@orpc/server'
 
 const ACTION_SYSTEM_PROMPT =
-    'You are an assistant helping users manage Automaspec tests and folders. Be concise and take actions when users ask.'
+    'You are an assistant helping users manage Automaspec tests and folders. Be concise, take actions when users ask, and never mention internal IDs — refer only to names.'
 
 function toCoreMessages(messages: AiChatMessage[]): ModelMessage[] {
     const coreMessages: ModelMessage[] = []
@@ -47,6 +47,7 @@ function resolveModel(provider: AiProvider, model: string | undefined): string {
 }
 
 type ToolMessageSetter = (message: string) => void
+type ToolRefreshSetter = (itemId: string) => void
 type ToolDeps = {
     createFolder: typeof createFolderRecord
     findFolderByName: typeof findFolderByNameRecord
@@ -138,6 +139,7 @@ export async function createSpecRecord(input: {
 export function createAiTools(
     context: { organizationId: string },
     setToolMessage: ToolMessageSetter,
+    setRefreshItem: ToolRefreshSetter,
     deps: ToolDeps = defaultToolDeps
 ) {
     return {
@@ -158,9 +160,13 @@ export function createAiTools(
                         parentFolderId: parentFolderId ?? null,
                         organizationId: context.organizationId
                     })
-                    setToolMessage(`Created folder "${name}" (${created.id}).`)
+                    setToolMessage(`Created folder "${name}".`)
+                    setRefreshItem(parentFolderId ?? 'root')
                     return { success: true, folderId: created.id }
                 } catch (error) {
+                    setToolMessage(
+                        `Failed to create folder "${name}"${error instanceof Error ? `: ${error.message}` : ''}.`
+                    )
                     return {
                         success: false,
                         error: error instanceof Error ? error.message : 'Failed to create folder'
@@ -179,9 +185,12 @@ export function createAiTools(
                     if (!found) {
                         return { success: false, error: 'Folder not found' }
                     }
-                    setToolMessage(`Found folder "${name}" (${found.id}).`)
+                    setToolMessage(`Found folder "${name}".`)
                     return { success: true, folderId: found.id }
                 } catch (error) {
+                    setToolMessage(
+                        `Failed to find folder "${name}"${error instanceof Error ? `: ${error.message}` : ''}.`
+                    )
                     return {
                         success: false,
                         error: error instanceof Error ? error.message : 'Failed to find folder'
@@ -208,9 +217,13 @@ export function createAiTools(
                         folderId: folderId ?? null,
                         organizationId: context.organizationId
                     })
-                    setToolMessage(`Created spec "${name}" (${created.id}).`)
+                    setToolMessage(`Created spec "${name}".`)
+                    setRefreshItem(folderId ?? 'root')
                     return { success: true, specId: created.id }
                 } catch (error) {
+                    setToolMessage(
+                        `Failed to create spec "${name}"${error instanceof Error ? `: ${error.message}` : ''}.`
+                    )
                     return {
                         success: false,
                         error: error instanceof Error ? error.message : 'Failed to create spec'
@@ -228,9 +241,18 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
     const model = resolveModel(provider, input.model)
     const messages = toCoreMessages(input.messages)
     let lastToolMessage: string | null = null
-    const tools = createAiTools(context, (message: string) => {
-        lastToolMessage = message
-    })
+    const toolMessages: string[] = []
+    const refreshItemIds: Set<string> = new Set()
+    const tools = createAiTools(
+        context,
+        (message: string) => {
+            lastToolMessage = message
+            toolMessages.push(message)
+        },
+        (itemId: string) => {
+            refreshItemIds.add(itemId)
+        }
+    )
 
     if (provider === AI_PROVIDERS.openrouter) {
         const apiKey = process.env[AI_ENV_KEYS.openrouter]
@@ -256,12 +278,16 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
             const text = await result.text
             if (!text || text.trim() === '') {
                 if (lastToolMessage) {
-                    return { text: lastToolMessage }
+                    return { text: lastToolMessage, toolMessages, refreshItemIds: Array.from(refreshItemIds) }
                 }
                 console.error('OpenRouter AI empty text', { model })
-                return { text: 'The OpenRouter model returned no content. Please try again or switch provider.' }
+                return {
+                    text: 'The OpenRouter model returned no content. Please try again or switch provider.',
+                    toolMessages,
+                    refreshItemIds: Array.from(refreshItemIds)
+                }
             }
-            return { text }
+            return { text, toolMessages, refreshItemIds: Array.from(refreshItemIds) }
         } catch (error) {
             const message =
                 error instanceof Error ? error.message : 'OpenRouter returned an error. Please retry in a moment.'
@@ -292,12 +318,16 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
         const text = await result.text
         if (!text || text.trim() === '') {
             if (lastToolMessage) {
-                return { text: lastToolMessage }
+                return { text: lastToolMessage, toolMessages, refreshItemIds: Array.from(refreshItemIds) }
             }
             console.error('Gemini AI empty text', { model })
-            return { text: 'The Gemini model returned no content. Please try again.' }
+            return {
+                text: 'The Gemini model returned no content. Please try again.',
+                toolMessages,
+                refreshItemIds: Array.from(refreshItemIds)
+            }
         }
-        return { text }
+        return { text, toolMessages, refreshItemIds: Array.from(refreshItemIds) }
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Gemini returned an error. Please retry.'
         console.error('Gemini AI error:', error)

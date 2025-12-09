@@ -4,16 +4,23 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 
-import type { AiChatMessage, AiProvider, TestSpec, Test, TestRequirement, TestFolder } from '@/lib/types'
+import type {
+    AiChatMessage,
+    AiProvider,
+    TestSpec,
+    Test,
+    TestRequirement,
+    TestFolder,
+    AiChatResponse
+} from '@/lib/types'
 
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
-import { AI_MODELS, AI_PROVIDER_LABELS, AI_PROVIDERS } from '@/lib/constants'
+import { AI_MODELS, AI_PROVIDERS } from '@/lib/constants'
 import { orpc, safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 
+import { AiChatWidget } from './components/ai-chat-widget'
 import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
 import { FolderDetailsPanel } from './components/folder-details-panel'
 import { DashboardHeader } from './components/header'
@@ -38,6 +45,7 @@ export default function Dashboard() {
     const [aiModel, setAiModel] = useState<string>(AI_MODELS[AI_PROVIDERS.google])
     const [aiIsLoading, setAiIsLoading] = useState(false)
     const [aiError, setAiError] = useState<string | null>(null)
+    const [aiProgress, setAiProgress] = useState<string[]>([])
     const router = useRouter()
 
     const { data: activeOrganization, isPending: isPendingActiveOrg } = authClient.useActiveOrganization()
@@ -228,6 +236,20 @@ export default function Dashboard() {
         setAiModel(AI_MODELS[AI_PROVIDERS.google])
     }
 
+    const handleAiInputChange = (value: string) => {
+        setAiInput(value)
+    }
+
+    const handleToggleAiOpen = () => {
+        setAiOpen(!aiOpen)
+    }
+
+    const handleResetAiChat = () => {
+        setAiMessages([])
+        setAiError(null)
+        setAiProgress([])
+    }
+
     const handleAiSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const trimmedInput = aiInput.trim()
@@ -240,28 +262,49 @@ export default function Dashboard() {
         setAiInput('')
         setAiIsLoading(true)
         setAiError(null)
+        setAiProgress(['Sending request...'])
 
         const { data, error } = await safeClient.ai.chat({
             messages: nextMessages,
             provider: aiProvider,
             model: aiModel
         })
+        const responseData = data as AiChatResponse | undefined
 
         if (error) {
             setAiError(error.message || 'Request failed')
             setAiIsLoading(false)
+            setAiProgress(['Request failed'])
             return
         }
 
-        if (!data?.text || data.text.trim() === '') {
+        if (!responseData?.text || responseData.text.trim() === '') {
             setAiError('No response received')
             setAiIsLoading(false)
+            setAiProgress(['Empty response'])
             return
         }
 
-        const assistantMessage: AiChatMessage = { role: 'assistant', content: data.text }
+        const assistantMessage: AiChatMessage = { role: 'assistant', content: responseData.text }
         setAiMessages([...nextMessages, assistantMessage])
         setAiIsLoading(false)
+        const { toolMessages = [], refreshItemIds = [] } = (responseData ?? {}) as {
+            toolMessages?: string[]
+            refreshItemIds?: string[]
+        }
+
+        const nextProgress: string[] = []
+        if (toolMessages.length > 0) {
+            nextProgress.push(...toolMessages)
+        }
+        nextProgress.push('Response received')
+        setAiProgress(nextProgress)
+
+        if (refreshItemIds.length > 0) {
+            for (const itemId of refreshItemIds) {
+                await treeRef.current?.refreshItemChildren(itemId)
+            }
+        }
     }
 
     if (isPendingActiveOrg || isPendingOrganizations || !activeOrganization) {
@@ -328,64 +371,20 @@ export default function Dashboard() {
                     onConfirm={handleConfirmDelete}
                 />
             )}
-            <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3">
-                {aiOpen ? (
-                    <div className="w-80 rounded-lg border bg-background shadow-lg">
-                        <div className="flex items-center justify-between border-b px-3 py-2">
-                            <div className="flex gap-2">
-                                <select
-                                    className="h-9 rounded-md border bg-background px-2 text-xs"
-                                    value={aiProvider}
-                                    onChange={(event) => handleProviderChange(event.target.value)}
-                                >
-                                    <option value={AI_PROVIDERS.google}>{AI_PROVIDER_LABELS.google}</option>
-                                    <option value={AI_PROVIDERS.openrouter}>{AI_PROVIDER_LABELS.openrouter}</option>
-                                </select>
-                                <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    onClick={() => {
-                                        setAiMessages([])
-                                        setAiError(null)
-                                    }}
-                                >
-                                    New Chat
-                                </Button>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-3 px-3 py-3">
-                            {aiMessageItems.length > 0 ? (
-                                <div className="max-h-64 space-y-2 overflow-auto rounded-md border bg-muted p-2 text-sm">
-                                    {aiMessageItems.map((message) => (
-                                        <div key={message.key} className="rounded-md bg-background p-2">
-                                            <p className="text-[11px] font-semibold uppercase text-muted-foreground">
-                                                {message.role}
-                                            </p>
-                                            <p className="whitespace-pre-line">{message.content}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : null}
-                            {aiIsLoading ? <p className="text-xs text-muted-foreground">Thinking...</p> : null}
-                            <form className="space-y-2" onSubmit={handleAiSubmit}>
-                                <Textarea
-                                    value={aiInput}
-                                    onChange={(event) => setAiInput(event.target.value)}
-                                    rows={3}
-                                    placeholder="Ask about your tests or requirements"
-                                />
-                                {aiError ? <p className="text-xs text-red-600">{aiError}</p> : null}
-                                <Button type="submit" size="sm" disabled={aiIsLoading} className="w-full">
-                                    {aiIsLoading ? 'Thinking...' : 'Send'}
-                                </Button>
-                            </form>
-                        </div>
-                    </div>
-                ) : null}
-                <Button size="lg" className="rounded-full shadow-lg" onClick={() => setAiOpen(!aiOpen)}>
-                    {aiOpen ? 'Hide Chat' : 'Chat with AI'}
-                </Button>
-            </div>
+            <AiChatWidget
+                aiOpen={aiOpen}
+                aiProvider={aiProvider}
+                aiMessageItems={aiMessageItems}
+                aiInput={aiInput}
+                aiError={aiError}
+                aiIsLoading={aiIsLoading}
+                aiProgress={aiProgress}
+                onProviderChange={handleProviderChange}
+                onInputChange={handleAiInputChange}
+                onSubmit={handleAiSubmit}
+                onToggleOpen={handleToggleAiOpen}
+                onResetChat={handleResetAiChat}
+            />
         </>
     )
 }
