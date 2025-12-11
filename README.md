@@ -13,7 +13,6 @@ The following checks run on staged files before each commit:
 - **Database Schema Check**: Validates Drizzle schema changes (`drizzle-kit check`) on `db/schema/*.ts`
 - **Prettier**: Code formatting (`prettier --write`)
 - **Oxlint**: Code linting with auto-fix
-- **TODO/FIXME Check**: Warns about TODO/FIXME comments (non-blocking)
 
 #### Pre-push Hooks
 
@@ -73,12 +72,14 @@ Automaspec helps organize test specifications, requirements, and individual test
 
 2. Environment variables
 
-    Copy `.env.example` to `.env.local` (already provided in the repo root):
+    Copy `.env.example` to `.env.local` for local dev and to `.env` for Docker:
 
     ```env
-    NEXT_PUBLIC_DATABASE_URL=http://127.0.0.1:8080
-    DATABASE_AUTH_TOKEN=
+    NEXT_PUBLIC_DATABASE_URL=https://your-cloud-libsql-endpoint
+    DATABASE_AUTH_TOKEN=your-cloud-libsql-token
     # Optional: VERCEL_URL=your-vercel-deployment-url
+    # Optional: OPENROUTER_API_KEY=...
+    # Optional: GEMINI_API_KEY=...
     ```
 
 3. Database (local libsql)
@@ -126,6 +127,34 @@ pnpm test __tests__/components/tree.test.tsx
 Notes:
 
 - Integration tests are skipped by default; to enable, set `NEXT_PUBLIC_DATABASE_URL` to a reachable libsql endpoint.
+
+## Containerization
+
+- Copy `.env.example` to `.env` and set secrets before running containers.
+- Start everything with `docker compose up --build`; stop with `docker compose down`.
+- App listens on port `3000`; database is expected to be an external cloud libsql endpoint.
+
+### Images
+
+- `automaspec-web:local`: built from `Dockerfile` (multi-stage, non-root runtime).
+
+### Environment variables
+
+- `NEXT_PUBLIC_DATABASE_URL`: cloud libsql endpoint.
+- `DATABASE_AUTH_TOKEN`: auth token for the cloud libsql endpoint.
+- `OPENROUTER_API_KEY`: key for OpenRouter AI provider.
+- `GEMINI_API_KEY`: key for Gemini AI provider.
+- `VERCEL_URL`: optional host used by Better Auth for trusted origins.
+
+### Container architecture
+
+```
+[browser] -> :3000 -> [automaspec-web] -> cloud libsql
+```
+
+### Resource requirements (min)
+
+- App container: 1 CPU / 1.5 GB RAM.
 
 ## Scripts
 
