@@ -12,6 +12,38 @@ export const ORGANIZATION_PLANS = {
     enterprise: 'enterprise'
 } as const
 
+export const AI_PROVIDERS = {
+    openrouter: 'openrouter',
+    google: 'google'
+} as const
+
+export const AI_MODELS = {
+    openrouter: 'kwaipilot/kat-coder-pro:free',
+    google: 'gemini-2.5-flash'
+} as const
+export const AI_MAX_PROMPT_LENGTH = 2000
+export const AI_BLOCKED_PATTERNS = [
+    'ignore previous instructions',
+    'disregard previous instructions',
+    'disregard prior instructions',
+    'drop database',
+    'disable safety',
+    'delete all data'
+] as const
+export const AI_RATE_LIMIT_WINDOW_MS = 60000
+export const AI_RATE_LIMIT_MAX_REQUESTS = 30
+
+export const AI_PROVIDER_LABELS = {
+    openrouter: 'OpenRouter (free)',
+    google: 'Gemini (Google)'
+} as const
+
+export const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1'
+export const AI_ENV_KEYS = {
+    openrouter: 'OPENROUTER_API_KEY',
+    google: 'GEMINI_API_KEY'
+} as const
+
 export const MEMBER_ROLES = {
     owner: 'owner',
     admin: 'admin',

@@ -14,12 +14,13 @@ import { DeleteConfirmDialog } from './delete-confirm-dialog'
 import { FolderDetailsHeader } from './folder-details-header'
 import { TestDetailsEmptyState } from './test-details-empty-state'
 
-interface FolderDetailsPanelProps {
+export interface FolderDetailsPanelProps {
     selectedFolder: TestFolder | null
     onDeleteFolder: (folderId: string) => void
+    onRefreshTreeChildren?: (parentFolderId: string | null) => Promise<void> | void
 }
 
-export function FolderDetailsPanel({ selectedFolder, onDeleteFolder }: FolderDetailsPanelProps) {
+export function FolderDetailsPanel({ selectedFolder, onDeleteFolder, onRefreshTreeChildren }: FolderDetailsPanelProps) {
     const [deleteFolderDialogOpen, setDeleteFolderDialogOpen] = useState(false)
     const { data: activeOrganization } = authClient.useActiveOrganization()
     const queryClient = useQueryClient()
@@ -39,6 +40,7 @@ export function FolderDetailsPanel({ selectedFolder, onDeleteFolder }: FolderDet
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-folders')
+            await onRefreshTreeChildren?.(selectedFolder?.id ?? null)
             toast.success('Folder created successfully')
         },
         onError: (error) => {
@@ -64,6 +66,7 @@ export function FolderDetailsPanel({ selectedFolder, onDeleteFolder }: FolderDet
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            await onRefreshTreeChildren?.(selectedFolder?.id ?? null)
             toast.success('Test created successfully')
         },
         onError: (error) => {

@@ -62,6 +62,20 @@ const getFolderChildrenContract = oc
         )
     )
 
+const findTestFolderByNameContract = oc
+    .route({
+        method: 'GET',
+        path: '/test-folders/find',
+        tags: ['tests', 'folders'],
+        description: 'Find a test folder by name in the active organization'
+    })
+    .input(
+        z.object({
+            name: z.string().min(1)
+        })
+    )
+    .output(testFolderSelectSchema.nullable())
+
 const upsertTestFolderContract = oc
     .route({
         method: 'POST',
@@ -171,6 +185,7 @@ export const testsContract = {
         get: getTestFolderContract,
         list: listTestFoldersContract,
         getChildren: getFolderChildrenContract,
+        findByName: findTestFolderByNameContract,
         upsert: upsertTestFolderContract,
         delete: deleteTestFolderContract
     },

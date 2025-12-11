@@ -12,7 +12,7 @@ import { onError } from '@orpc/server'
 import { CORSPlugin } from '@orpc/server/plugins'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
 
-const logger = pino(pretty({ colorize: true, translateTime: 'HH:MM:ss.l' }))
+const logger = pino(pretty({ colorize: true, singleLine: true }))
 
 const handler = new OpenAPIHandler(router, {
     plugins: [
@@ -25,8 +25,8 @@ const handler = new OpenAPIHandler(router, {
         new LoggingHandlerPlugin({
             logger,
             generateId: () => crypto.randomUUID(), // Custom ID generator
-            logRequestResponse: true, // Log request start/end (disabled by default)
-            logRequestAbort: true // Log when requests are aborted (disabled by default)
+            logRequestResponse: true,
+            logRequestAbort: true
         }),
         new OpenAPIReferencePlugin({
             docsPath: '/docs',

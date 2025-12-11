@@ -17,18 +17,20 @@ import { TestDetailsEmptyState } from './test-details-empty-state'
 import { TestDetailsHeader } from './test-details-header'
 import { VitestCodeTab } from './vitest-code-tab'
 
-interface TestDetailsPanelProps {
+export interface TestDetailsPanelProps {
     selectedSpec: TestSpec | null
     selectedRequirements: TestRequirement[]
     selectedTests: Test[]
     onDeleteSpec: (specId: string) => void
+    onRefreshTreeChildren?: (parentFolderId: string | null) => Promise<void> | void
 }
 
 export function TestDetailsPanel({
     selectedSpec,
     selectedRequirements,
     selectedTests,
-    onDeleteSpec
+    onDeleteSpec,
+    onRefreshTreeChildren
 }: TestDetailsPanelProps) {
     const [deleteSpecDialogOpen, setDeleteSpecDialogOpen] = useState(false)
     const { data: activeOrganization } = authClient.useActiveOrganization()
@@ -50,6 +52,7 @@ export function TestDetailsPanel({
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-folders')
+            await onRefreshTreeChildren?.(null)
             toast.success('Folder created successfully')
         },
         onError: (error) => {
@@ -75,6 +78,7 @@ export function TestDetailsPanel({
         },
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            await onRefreshTreeChildren?.(null)
             toast.success('Test created successfully')
         },
         onError: (error) => {
