@@ -1,6 +1,6 @@
-import { drizzle } from 'drizzle-orm/libsql'
+import { drizzle } from 'drizzle-orm/libsql/web'
 
-import { createClient } from '@libsql/client'
+import { createClient } from '@libsql/client/web'
 
 const client = createClient({
     url: process.env.NEXT_PUBLIC_DATABASE_URL ?? '',
