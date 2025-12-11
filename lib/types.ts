@@ -5,7 +5,14 @@ import * as schema from '@/db/schema'
 
 import type { authClient } from './shared/better-auth-client'
 
-import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK, ORGANIZATION_PLANS, type MEMBER_ROLES } from './constants'
+import {
+    TEST_STATUSES,
+    SPEC_STATUSES,
+    TEST_FRAMEWORK,
+    ORGANIZATION_PLANS,
+    AI_PROVIDERS,
+    type MEMBER_ROLES
+} from './constants'
 
 // FIXME: will work after https://github.com/drizzle-team/drizzle-orm/pull/4820, removing all manual zod coercions
 // const { createInsertSchema, createSelectSchema } = createSchemaFactory({
@@ -89,6 +96,38 @@ export type Invitation = z.infer<typeof invitationSelectSchema>
 // Session has user and session
 export type Session = typeof authClient.$Infer.Session
 export type User = Session['user']
+
+export type AiProvider = keyof typeof AI_PROVIDERS
+export type AiChatMessage = {
+    role: 'user' | 'assistant' | 'system'
+    content: string
+}
+export type AiChatRequest = {
+    messages: AiChatMessage[]
+    provider?: AiProvider
+    model?: string
+}
+export type AiChatResponse = {
+    text?: string
+    error?: string
+    toolMessages?: string[]
+    refreshItemIds?: string[]
+}
+export const aiChatMessageSchema = z.object({
+    role: z.enum(['user', 'assistant', 'system']),
+    content: z.string().min(1)
+})
+export const aiChatRequestSchema = z.object({
+    messages: z.array(aiChatMessageSchema).min(1),
+    provider: z.enum([AI_PROVIDERS.openrouter, AI_PROVIDERS.google]).optional(),
+    model: z.string().optional()
+})
+export const aiChatResponseSchema = z.object({
+    text: z.string().optional(),
+    error: z.string().optional(),
+    toolMessages: z.array(z.string()).optional(),
+    refreshItemIds: z.array(z.string()).optional()
+})
 
 // Update input types
 export type UpdateTestFolderInput = { id: string } & Partial<CreateTestFolderInput>

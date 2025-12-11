@@ -118,6 +118,20 @@ const getFolderChildren = os.testFolders.getChildren.handler(async ({ input, con
     return await fetchChildren(folderId, depth)
 })
 
+const findTestFolderByName = os.testFolders.findByName.handler(async ({ input, context }) => {
+    const folder = await db
+        .select()
+        .from(testFolder)
+        .where(and(eq(testFolder.organizationId, context.organizationId), eq(testFolder.name, input.name)))
+        .limit(1)
+
+    if (!folder || folder.length === 0) {
+        return null
+    }
+
+    return folder[0]
+})
+
 const upsertTestFolder = os.testFolders.upsert.handler(async ({ input, context }) => {
     const { id = crypto.randomUUID(), ...updates } = input
 
@@ -453,6 +467,7 @@ export const testsRouter = {
         get: getTestFolder,
         list: listTestFolders,
         getChildren: getFolderChildren,
+        findByName: findTestFolderByName,
         upsert: upsertTestFolder,
         delete: deleteTestFolder
     },
