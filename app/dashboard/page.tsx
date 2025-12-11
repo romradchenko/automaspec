@@ -119,8 +119,24 @@ export default function Dashboard() {
     })
 
     const handleSpecSelect = (spec: TestSpec) => {
-        const specRequirements = requirements.filter((req) => req.specId === spec.id)
-        const specTests = tests.filter((test) => test.requirementId === spec.id)
+        const specRequirements = []
+        for (const requirement of requirements) {
+            if (requirement.specId === spec.id) {
+                specRequirements.push(requirement)
+            }
+        }
+
+        const requirementIds = new Set<string>()
+        for (const requirement of specRequirements) {
+            requirementIds.add(requirement.id)
+        }
+
+        const specTests = []
+        for (const test of tests) {
+            if (requirementIds.has(test.requirementId)) {
+                specTests.push(test)
+            }
+        }
 
         setSelectedSpec(spec)
         setSelectedFolder(null)

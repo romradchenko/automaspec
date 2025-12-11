@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { AI_MODELS, AI_PROVIDER_LABELS, AI_PROVIDERS } from '@/lib/constants'
+import { AI_BLOCKED_PATTERNS, AI_MAX_PROMPT_LENGTH, AI_MODELS, AI_PROVIDER_LABELS, AI_PROVIDERS } from '@/lib/constants'
 import { safeClient } from '@/lib/orpc/orpc'
 
 export default function AiPage() {
@@ -38,6 +38,18 @@ export default function AiPage() {
             return
         }
 
+        if (trimmedInput.length > AI_MAX_PROMPT_LENGTH) {
+            setError(`Message exceeds ${AI_MAX_PROMPT_LENGTH} characters.`)
+            return
+        }
+
+        for (const pattern of AI_BLOCKED_PATTERNS) {
+            if (trimmedInput.toLowerCase().includes(pattern)) {
+                setError('Message contains disallowed instructions.')
+                return
+            }
+        }
+
         const nextMessages: AiChatMessage[] = [...messages, { role: 'user', content: trimmedInput }]
         setMessages(nextMessages)
         setInput('')
@@ -65,6 +77,11 @@ export default function AiPage() {
         const assistantMessage: AiChatMessage = { role: 'assistant', content: data.text }
         setMessages([...nextMessages, assistantMessage])
         setIsLoading(false)
+    }
+
+    const handleReset = () => {
+        setMessages([])
+        setError(null)
     }
 
     return (
@@ -113,11 +130,16 @@ export default function AiPage() {
                     />
                 </div>
 
-                {error ? <p className="text-sm text-red-600">{error}</p> : null}
+                <div className="flex items-center gap-3">
+                    <Button type="submit" disabled={isLoading} className="w-fit">
+                        {isLoading ? 'Running...' : 'Send'}
+                    </Button>
+                    <Button type="button" variant="secondary" onClick={handleReset} disabled={isLoading}>
+                        New chat
+                    </Button>
+                </div>
 
-                <Button type="submit" disabled={isLoading} className="w-fit">
-                    {isLoading ? 'Running...' : 'Send'}
-                </Button>
+                {error ? <p className="text-sm text-red-600">{error}</p> : null}
             </form>
 
             <div className="space-y-3 rounded-lg border p-4">

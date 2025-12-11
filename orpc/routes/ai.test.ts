@@ -11,10 +11,12 @@ describe('createAiTools', () => {
         const setMessage = vi.fn()
         const upsertResult = { id: 'folder-123' }
         const createFolder = vi.fn().mockResolvedValue(upsertResult)
-        const tools = ai.createAiTools({ organizationId: 'org-1' }, setMessage, {
+        const setRefreshItem = vi.fn()
+        const tools = ai.createAiTools({ organizationId: 'org-1' }, setMessage, setRefreshItem, {
             createFolder,
             findFolderByName: vi.fn(),
-            createSpec: vi.fn()
+            createSpec: vi.fn(),
+            createRequirements: vi.fn()
         })
         const execute = tools.createFolder.execute
         if (!execute) {
@@ -36,6 +38,7 @@ describe('createAiTools', () => {
         expect(firstCall?.parentFolderId).toBeNull()
         expect(typeof firstCall?.id).toBe('string')
         expect(result).toEqual({ success: true, folderId: upsertResult.id })
-        expect(setMessage).toHaveBeenCalledWith(`Created folder "New folder" (${upsertResult.id}).`)
+        expect(setMessage).toHaveBeenCalledWith('Created folder "New folder".')
+        expect(setRefreshItem).toHaveBeenCalledWith('root')
     })
 })

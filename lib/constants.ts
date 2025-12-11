@@ -21,6 +21,17 @@ export const AI_MODELS = {
     openrouter: 'kwaipilot/kat-coder-pro:free',
     google: 'gemini-2.5-flash'
 } as const
+export const AI_MAX_PROMPT_LENGTH = 2000
+export const AI_BLOCKED_PATTERNS = [
+    'ignore previous instructions',
+    'disregard previous instructions',
+    'disregard prior instructions',
+    'drop database',
+    'disable safety',
+    'delete all data'
+] as const
+export const AI_RATE_LIMIT_WINDOW_MS = 60000
+export const AI_RATE_LIMIT_MAX_REQUESTS = 30
 
 export const AI_PROVIDER_LABELS = {
     openrouter: 'OpenRouter (free)',
