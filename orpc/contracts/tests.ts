@@ -13,8 +13,6 @@ import {
 } from '@/lib/types'
 import { oc } from '@orpc/contract'
 
-// FIXME: almost all contract schemes are bullshit here
-
 const getTestFolderContract = oc
     .route({
         method: 'GET',
