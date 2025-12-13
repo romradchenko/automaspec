@@ -1,0 +1,37 @@
+name: Sync Test Results to Automaspec
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test-and-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with JSON reporter
+        run: npm test -- --reporter=json --outputFile=test-results.json
+        continue-on-error: true
+
+      - name: Sync test results to Automaspec
+        if: always()
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d @test-results.json \
+            ${{ secrets.AUTOMASPEC_WEBHOOK_URL }}
