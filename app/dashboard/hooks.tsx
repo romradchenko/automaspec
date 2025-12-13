@@ -2,7 +2,6 @@
 
 import type { QueryClient, Query } from '@tanstack/react-query'
 
-// TODO: Delete this file
 function createQueryPredicate(path: string) {
     return (query: Query<unknown, Error, unknown, readonly unknown[]>) => {
         const queryKey = query.queryKey
