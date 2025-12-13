@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build --webpack",
-    "dev": "pnpm i && next dev",
+    "dev": "pnpm i && next dev --turbopack",
     "deploy": "pnpm checks && vercel --prod",
     "start": "next start",
     "compose:up": "docker compose up --build",
