@@ -2,7 +2,12 @@ import { afterEach, vi } from 'vitest'
 
 import { cleanup } from '@testing-library/react'
 
-// Cleanup after each test
+global.ResizeObserver = vi.fn(function (this: ResizeObserver) {
+    this.observe = vi.fn()
+    this.unobserve = vi.fn()
+    this.disconnect = vi.fn()
+}) as unknown as typeof ResizeObserver
+
 afterEach(() => {
     cleanup()
 })
