@@ -7,6 +7,9 @@ on:
         description: 'Base URL of the Automaspec instance'
         required: true
         default: 'http://localhost:3000'
+      api_key:
+        description: 'API key for authentication'
+        required: true
 
 jobs:
   sync-local:
@@ -43,6 +46,7 @@ jobs:
           echo "Syncing to: ${{ github.event.inputs.base_url }}/api/webhook/sync-tests"
           curl -X POST \
             -H "Content-Type: application/json" \
+            -H "x-api-key: ${{ github.event.inputs.api_key }}" \
             -d @test-results.json \
             "${{ github.event.inputs.base_url }}/api/webhook/sync-tests" \
             --fail-with-body || echo "Failed to sync (server may not be running)"

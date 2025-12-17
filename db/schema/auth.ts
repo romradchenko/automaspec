@@ -91,3 +91,29 @@ export const verification = sqliteTable('verification', {
     createdAt: integer({ mode: 'timestamp' }),
     updatedAt: integer({ mode: 'timestamp' })
 })
+
+export const apiKey = sqliteTable('apiKey', {
+    id: text().primaryKey().notNull(),
+    name: text(),
+    start: text(),
+    prefix: text(),
+    key: text().notNull(),
+    userId: text()
+        .notNull()
+        .references(() => user.id, { onDelete: 'cascade' }),
+    refillInterval: integer(),
+    refillAmount: integer(),
+    lastRefillAt: integer({ mode: 'timestamp' }),
+    enabled: integer({ mode: 'boolean' }).default(true).notNull(),
+    rateLimitEnabled: integer({ mode: 'boolean' }).default(true).notNull(),
+    rateLimitTimeWindow: integer(),
+    rateLimitMax: integer(),
+    requestCount: integer().default(0).notNull(),
+    remaining: integer(),
+    lastRequest: integer({ mode: 'timestamp' }),
+    expiresAt: integer({ mode: 'timestamp' }),
+    createdAt: integer({ mode: 'timestamp' }).notNull(),
+    updatedAt: integer({ mode: 'timestamp' }).notNull(),
+    permissions: text(),
+    metadata: text()
+})

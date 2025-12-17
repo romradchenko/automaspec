@@ -4,20 +4,41 @@ import { NextResponse } from 'next/server'
 import type { TestStatus, SpecStatus, VitestTestResult } from '@/lib/types'
 
 import { db } from '@/db'
-import { organization, testSpec, testRequirement, test } from '@/db/schema'
+import { testSpec, testRequirement, test, member } from '@/db/schema'
 import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import { auth } from '@/lib/shared/better-auth'
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json()
+        const apiKeyHeader = request.headers.get('x-api-key')
 
-        const firstOrg = await db.select().from(organization).limit(1)
-
-        if (!firstOrg || firstOrg.length === 0) {
-            return NextResponse.json({ error: 'No organization found' }, { status: 404 })
+        if (!apiKeyHeader) {
+            return NextResponse.json({ error: 'Missing API key' }, { status: 401 })
         }
 
-        const organizationId = firstOrg[0].id
+        const verifyResult = await auth.api.verifyApiKey({
+            body: { key: apiKeyHeader }
+        })
+
+        if (!verifyResult.valid || !verifyResult.key) {
+            return NextResponse.json({ error: verifyResult.error?.message || 'Invalid API key' }, { status: 401 })
+        }
+
+        const userId = verifyResult.key.userId
+
+        const userMembership = await db
+            .select({ organizationId: member.organizationId })
+            .from(member)
+            .where(eq(member.userId, userId))
+            .limit(1)
+
+        if (!userMembership || userMembership.length === 0) {
+            return NextResponse.json({ error: 'User has no organization' }, { status: 400 })
+        }
+
+        const organizationId = userMembership[0].organizationId
+
+        const body = await request.json()
 
         const titleToStatus: Record<string, TestStatus> = {}
         const report = body

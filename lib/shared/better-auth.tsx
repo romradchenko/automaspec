@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
+import { apiKey } from 'better-auth/plugins'
 import { organization } from 'better-auth/plugins/organization'
 
 import { db } from '@/db'
@@ -16,6 +17,9 @@ export const auth = betterAuth({
         enabled: true
     },
     plugins: [
+        apiKey({
+            defaultPrefix: 'ams_'
+        }),
         organization({
             allowUserToCreateOrganization: true,
             organizationLimit: 2,
@@ -33,6 +37,6 @@ export const auth = betterAuth({
                 }
             }
         }),
-        nextCookies() // Should be last plugin
+        nextCookies()
     ]
 })
