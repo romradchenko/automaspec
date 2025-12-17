@@ -31,6 +31,7 @@
         "eslint/no-undefined": "allow", // too strict
         "eslint/no-plusplus": "allow", // too strict
         "eslint-plugin-jest/no-conditional-in-test": "allow", // too strict
+        "eslint-plugin-jest/require-to-throw-message": "allow", // allow toThrow() without message for generic error tests
         "oxc/no-async-await": "allow", // this is stupid
         "oxc/no-rest-spread-properties": "allow", // this is stupid
         "oxc/no-optional-chaining": "allow", // this is stupid
