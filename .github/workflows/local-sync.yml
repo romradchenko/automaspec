@@ -48,3 +48,4 @@ jobs:
             -d @test-results.json \
             "${{ github.event.inputs.base_url }}/api/webhook/sync-tests" \
             --fail-with-body || echo "Failed to sync (server may not be running)"
+
