@@ -38,4 +38,4 @@ jobs:
             -H "Content-Type: application/json" \
             -H "x-api-key: ${{ secrets.AUTOMASPEC_API_KEY }}" \
             -d @test-results.json \
-            ${{ secrets.AUTOMASPEC_WEBHOOK_URL }}
+            "${{ secrets.AUTOMASPEC_WEBHOOK_URL }}"
