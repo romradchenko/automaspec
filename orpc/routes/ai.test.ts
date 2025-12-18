@@ -1,12 +1,28 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('@/db', () => ({
+    db: {
+        insert: vi.fn(() => ({
+            values: vi.fn(() => ({
+                onConflictDoUpdate: vi.fn(() => ({
+                    returning: vi.fn(async () => [{ id: 'test-id' }])
+                }))
+            }))
+        })),
+        select: vi.fn(() => ({
+            from: vi.fn(() => ({
+                where: vi.fn(async () => [])
+            }))
+        }))
+    }
+}))
+
 describe('createAiTools', () => {
     afterEach(() => {
         vi.clearAllMocks()
     })
 
     it('calls test folder upsert with context and returns success', async () => {
-        process.env.NEXT_PUBLIC_DATABASE_URL = 'file:test.db'
         const ai = await import('@/orpc/routes/ai')
         const setMessage = vi.fn()
         const upsertResult = { id: 'folder-123' }

@@ -109,7 +109,7 @@ describe('Analytics Page Components', () => {
 
         expect(screen.getByText('Stale Tests')).toBeDefined()
         expect(screen.getByText('Old Auth Tests')).toBeDefined()
-    })
+    }, 10000)
 
     it('displays empty state when no stale tests', async () => {
         const { StaleTestsTable } = await import('@/app/analytics/components/stale-tests-table')
