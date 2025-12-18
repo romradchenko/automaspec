@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "02e2b27b-7d89-475e-8257-39b0340b2807",
+  "id": "e129b79d-40f6-47b1-b118-a88a7acc5c75",
   "prevId": "4d05aba9-280e-414a-abfa-bb6c3e10d019",
   "tables": {
     "account": {
@@ -119,8 +119,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "api_key": {
-      "name": "api_key",
+    "apiKey": {
+      "name": "apiKey",
       "columns": {
         "id": {
           "name": "id",
@@ -275,9 +275,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "api_key_user_id_user_id_fk": {
-          "name": "api_key_user_id_user_id_fk",
-          "tableFrom": "api_key",
+        "apiKey_user_id_user_id_fk": {
+          "name": "apiKey_user_id_user_id_fk",
+          "tableFrom": "apiKey",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"

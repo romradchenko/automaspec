@@ -1,4 +1,4 @@
-CREATE TABLE `api_key` (
+CREATE TABLE `apiKey` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text,
 	`start` text,

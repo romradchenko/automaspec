@@ -93,7 +93,7 @@ export const verification = sqliteTable('verification', {
 })
 
 export const apiKey = sqliteTable('apiKey', {
-    id: text().primaryKey().notNull(),
+    id: text().primaryKey(),
     name: text(),
     start: text(),
     prefix: text(),
@@ -103,17 +103,19 @@ export const apiKey = sqliteTable('apiKey', {
         .references(() => user.id, { onDelete: 'cascade' }),
     refillInterval: integer(),
     refillAmount: integer(),
-    lastRefillAt: integer({ mode: 'timestamp' }),
-    enabled: integer({ mode: 'boolean' }).default(true).notNull(),
-    rateLimitEnabled: integer({ mode: 'boolean' }).default(true).notNull(),
-    rateLimitTimeWindow: integer(),
-    rateLimitMax: integer(),
-    requestCount: integer().default(0).notNull(),
+    lastRefillAt: integer({ mode: 'timestamp_ms' }),
+    enabled: integer({ mode: 'boolean' }).default(true),
+    rateLimitEnabled: integer({
+        mode: 'boolean'
+    }).default(true),
+    rateLimitTimeWindow: integer().default(86400000),
+    rateLimitMax: integer().default(10),
+    requestCount: integer().default(0),
     remaining: integer(),
-    lastRequest: integer({ mode: 'timestamp' }),
-    expiresAt: integer({ mode: 'timestamp' }),
-    createdAt: integer({ mode: 'timestamp' }).notNull(),
-    updatedAt: integer({ mode: 'timestamp' }).notNull(),
+    lastRequest: integer({ mode: 'timestamp_ms' }),
+    expiresAt: integer({ mode: 'timestamp_ms' }),
+    createdAt: integer({ mode: 'timestamp_ms' }).notNull(),
+    updatedAt: integer({ mode: 'timestamp_ms' }).notNull(),
     permissions: text(),
     metadata: text()
 })

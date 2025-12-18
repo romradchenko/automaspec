@@ -18,7 +18,12 @@ export const auth = betterAuth({
     },
     plugins: [
         apiKey({
-            defaultPrefix: 'ams_'
+            defaultPrefix: 'ams_',
+            schema: {
+                apikey: {
+                    modelName: 'apiKey'
+                }
+            }
         }),
         organization({
             allowUserToCreateOrganization: true,

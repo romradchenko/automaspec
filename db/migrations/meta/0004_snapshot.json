@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c2ba2584-3ffd-4831-b842-9f39973fad60",
-  "prevId": "02e2b27b-7d89-475e-8257-39b0340b2807",
+  "id": "24bce52d-9e71-4d98-a958-2541f3e19fa3",
+  "prevId": "e129b79d-40f6-47b1-b118-a88a7acc5c75",
   "tables": {
     "account": {
       "name": "account",
@@ -189,7 +189,7 @@
           "name": "enabled",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": true
         },
@@ -197,7 +197,7 @@
           "name": "rate_limit_enabled",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": true
         },
@@ -206,20 +206,22 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": 86400000
         },
         "rate_limit_max": {
           "name": "rate_limit_max",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": 10
         },
         "request_count": {
           "name": "request_count",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": 0
         },
@@ -1106,9 +1108,7 @@
   "enums": {},
   "_meta": {
     "schemas": {},
-    "tables": {
-      "\"api_key\"": "\"apiKey\""
-    },
+    "tables": {},
     "columns": {}
   },
   "internal": {

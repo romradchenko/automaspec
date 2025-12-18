@@ -74,7 +74,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         fetchApiKeys()
-    }, [fetchApiKeys])
+    }, [fetchApiKeys, session, activeOrganization])
 
     const userName = session?.user.name || ''
     const userEmail = session?.user.email || ''
