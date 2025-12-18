@@ -10,3 +10,4 @@ cd docs && pandoc --pdf-engine=xelatex -o adaptive-ui-documentation.pdf adaptive
 ## Windows
 cd docs
 pandoc --pdf-engine=xelatex --variable=geometry:margin=1cm -o adaptive-ui-documentation.pdf adaptive-ui-documentation.md
+pandoc --pdf-engine=xelatex -V lang=en-US -V mainfont="Times New Roman" -V monofont="Consolas" --variable=geometry:margin=1cm -o frontend-report.pdf frontend-report.md
