@@ -5,7 +5,6 @@
   },
   "oxc.enable": true,
   "oxc.fmt.experimental": true,
-  "editor.defaultFormatter": "oxc.oxc-vscode",
   "[javascript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
@@ -14,7 +13,4 @@
   },
   "oxc.typeAware": true,
   "oxc.requireConfig": true,
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
 }
