@@ -284,7 +284,7 @@ function SignUpForm({ onToggle }: AuthFormProps) {
                     email: value.email,
                     password: value.password,
                     name: value.name
-                    // callbackURL does not work here because it is for email verification
+                    // NOTE: callbackURL does not work here because it is for email verification
                 },
                 {
                     onSuccess: async () => {
