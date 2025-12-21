@@ -191,3 +191,12 @@ export type AnalyticsMetricsInput = z.infer<typeof analyticsMetricsInputSchema>
 export type AnalyticsMetricsOutput = z.infer<typeof analyticsMetricsOutputSchema>
 export type TestsGrowthItem = z.infer<typeof testsGrowthItemSchema>
 export type StaleTest = z.infer<typeof staleTestSchema>
+
+export type RpcErrorCause = {
+    issues?: unknown
+    data?: unknown
+}
+
+export type RpcError = {
+    cause?: RpcErrorCause
+}
