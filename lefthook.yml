@@ -21,10 +21,10 @@ pre-push:
     jobs:
         - name: git pull
           run: |
-            if [ "$LEFTHOOK_FORCE" != "1" ]; then
+            if [ "$LEFTHOOK_FORCE" == "1" ]; then
               exit 0
             fi
-            git pull
+            git pull --rebase
           fail_text: '❌ Git pull failed'
 
         - group:
