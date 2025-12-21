@@ -20,9 +20,6 @@ Pre-push hooks are currently disabled (commented out in `lefthook.yml`). Uncomme
 
 #### Bypassing Hooks
 
-
-
-
 If you need to bypass hooks (use sparingly):
 
 ```bash
@@ -151,7 +148,7 @@ Notes:
 
 ### Container architecture
 
-```
+```mermaid
 [browser] -> :3000 -> [automaspec-web] -> cloud libsql
 ```
 
