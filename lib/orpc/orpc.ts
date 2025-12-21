@@ -24,6 +24,7 @@ const link = new OpenAPILink(contract, {
             return {}
         }
 
+        // Next Docs recommend that approach, so dynamic imports should be here 100%
         const { headers } = await import('next/headers')
         return await headers()
     },
