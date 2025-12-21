@@ -1,5 +1,0 @@
----
-alwaysApply: true
----
-
-Avoid using map in code, prefer using more easy readable things like: Obj, Array, Set

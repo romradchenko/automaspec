@@ -1,5 +1,0 @@
----
-alwaysApply: true
----
-
-Never declare types in code, except files that has types in their name

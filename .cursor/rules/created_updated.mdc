@@ -1,5 +1,0 @@
----
-alwaysApply: true
----
-
-Do not add created_at and updated_at values on backend, they already handled in database-level
