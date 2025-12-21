@@ -1,3 +1,4 @@
 * Fix signin / signup flow (split)
 * Use orpc routes inside ai tools
 * Write end to end tests
+* Implement 403, 404, 500 page
