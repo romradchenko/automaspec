@@ -15,10 +15,7 @@ const nextConfig: NextConfig = {
     },
     reactCompiler: false, // Broke react-headless-tree
     reactStrictMode: false,
-    typedRoutes: true,
-    images: {
-        unoptimized: true // FIXME
-    }
+    typedRoutes: true
 }
 
 // oxlint-disable-next-line no-commonjs
