@@ -6,6 +6,7 @@ export default defineConfig({
     dialect: 'turso',
     casing: 'snake_case',
     dbCredentials: {
+        // NEXT_PUBLIC prefix is needed for client-side orpc client
         url: process.env.NEXT_PUBLIC_DATABASE_URL ?? '',
         authToken: process.env.DATABASE_AUTH_TOKEN
     }
