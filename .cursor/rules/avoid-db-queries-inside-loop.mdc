@@ -1,5 +1,0 @@
----
-alwaysApply: true
----
-
-Never do db queries inside of the loop (for/while or any other loop)
