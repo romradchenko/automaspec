@@ -25,10 +25,13 @@ export default function ChooseOrganizationPage() {
             organizationId: orgId
         })
 
-        if (error) toast.error(error.message || 'Failed to set active organization')
-        else toast.success(`Organization ${data.name} set as active successfully!`)
-
-        router.push(error ? '/create-organization' : '/dashboard')
+        if (error) {
+            toast.error(error.message || 'Failed to set active organization')
+            router.push('/create-organization')
+        } else {
+            toast.success(`Organization ${data.name} set as active successfully!`)
+            window.location.href = '/dashboard'
+        }
     }
 
     return (
