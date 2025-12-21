@@ -371,7 +371,7 @@ export default function LoginPage() {
                             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary shadow-colored">
                                 <Code className="h-5 w-5 text-primary-foreground" />
                             </div>
-                            <span className="font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                            <span className="font-bold text-xl bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
                                 AutomaSpec
                             </span>
                         </Link>
