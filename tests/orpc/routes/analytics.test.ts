@@ -3,36 +3,42 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { router } from '@/orpc/routes'
 
-let mockSpecs: Array<Record<string, unknown>> = []
-let mockTests: Array<Record<string, unknown>> = []
-let _mockMembers: Array<Record<string, unknown>> = []
-
-vi.mock('@/db', () => {
+const dbMocks = vi.hoisted(() => {
     let callIndex = 0
-
+    let specs: Array<Record<string, unknown>> = []
+    let tests: Array<Record<string, unknown>> = []
     const createChain = () => ({
         from: () => createChain(),
         where: () => {
             const idx = callIndex++
             if (idx === 0) return Promise.resolve([{ count: 2 }])
-            if (idx === 1) return Promise.resolve(mockSpecs)
+            if (idx === 1) return Promise.resolve(specs)
             if (idx === 2) return Promise.resolve([{ count: 2 }])
             if (idx === 3) return Promise.resolve([{ count: 3 }])
             if (idx === 4) return Promise.resolve([{ count: 1 }])
-            if (idx === 5) return Promise.resolve(mockTests)
+            if (idx === 5) return Promise.resolve(tests)
             return Promise.resolve([])
         },
         innerJoin: () => createChain()
     })
-
     const select = vi.fn(() => createChain())
-
     const reset = () => {
         callIndex = 0
         select.mockClear()
     }
+    const setData = (nextSpecs: Array<Record<string, unknown>>, nextTests: Array<Record<string, unknown>>) => {
+        specs = nextSpecs
+        tests = nextTests
+    }
+    return { select, reset, setData }
+})
 
-    return { db: { select }, __esModule: true, reset }
+let mockSpecs: Array<Record<string, unknown>> = []
+let mockTests: Array<Record<string, unknown>> = []
+let _mockMembers: Array<Record<string, unknown>> = []
+
+vi.mock('@/db', () => {
+    return { db: { select: dbMocks.select }, __esModule: true }
 })
 
 describe('analytics.getMetrics', () => {
@@ -91,8 +97,8 @@ describe('analytics.getMetrics', () => {
             { id: 't3', status: 'failed', createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() }
         ]
         _mockMembers = [{ id: 'member-1', userId: 'user-1' }]
-        const m = (await import('@/db')) as unknown as { reset: () => void }
-        m.reset()
+        dbMocks.setData(mockSpecs, mockTests)
+        dbMocks.reset()
     })
 
     it('returns correct total counts', async () => {

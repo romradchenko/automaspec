@@ -148,3 +148,32 @@ export const ANALYTICS_PERIODS = {
     '30d': 30,
     '90d': 90
 } as const
+
+export const ERROR_PAGE_CONTENT = {
+    forbidden: {
+        code: '403',
+        title: 'Access denied',
+        description: 'You do not have permission to access this page. Check your permissions or switch organizations.',
+        primaryActionLabel: 'Go to dashboard',
+        primaryActionHref: '/dashboard',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    },
+    notFound: {
+        code: '404',
+        title: 'Page not found',
+        description: 'The page you are looking for does not exist or has been moved.',
+        primaryActionLabel: 'Return home',
+        primaryActionHref: '/',
+        secondaryActionLabel: 'Open dashboard',
+        secondaryActionHref: '/dashboard'
+    },
+    serverError: {
+        code: '500',
+        title: 'Something went wrong',
+        description: 'An unexpected error occurred. Please try again or head back to the main page.',
+        primaryActionLabel: 'Try again',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    }
+} as const

@@ -212,12 +212,12 @@ Dockerfile included with multi-stage build:
 ### 10.1 Test Structure
 
 ```
-__tests__/
-├── components/          - UI component tests
-├── db/                  - Schema validation tests
-├── integration/         - Workflow tests
-├── lib/                 - Utility tests
-└── orpc/routes/         - API route tests
+tests/
+?? components/          - UI component tests
+?? db/                  - Schema validation tests
+?? integration/         - Workflow tests
+?? lib/                 - Utility tests
+?? orpc/routes/         - API route tests
 ```
 
 ### 10.2 Coverage

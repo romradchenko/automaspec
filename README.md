@@ -121,7 +121,7 @@ pnpm start   # run production build
 ```bash
 pnpm test             # run unit/component tests
 pnpm test --watch     # watch mode
-pnpm test __tests__/components/tree.test.tsx
+pnpm test tests/components/test-details-panel.test.tsx
 ```
 
 Notes:

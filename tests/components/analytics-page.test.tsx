@@ -3,6 +3,11 @@ import { render, screen } from '@testing-library/react'
 import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+import { MetricsCards } from '@/app/analytics/components/metrics-cards'
+import { StaleTestsTable } from '@/app/analytics/components/stale-tests-table'
+import { StatusDistributionChart } from '@/app/analytics/components/status-distribution-chart'
+import { TestsGrowthChart } from '@/app/analytics/components/tests-growth-chart'
+
 vi.mock('@/lib/shared/better-auth-client', () => ({
     authClient: {
         useActiveOrganization: () => ({ data: { id: 'org-1', name: 'Test Org' } })
@@ -71,8 +76,7 @@ describe('Analytics Page Components', () => {
         vi.clearAllMocks()
     })
 
-    it('renders metrics cards with correct values', async () => {
-        const { MetricsCards } = await import('@/app/analytics/components/metrics-cards')
+    it('renders metrics cards with correct values', () => {
         renderWithProviders(
             <MetricsCards
                 totalTests={mockMetrics.totalTests}
@@ -88,30 +92,26 @@ describe('Analytics Page Components', () => {
         expect(screen.getByText('3')).toBeDefined()
     })
 
-    it('renders status distribution chart with data', async () => {
-        const { StatusDistributionChart } = await import('@/app/analytics/components/status-distribution-chart')
+    it('renders status distribution chart with data', () => {
         renderWithProviders(<StatusDistributionChart testsByStatus={mockMetrics.testsByStatus} />)
 
         expect(screen.getByText('Test Status Distribution')).toBeDefined()
     })
 
-    it('renders tests growth chart with data', async () => {
-        const { TestsGrowthChart } = await import('@/app/analytics/components/tests-growth-chart')
+    it('renders tests growth chart with data', () => {
         renderWithProviders(<TestsGrowthChart testsGrowth={mockMetrics.testsGrowth} />)
 
         expect(screen.getByText('Tests Growth')).toBeDefined()
     })
 
-    it('renders stale tests table with items', async () => {
-        const { StaleTestsTable } = await import('@/app/analytics/components/stale-tests-table')
+    it('renders stale tests table with items', () => {
         renderWithProviders(<StaleTestsTable staleTests={mockMetrics.staleTests} period="30d" />)
 
         expect(screen.getByText('Stale Tests')).toBeDefined()
         expect(screen.getByText('Old Auth Tests')).toBeDefined()
     }, 10000)
 
-    it('displays empty state when no stale tests', async () => {
-        const { StaleTestsTable } = await import('@/app/analytics/components/stale-tests-table')
+    it('displays empty state when no stale tests', () => {
         renderWithProviders(<StaleTestsTable staleTests={[]} period="30d" />)
 
         expect(screen.getByText('No stale tests found')).toBeDefined()

@@ -8,37 +8,36 @@ import { router } from '@/orpc/routes'
 let orgTests: Array<Record<string, unknown>> = []
 let allSpecTests: Array<Record<string, unknown>> = []
 
-vi.mock('@/db', () => {
+const dbMocks = vi.hoisted(() => {
+    let selectCall = 0
     const update = vi.fn((_table: unknown) => ({
         set: () => ({
-            where: () => {
-                return Promise.resolve()
-            }
+            where: async () => undefined
         })
     }))
-
-    let selectCall = 0
     const select = vi.fn(() => ({
         from: () => ({
             innerJoin: () => ({
                 innerJoin: () => ({
                     where: () => {
-                        const r = selectCall === 0 ? orgTests : allSpecTests
-                        selectCall++
-                        return Promise.resolve(r)
+                        const result = selectCall === 0 ? orgTests : allSpecTests
+                        selectCall += 1
+                        return Promise.resolve(result)
                     }
                 })
             })
         })
     }))
-
     const reset = () => {
         selectCall = 0
         update.mockClear()
         select.mockClear()
     }
+    return { update, select, reset }
+})
 
-    return { db: { update, select }, __esModule: true, reset }
+vi.mock('@/db', () => {
+    return { db: { update: dbMocks.update, select: dbMocks.select }, __esModule: true }
 })
 
 describe('syncReport', () => {
@@ -54,7 +53,7 @@ describe('syncReport', () => {
     }
     const testClient = createRouterClient(router, { context: async () => ctx })
 
-    beforeEach(async () => {
+    beforeEach(() => {
         orgTests = [
             { testId: 'A', testStatus: TEST_STATUSES.failed, requirementName: 'Req A', specId: 'spec-1' },
             { testId: 'B', testStatus: TEST_STATUSES.passed, requirementName: 'Req B', specId: 'spec-1' },
@@ -65,8 +64,7 @@ describe('syncReport', () => {
             { specId: 'spec-1', status: TEST_STATUSES.missing },
             { specId: 'spec-2', status: TEST_STATUSES.missing }
         ]
-        const m = (await import('@/db')) as unknown as { reset: () => void }
-        m.reset()
+        dbMocks.reset()
     })
 
     it('updates reported statuses and marks unmatched as missing, in batches', async () => {
@@ -89,8 +87,7 @@ describe('syncReport', () => {
 
         expect(data).toEqual({ updated: 2, missing: 1 })
 
-        const m = (await import('@/db')) as unknown as { db: { update: { mock: { calls: unknown[][] } } } }
-        const calls = m.db.update.mock.calls
+        const calls = dbMocks.update.mock.calls
         expect(calls.length).toBeGreaterThanOrEqual(3)
         expect(calls[0][0]).toBe(testTable)
         expect(calls.some((call) => call[0] === testSpecTable)).toBe(true)

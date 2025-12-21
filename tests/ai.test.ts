@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { createAiTools } from '@/orpc/routes/ai'
+
 vi.mock('@/db', () => ({
     db: {
         insert: vi.fn(() => ({
@@ -23,12 +25,11 @@ describe('createAiTools', () => {
     })
 
     it('calls test folder upsert with context and returns success', async () => {
-        const ai = await import('@/orpc/routes/ai')
         const setMessage = vi.fn()
         const upsertResult = { id: 'folder-123' }
         const createFolder = vi.fn().mockResolvedValue(upsertResult)
         const setRefreshItem = vi.fn()
-        const tools = ai.createAiTools({ organizationId: 'org-1' }, setMessage, setRefreshItem, {
+        const tools = createAiTools({ organizationId: 'org-1' }, setMessage, setRefreshItem, {
             createFolder,
             findFolderByName: vi.fn(),
             createSpec: vi.fn(),

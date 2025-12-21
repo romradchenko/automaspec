@@ -809,12 +809,12 @@ All sensitive information is stored securely in GitHub Secrets, never in code or
 
 ### Test Structure
 
-Tests are organized in `__tests__/` directory:
-- Component tests: `__tests__/components/`
-- Database tests: `__tests__/db/`
-- Integration tests: `__tests__/integration/`
-- Library tests: `__tests__/lib/`
-- ORPC route tests: `__tests__/orpc/routes/`
+Tests are organized in `tests/` directory:
+- Component tests: `tests/components/`
+- Database tests: `tests/db/`
+- Integration tests: `tests/integration/`
+- Library tests: `tests/lib/`
+- ORPC route tests: `tests/orpc/routes/`
 
 ### Test Reporting
 

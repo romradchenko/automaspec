@@ -75,7 +75,7 @@ lib/
   shared/*                - auth client, form helpers
   constants.ts            - centralized constants
   types.ts                - Zod schemas + TS types
-__tests__/
+tests/
   components/*            - unit/component tests (RTL)
   integration/*           - integration flows
 ```
@@ -229,12 +229,12 @@ Response example (shortened):
 Tooling:
 
 - Vitest (`pnpm test`)
-- React Testing Library (jsdom, setup in `__tests__/setup.ts`)
+- React Testing Library (jsdom, setup in `tests/setup.ts`)
 
 Coverage in repo:
 
-- Unit/component tests: `__tests__/components/*`, `__tests__/lib/*`, `__tests__/db/*`, `__tests__/orpc/*`
-- Integration tests: `__tests__/integration/*` (README notes they require a reachable `NEXT_PUBLIC_DATABASE_URL`)
+- Unit/component tests: `tests/components/*`, `tests/lib/*`, `tests/db/*`, `tests/orpc/*`
+- Integration tests: `tests/integration/*` (README notes they require a reachable `NEXT_PUBLIC_DATABASE_URL`)
 
 ## 10) Stack Rationale
 

@@ -118,11 +118,9 @@ describe('Test Details Panel', () => {
             />
         )
 
-        // Should display spec name and description
         expect(screen.getByText('API Tests')).toBeDefined()
         expect(screen.getByText('Backend API tests')).toBeDefined()
 
-        // Should display requirements
         expect(screen.getByText('Test requirement 1')).toBeDefined()
     })
 
@@ -131,7 +129,6 @@ describe('Test Details Panel', () => {
             <TestDetailsPanel selectedSpec={null} selectedRequirements={[]} selectedTests={[]} onDeleteSpec={vi.fn()} />
         )
 
-        // Should show empty state with the actual text from the component
         expect(screen.getByText('Select a spec to view details and requirements')).toBeDefined()
         expect(screen.getByText('New Folder')).toBeDefined()
         expect(screen.getByText('New Spec')).toBeDefined()
