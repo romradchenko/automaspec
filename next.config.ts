@@ -2,6 +2,11 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
     output: 'standalone',
+    typescript: {
+        // We already run typecheck as a part of ci and pre-push hooks
+        // This speeds up build time considerably
+        ignoreBuildErrors: true
+    },
     experimental: {
         browserDebugInfoInTerminal: true,
         typedEnv: true,
