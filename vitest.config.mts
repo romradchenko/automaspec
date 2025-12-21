@@ -23,10 +23,6 @@ export default defineConfig({
                 'dist/',
                 'build/',
                 '**/*.d.ts',
-                '**/ui/**',
-                '**/components/ui/**',
-                'app/**',
-                '**/app/**',
                 '**/test-results.json'
             ],
             thresholds: {
