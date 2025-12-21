@@ -26,15 +26,18 @@ pre-push:
             fi
             git pull
           fail_text: '❌ Git pull failed'
-          
-        - name: typecheck
-          glob: '*.{ts,tsx,mts}'
-          run: pnpm typecheck
-          fail_text: '❌ TypeScript type checking failed'
 
-        - name: tests
-          glob: '*.{ts,tsx,mts}'
-          run: pnpm test run
-          fail_text: '❌ Tests failed'
+        - group:
+            parallel: true
+            jobs:
+                - name: typecheck
+                  glob: '*.{ts,tsx,mts}'
+                  run: pnpm typecheck
+                  fail_text: '❌ TypeScript type checking failed'
+
+                - name: tests
+                  glob: '*.{ts,tsx,mts}'
+                  run: pnpm test run
+                  fail_text: '❌ Tests failed'
 
 colors: true
