@@ -6,7 +6,6 @@
         "build": "next build",
         "wd": "pnpm i && next dev --webpack",
         "dev": "pnpm i && next dev",
-        "start": "next start",
         "compose:up": "docker compose up --build",
         "compose:down": "docker compose down",
         "test": "vitest",
