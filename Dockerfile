@@ -17,14 +17,16 @@ COPY . .
 RUN pnpm run build
 
 FROM node:22-alpine AS runner
-RUN apk add --no-cache libc6-compat
+RUN apk add libc6-compat curl
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 WORKDIR /app
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
-ENV PORT=3000
+ENV PORT=${PORT:-3000}
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
-EXPOSE 3000
+EXPOSE ${PORT}
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD sh -c "curl -f http://localhost:${PORT}/ || exit 1"
 CMD ["node", "server.js"]
