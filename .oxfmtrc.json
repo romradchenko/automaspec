@@ -1,5 +1,6 @@
 {
     "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "ignorePatterns": ["db/migrations/**", "**/*.md"],
     "experimentalSortImports": {
         "enabled": true
     },

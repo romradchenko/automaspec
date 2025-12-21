@@ -1,7 +1,7 @@
+import { createRouterClient } from '@orpc/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { router } from '@/orpc/routes'
-import { createRouterClient } from '@orpc/server'
 
 let mockSpecs: Array<Record<string, unknown>> = []
 let mockTests: Array<Record<string, unknown>> = []

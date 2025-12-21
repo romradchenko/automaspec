@@ -1,1 +1,465 @@
-{"numTotalTestSuites":27,"numPassedTestSuites":27,"numFailedTestSuites":0,"numPendingTestSuites":0,"numTotalTests":40,"numPassedTests":33,"numFailedTests":0,"numPendingTests":7,"numTodoTests":0,"snapshot":{"added":0,"failure":false,"filesAdded":0,"filesRemoved":0,"filesRemovedList":[],"filesUnmatched":0,"filesUpdated":0,"matched":0,"total":0,"unchecked":0,"uncheckedKeysByFile":[],"unmatched":0,"updated":0,"didUpdate":false},"startTime":1760889268834,"success":true,"testResults":[{"assertionResults":[{"ancestorTitles":["Test Details Panel"],"fullName":"Test Details Panel should display test spec details","status":"passed","title":"should display test spec details","duration":87.21241599999985,"failureMessages":[],"meta":{}},{"ancestorTitles":["Test Details Panel"],"fullName":"Test Details Panel should display test statistics","status":"passed","title":"should display test statistics","duration":18.820915999999897,"failureMessages":[],"meta":{}},{"ancestorTitles":["Test Details Panel"],"fullName":"Test Details Panel should handle no spec selected","status":"passed","title":"should handle no spec selected","duration":4.12520799999993,"failureMessages":[],"meta":{}}],"startTime":1760889270796,"endTime":1760889270906.1252,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/components/test-details-panel.test.tsx"},{"assertionResults":[{"ancestorTitles":["Tree Component"],"fullName":"Tree Component should display test folders in tree structure","status":"passed","title":"should display test folders in tree structure","duration":0.7375420000000759,"failureMessages":[],"meta":{}}],"startTime":1760889271045,"endTime":1760889271045.7375,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/components/tree-display.test.ts"},{"assertionResults":[{"ancestorTitles":["Dashboard Tree View"],"fullName":"Dashboard Tree View should display test folders in tree structure","status":"passed","title":"should display test folders in tree structure","duration":44.980542000000014,"failureMessages":[],"meta":{}},{"ancestorTitles":["Dashboard Tree View"],"fullName":"Dashboard Tree View should handle empty folders array","status":"passed","title":"should handle empty folders array","duration":120.89345800000001,"failureMessages":[],"meta":{}},{"ancestorTitles":["Dashboard Tree View"],"fullName":"Dashboard Tree View should display specs in folders","status":"passed","title":"should display specs in folders","duration":15.585917000000109,"failureMessages":[],"meta":{}}],"startTime":1760889270409,"endTime":1760889270590.586,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/components/tree.test.tsx"},{"assertionResults":[{"ancestorTitles":["Session Management"],"fullName":"Session Management should maintain session across page reloads","status":"passed","title":"should maintain session across page reloads","duration":0.6579580000000078,"failureMessages":[],"meta":{}}],"startTime":1760889271003,"endTime":1760889271003.658,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/integration/session-reload.test.ts"},{"assertionResults":[{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should create a test folder","status":"skipped","title":"should create a test folder","failureMessages":[],"meta":{}},{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should create a test spec in the folder","status":"skipped","title":"should create a test spec in the folder","failureMessages":[],"meta":{}},{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should create a test requirement","status":"skipped","title":"should create a test requirement","failureMessages":[],"meta":{}},{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should create a test","status":"skipped","title":"should create a test","failureMessages":[],"meta":{}},{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should query test with all relationships","status":"skipped","title":"should query test with all relationships","failureMessages":[],"meta":{}},{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should update test status","status":"skipped","title":"should update test status","failureMessages":[],"meta":{}},{"ancestorTitles":["Test Management Workflow (Integration)"],"fullName":"Test Management Workflow (Integration) should cascade delete when folder is deleted","status":"skipped","title":"should cascade delete when folder is deleted","failureMessages":[],"meta":{}}],"startTime":1760889268834,"endTime":1760889268834,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/integration/test-workflow.test.ts"},{"assertionResults":[{"ancestorTitles":["Database Schema","Test Tables"],"fullName":"Database Schema Test Tables should have testFolder table defined","status":"passed","title":"should have testFolder table defined","duration":1.7342919999998685,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Test Tables"],"fullName":"Database Schema Test Tables should have testSpec table defined","status":"passed","title":"should have testSpec table defined","duration":0.15949999999998,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Test Tables"],"fullName":"Database Schema Test Tables should have testRequirement table defined","status":"passed","title":"should have testRequirement table defined","duration":0.14333299999998417,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Test Tables"],"fullName":"Database Schema Test Tables should have test table defined","status":"passed","title":"should have test table defined","duration":0.06283300000018244,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Auth Tables"],"fullName":"Database Schema Auth Tables should have user table defined","status":"passed","title":"should have user table defined","duration":0.17520799999988412,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Auth Tables"],"fullName":"Database Schema Auth Tables should have organization table defined","status":"passed","title":"should have organization table defined","duration":0.12416699999994307,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Auth Tables"],"fullName":"Database Schema Auth Tables should have member table defined","status":"passed","title":"should have member table defined","duration":0.06820900000002439,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Table Columns"],"fullName":"Database Schema Table Columns testFolder should have required columns","status":"passed","title":"testFolder should have required columns","duration":0.7834579999998823,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Table Columns"],"fullName":"Database Schema Table Columns testSpec should have required columns","status":"passed","title":"testSpec should have required columns","duration":0.6662920000001122,"failureMessages":[],"meta":{}},{"ancestorTitles":["Database Schema","Table Columns"],"fullName":"Database Schema Table Columns test should have required columns","status":"passed","title":"test should have required columns","duration":0.2177079999999023,"failureMessages":[],"meta":{}}],"startTime":1760889270687,"endTime":1760889270691.6663,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/db/schema.test.ts"},{"assertionResults":[{"ancestorTitles":["Constants","TEST_STATUSES"],"fullName":"Constants TEST_STATUSES should contain all required test statuses","status":"passed","title":"should contain all required test statuses","duration":3.7805419999999685,"failureMessages":[],"meta":{}},{"ancestorTitles":["Constants","TEST_STATUSES"],"fullName":"Constants TEST_STATUSES should have string values matching keys","status":"passed","title":"should have string values matching keys","duration":0.3565000000000964,"failureMessages":[],"meta":{}},{"ancestorTitles":["Constants","SPEC_STATUSES"],"fullName":"Constants SPEC_STATUSES should extend TEST_STATUSES with additional statuses","status":"passed","title":"should extend TEST_STATUSES with additional statuses","duration":0.13716699999986304,"failureMessages":[],"meta":{}},{"ancestorTitles":["Constants","SPEC_STATUSES"],"fullName":"Constants SPEC_STATUSES should include all test statuses","status":"passed","title":"should include all test statuses","duration":0.1486250000000382,"failureMessages":[],"meta":{}},{"ancestorTitles":["Constants","STATUS_CONFIGS"],"fullName":"Constants STATUS_CONFIGS should have config for each status","status":"passed","title":"should have config for each status","duration":0.226917000000185,"failureMessages":[],"meta":{}},{"ancestorTitles":["Constants","STATUS_CONFIGS"],"fullName":"Constants STATUS_CONFIGS should have required properties for each config","status":"passed","title":"should have required properties for each config","duration":0.5210419999998521,"failureMessages":[],"meta":{}},{"ancestorTitles":["Constants","STATUS_CONFIGS"],"fullName":"Constants STATUS_CONFIGS should have correct labels","status":"passed","title":"should have correct labels","duration":0.08287500000005821,"failureMessages":[],"meta":{}}],"startTime":1760889270363,"endTime":1760889270369.0828,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/lib/constants.test.ts"},{"assertionResults":[{"ancestorTitles":["Type Schemas","testSpecInsertSchema"],"fullName":"Type Schemas testSpecInsertSchema should validate required fields","status":"passed","title":"should validate required fields","duration":1.6174999999998363,"failureMessages":[],"meta":{}},{"ancestorTitles":["Type Schemas","testSpecInsertSchema"],"fullName":"Type Schemas testSpecInsertSchema should accept valid test spec data","status":"passed","title":"should accept valid test spec data","duration":0.5567080000000715,"failureMessages":[],"meta":{}},{"ancestorTitles":["Type Schemas","testFolderInsertSchema"],"fullName":"Type Schemas testFolderInsertSchema should accept valid folder data","status":"passed","title":"should accept valid folder data","duration":0.3266670000000431,"failureMessages":[],"meta":{}},{"ancestorTitles":["Type Schemas","testFolderInsertSchema"],"fullName":"Type Schemas testFolderInsertSchema should require organization ID","status":"passed","title":"should require organization ID","duration":0.183667000000014,"failureMessages":[],"meta":{}}],"startTime":1760889270794,"endTime":1760889270797.3267,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/lib/types.test.ts"},{"assertionResults":[{"ancestorTitles":["Utils","cn (className merger)"],"fullName":"Utils cn (className merger) should merge class names","status":"passed","title":"should merge class names","duration":5.209916999999905,"failureMessages":[],"meta":{}},{"ancestorTitles":["Utils","cn (className merger)"],"fullName":"Utils cn (className merger) should handle conditional classes","status":"passed","title":"should handle conditional classes","duration":0.2101669999999558,"failureMessages":[],"meta":{}},{"ancestorTitles":["Utils","cn (className merger)"],"fullName":"Utils cn (className merger) should handle tailwind merge","status":"passed","title":"should handle tailwind merge","duration":0.4322500000000673,"failureMessages":[],"meta":{}},{"ancestorTitles":["Utils","cn (className merger)"],"fullName":"Utils cn (className merger) should handle undefined and null","status":"passed","title":"should handle undefined and null","duration":0.08920800000009876,"failureMessages":[],"meta":{}}],"startTime":1760889270289,"endTime":1760889270295.4321,"status":"passed","message":"","name":"/Users/roman/Desktop/automaspec/__tests__/lib/utils.test.ts"}]}
+{
+    "numTotalTestSuites": 27,
+    "numPassedTestSuites": 27,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "numTotalTests": 40,
+    "numPassedTests": 33,
+    "numFailedTests": 0,
+    "numPendingTests": 7,
+    "numTodoTests": 0,
+    "snapshot": {
+        "added": 0,
+        "failure": false,
+        "filesAdded": 0,
+        "filesRemoved": 0,
+        "filesRemovedList": [],
+        "filesUnmatched": 0,
+        "filesUpdated": 0,
+        "matched": 0,
+        "total": 0,
+        "unchecked": 0,
+        "uncheckedKeysByFile": [],
+        "unmatched": 0,
+        "updated": 0,
+        "didUpdate": false
+    },
+    "startTime": 1760889268834,
+    "success": true,
+    "testResults": [
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Test Details Panel"],
+                    "fullName": "Test Details Panel should display test spec details",
+                    "status": "passed",
+                    "title": "should display test spec details",
+                    "duration": 87.21241599999985,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Details Panel"],
+                    "fullName": "Test Details Panel should display test statistics",
+                    "status": "passed",
+                    "title": "should display test statistics",
+                    "duration": 18.820915999999897,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Details Panel"],
+                    "fullName": "Test Details Panel should handle no spec selected",
+                    "status": "passed",
+                    "title": "should handle no spec selected",
+                    "duration": 4.12520799999993,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889270796,
+            "endTime": 1760889270906.1252,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/components/test-details-panel.test.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Tree Component"],
+                    "fullName": "Tree Component should display test folders in tree structure",
+                    "status": "passed",
+                    "title": "should display test folders in tree structure",
+                    "duration": 0.7375420000000759,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889271045,
+            "endTime": 1760889271045.7375,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/components/tree-display.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Dashboard Tree View"],
+                    "fullName": "Dashboard Tree View should display test folders in tree structure",
+                    "status": "passed",
+                    "title": "should display test folders in tree structure",
+                    "duration": 44.980542000000014,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Dashboard Tree View"],
+                    "fullName": "Dashboard Tree View should handle empty folders array",
+                    "status": "passed",
+                    "title": "should handle empty folders array",
+                    "duration": 120.89345800000001,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Dashboard Tree View"],
+                    "fullName": "Dashboard Tree View should display specs in folders",
+                    "status": "passed",
+                    "title": "should display specs in folders",
+                    "duration": 15.585917000000109,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889270409,
+            "endTime": 1760889270590.586,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/components/tree.test.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Session Management"],
+                    "fullName": "Session Management should maintain session across page reloads",
+                    "status": "passed",
+                    "title": "should maintain session across page reloads",
+                    "duration": 0.6579580000000078,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889271003,
+            "endTime": 1760889271003.658,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/integration/session-reload.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should create a test folder",
+                    "status": "skipped",
+                    "title": "should create a test folder",
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should create a test spec in the folder",
+                    "status": "skipped",
+                    "title": "should create a test spec in the folder",
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should create a test requirement",
+                    "status": "skipped",
+                    "title": "should create a test requirement",
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should create a test",
+                    "status": "skipped",
+                    "title": "should create a test",
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should query test with all relationships",
+                    "status": "skipped",
+                    "title": "should query test with all relationships",
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should update test status",
+                    "status": "skipped",
+                    "title": "should update test status",
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Management Workflow (Integration)"],
+                    "fullName": "Test Management Workflow (Integration) should cascade delete when folder is deleted",
+                    "status": "skipped",
+                    "title": "should cascade delete when folder is deleted",
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889268834,
+            "endTime": 1760889268834,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/integration/test-workflow.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have testFolder table defined",
+                    "status": "passed",
+                    "title": "should have testFolder table defined",
+                    "duration": 1.7342919999998685,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have testSpec table defined",
+                    "status": "passed",
+                    "title": "should have testSpec table defined",
+                    "duration": 0.15949999999998,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have testRequirement table defined",
+                    "status": "passed",
+                    "title": "should have testRequirement table defined",
+                    "duration": 0.14333299999998417,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have test table defined",
+                    "status": "passed",
+                    "title": "should have test table defined",
+                    "duration": 0.06283300000018244,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Auth Tables"],
+                    "fullName": "Database Schema Auth Tables should have user table defined",
+                    "status": "passed",
+                    "title": "should have user table defined",
+                    "duration": 0.17520799999988412,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Auth Tables"],
+                    "fullName": "Database Schema Auth Tables should have organization table defined",
+                    "status": "passed",
+                    "title": "should have organization table defined",
+                    "duration": 0.12416699999994307,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Auth Tables"],
+                    "fullName": "Database Schema Auth Tables should have member table defined",
+                    "status": "passed",
+                    "title": "should have member table defined",
+                    "duration": 0.06820900000002439,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Table Columns"],
+                    "fullName": "Database Schema Table Columns testFolder should have required columns",
+                    "status": "passed",
+                    "title": "testFolder should have required columns",
+                    "duration": 0.7834579999998823,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Table Columns"],
+                    "fullName": "Database Schema Table Columns testSpec should have required columns",
+                    "status": "passed",
+                    "title": "testSpec should have required columns",
+                    "duration": 0.6662920000001122,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Table Columns"],
+                    "fullName": "Database Schema Table Columns test should have required columns",
+                    "status": "passed",
+                    "title": "test should have required columns",
+                    "duration": 0.2177079999999023,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889270687,
+            "endTime": 1760889270691.6663,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/db/schema.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Constants", "TEST_STATUSES"],
+                    "fullName": "Constants TEST_STATUSES should contain all required test statuses",
+                    "status": "passed",
+                    "title": "should contain all required test statuses",
+                    "duration": 3.7805419999999685,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "TEST_STATUSES"],
+                    "fullName": "Constants TEST_STATUSES should have string values matching keys",
+                    "status": "passed",
+                    "title": "should have string values matching keys",
+                    "duration": 0.3565000000000964,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "SPEC_STATUSES"],
+                    "fullName": "Constants SPEC_STATUSES should extend TEST_STATUSES with additional statuses",
+                    "status": "passed",
+                    "title": "should extend TEST_STATUSES with additional statuses",
+                    "duration": 0.13716699999986304,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "SPEC_STATUSES"],
+                    "fullName": "Constants SPEC_STATUSES should include all test statuses",
+                    "status": "passed",
+                    "title": "should include all test statuses",
+                    "duration": 0.1486250000000382,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "STATUS_CONFIGS"],
+                    "fullName": "Constants STATUS_CONFIGS should have config for each status",
+                    "status": "passed",
+                    "title": "should have config for each status",
+                    "duration": 0.226917000000185,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "STATUS_CONFIGS"],
+                    "fullName": "Constants STATUS_CONFIGS should have required properties for each config",
+                    "status": "passed",
+                    "title": "should have required properties for each config",
+                    "duration": 0.5210419999998521,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "STATUS_CONFIGS"],
+                    "fullName": "Constants STATUS_CONFIGS should have correct labels",
+                    "status": "passed",
+                    "title": "should have correct labels",
+                    "duration": 0.08287500000005821,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889270363,
+            "endTime": 1760889270369.0828,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/lib/constants.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Type Schemas", "testSpecInsertSchema"],
+                    "fullName": "Type Schemas testSpecInsertSchema should validate required fields",
+                    "status": "passed",
+                    "title": "should validate required fields",
+                    "duration": 1.6174999999998363,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Type Schemas", "testSpecInsertSchema"],
+                    "fullName": "Type Schemas testSpecInsertSchema should accept valid test spec data",
+                    "status": "passed",
+                    "title": "should accept valid test spec data",
+                    "duration": 0.5567080000000715,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Type Schemas", "testFolderInsertSchema"],
+                    "fullName": "Type Schemas testFolderInsertSchema should accept valid folder data",
+                    "status": "passed",
+                    "title": "should accept valid folder data",
+                    "duration": 0.3266670000000431,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Type Schemas", "testFolderInsertSchema"],
+                    "fullName": "Type Schemas testFolderInsertSchema should require organization ID",
+                    "status": "passed",
+                    "title": "should require organization ID",
+                    "duration": 0.183667000000014,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889270794,
+            "endTime": 1760889270797.3267,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/lib/types.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Utils", "cn (className merger)"],
+                    "fullName": "Utils cn (className merger) should merge class names",
+                    "status": "passed",
+                    "title": "should merge class names",
+                    "duration": 5.209916999999905,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Utils", "cn (className merger)"],
+                    "fullName": "Utils cn (className merger) should handle conditional classes",
+                    "status": "passed",
+                    "title": "should handle conditional classes",
+                    "duration": 0.2101669999999558,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Utils", "cn (className merger)"],
+                    "fullName": "Utils cn (className merger) should handle tailwind merge",
+                    "status": "passed",
+                    "title": "should handle tailwind merge",
+                    "duration": 0.4322500000000673,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Utils", "cn (className merger)"],
+                    "fullName": "Utils cn (className merger) should handle undefined and null",
+                    "status": "passed",
+                    "title": "should handle undefined and null",
+                    "duration": 0.08920800000009876,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1760889270289,
+            "endTime": 1760889270295.4321,
+            "status": "passed",
+            "message": "",
+            "name": "/Users/roman/Desktop/automaspec/__tests__/lib/utils.test.ts"
+        }
+    ]
+}

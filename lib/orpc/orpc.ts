@@ -1,10 +1,11 @@
 import type { ContractRouterClient } from '@orpc/contract'
 
-import { contract } from '@/orpc/contracts'
 import { createORPCClient, createSafeClient } from '@orpc/client'
 import { RequestValidationPlugin, ResponseValidationPlugin } from '@orpc/contract/plugins'
 import { OpenAPILink } from '@orpc/openapi-client/fetch'
 import { createTanstackQueryUtils } from '@orpc/tanstack-query'
+
+import { contract } from '@/orpc/contracts'
 
 declare global {
     var $client: ContractRouterClient<typeof contract> | undefined

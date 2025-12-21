@@ -1,256 +1,269 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>adaptive-ui-documentation</title>
-  <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
-</head>
-<body>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#adaptive-ui-documentation"
-id="toc-adaptive-ui-documentation">Adaptive UI Documentation</a>
-<ul>
-<li><a href="#overview" id="toc-overview">Overview</a></li>
-<li><a href="#device-support" id="toc-device-support">Device Support</a>
-<ul>
-<li><a href="#three-device-types-supported"
-id="toc-three-device-types-supported">✅ Three Device Types
-Supported</a></li>
-<li><a href="#key-features" id="toc-key-features">Key Features</a></li>
-</ul></li>
-<li><a href="#visual-criteria" id="toc-visual-criteria">Visual
-Criteria</a>
-<ul>
-<li><a href="#typography-icons" id="toc-typography-icons">Typography
-&amp; Icons</a></li>
-<li><a href="#interactive-elements"
-id="toc-interactive-elements">Interactive Elements</a></li>
-<li><a href="#theme-support" id="toc-theme-support">Theme
-Support</a></li>
-</ul></li>
-<li><a href="#structural-criteria"
-id="toc-structural-criteria">Structural Criteria</a>
-<ul>
-<li><a href="#adaptive-layout" id="toc-adaptive-layout">Adaptive
-Layout</a></li>
-<li><a href="#component-library" id="toc-component-library">Component
-Library</a></li>
-</ul></li>
-<li><a href="#screenshots" id="toc-screenshots">Screenshots</a>
-<ul>
-<li><a href="#login-page" id="toc-login-page">Login Page</a></li>
-<li><a href="#dashboard-page" id="toc-dashboard-page">Dashboard
-Page</a></li>
-</ul></li>
-<li><a href="#technical-implementation"
-id="toc-technical-implementation">Technical Implementation</a>
-<ul>
-<li><a href="#framework-tools" id="toc-framework-tools">Framework &amp;
-Tools</a></li>
-<li><a href="#responsive-features"
-id="toc-responsive-features">Responsive Features</a></li>
-<li><a href="#browser-support" id="toc-browser-support">Browser
-Support</a></li>
-</ul></li>
-<li><a href="#compliance-summary" id="toc-compliance-summary">Compliance
-Summary</a>
-<ul>
-<li><a href="#minimum-requirements"
-id="toc-minimum-requirements">Minimum Requirements ✅</a></li>
-<li><a href="#enhanced-features" id="toc-enhanced-features">Enhanced
-Features ✅</a></li>
-</ul></li>
-<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
-</ul></li>
-</ul>
-</nav>
-<h1 id="adaptive-ui-documentation">Adaptive UI Documentation</h1>
-<h2 id="overview">Overview</h2>
-<p>AutomaSpec implements a fully responsive interface that adapts
-seamlessly across mobile, tablet, and desktop devices while maintaining
-functionality and visual consistency.</p>
-<hr />
-<h2 id="device-support">Device Support</h2>
-<h3 id="three-device-types-supported">✅ Three Device Types
-Supported</h3>
-<ul>
-<li><strong>Mobile</strong> (375px - 767px): Touch-optimized,
-single-column layout</li>
-<li><strong>Tablet</strong> (768px - 1023px): Enhanced layouts with
-balanced information density<br />
-</li>
-<li><strong>Desktop</strong> (1024px+): Full two-panel dashboard with
-maximum functionality</li>
-</ul>
-<h3 id="key-features">Key Features</h3>
-<ul>
-<li>✅ Relative units throughout (rem, em, %, vw, vh)</li>
-<li>✅ No overlapping elements at any screen size</li>
-<li>✅ Correct functionality with browser zoom</li>
-<li>✅ Responsive breakpoints: 640px, 768px, 1024px, 1280px, 1536px</li>
-</ul>
-<hr />
-<h2 id="visual-criteria">Visual Criteria</h2>
-<h3 id="typography-icons">Typography &amp; Icons</h3>
-<ul>
-<li>✅ Scalable fonts using relative units</li>
-<li>✅ SVG icons (Lucide React) - scale without distortion</li>
-<li>✅ Unified typography across all devices</li>
-<li>✅ Consistent color palette via CSS custom properties</li>
-</ul>
-<h3 id="interactive-elements">Interactive Elements</h3>
-<ul>
-<li>✅ Minimum 44px touch targets for mobile</li>
-<li>✅ WCAG 2.1 AA contrast compliance (4.5:1 minimum)</li>
-<li>✅ Accessible form elements and buttons</li>
-</ul>
-<h3 id="theme-support">Theme Support</h3>
-<ul>
-<li>✅ Light/Dark theme with smooth transitions</li>
-<li>✅ System preference detection</li>
-<li>✅ Theme toggle available throughout</li>
-</ul>
-<hr />
-<h2 id="structural-criteria">Structural Criteria</h2>
-<h3 id="adaptive-layout">Adaptive Layout</h3>
-<ul>
-<li>✅ Flexbox/Grid-based responsive system</li>
-<li>✅ Blocks scale appropriately with screen width</li>
-<li>✅ Navigation always accessible</li>
-<li>✅ Mobile: Sheet-based sidebar</li>
-<li>✅ Desktop: Fixed sidebar with collapse</li>
-</ul>
-<h3 id="component-library">Component Library</h3>
-<ul>
-<li>✅ Reusable responsive components</li>
-<li>✅ Size variants (sm, md, lg)</li>
-<li>✅ Mobile-aware dialogs and sheets</li>
-</ul>
-<hr />
-<h2 id="screenshots">Screenshots</h2>
-<h3 id="login-page">Login Page</h3>
-<h4 id="desktop-19201080">Desktop (1920×1080)</h4>
-<figure>
-<img src="docs/screenshots/login-desktop-1920x1080.png"
-alt="Login Desktop" />
-<figcaption aria-hidden="true">Login Desktop</figcaption>
-</figure>
-<p><strong>Features:</strong> - Centered layout with optimal spacing -
-Full-width form elements - Clear visual hierarchy</p>
-<h4 id="tablet-7681024">Tablet (768×1024)</h4>
-<figure>
-<img src="docs/screenshots/login-tablet-768x1024.png"
-alt="Login Tablet" />
-<figcaption aria-hidden="true">Login Tablet</figcaption>
-</figure>
-<p><strong>Adaptations:</strong> - Maintained centered layout -
-Touch-friendly buttons - Readable typography</p>
-<h4 id="mobile-375667">Mobile (375×667)</h4>
-<figure>
-<img src="docs/screenshots/login-mobile-375x667.png"
-alt="Login Mobile" />
-<figcaption aria-hidden="true">Login Mobile</figcaption>
-</figure>
-<p><strong>Adaptations:</strong> - Full-width form - Stacked social
-login buttons - Single-column layout</p>
-<hr />
-<h3 id="dashboard-page">Dashboard Page</h3>
-<h4 id="desktop-19201080-1">Desktop (1920×1080)</h4>
-<figure>
-<img src="docs/screenshots/dashboard-desktop-1920x1080.png"
-alt="Dashboard Desktop" />
-<figcaption aria-hidden="true">Dashboard Desktop</figcaption>
-</figure>
-<p><strong>Layout:</strong> - Two-panel layout (50/50 split) - Tree
-navigation left, details panel right - Full header navigation</p>
-<h4 id="tablet-7681024-1">Tablet (768×1024)</h4>
-<figure>
-<img src="docs/screenshots/dashboard-tablet-768x1024.png"
-alt="Dashboard Tablet" />
-<figcaption aria-hidden="true">Dashboard Tablet</figcaption>
-</figure>
-<p><strong>Adaptations:</strong> - Responsive panel widths - Maintained
-two-column layout - Touch-optimized interactions</p>
-<h4 id="mobile-375667-1">Mobile (375×667)</h4>
-<figure>
-<img src="docs/screenshots/dashboard-mobile-375x667.png"
-alt="Dashboard Mobile" />
-<figcaption aria-hidden="true">Dashboard Mobile</figcaption>
-</figure>
-<p><strong>Adaptations:</strong> - Single-column stacked layout -
-Full-width panels - Mobile-optimized navigation</p>
-<hr />
-<h2 id="technical-implementation">Technical Implementation</h2>
-<h3 id="framework-tools">Framework &amp; Tools</h3>
-<ul>
-<li><strong>Next.js 16</strong> - React framework</li>
-<li><strong>Tailwind CSS 4</strong> - Utility-first CSS</li>
-<li><strong>TypeScript</strong> - Type safety</li>
-<li><strong>Lucide React</strong> - SVG icons</li>
-</ul>
-<h3 id="responsive-features">Responsive Features</h3>
-<ul>
-<li>Custom <code>useIsMobile()</code> hook (breakpoint: 768px)</li>
-<li>Tailwind responsive utilities (<code>sm:</code>, <code>md:</code>,
-<code>lg:</code>)</li>
-<li>CSS custom properties for theming</li>
-<li>Container queries where applicable</li>
-</ul>
-<h3 id="browser-support">Browser Support</h3>
-<ul>
-<li>✅ Modern browsers (Chrome, Firefox, Safari, Edge)</li>
-<li>✅ Mobile browsers (iOS Safari, Chrome Mobile)</li>
-<li>✅ Full touch support</li>
-</ul>
-<hr />
-<h2 id="compliance-summary">Compliance Summary</h2>
-<h3 id="minimum-requirements">Minimum Requirements ✅</h3>
-<ul>
-<li>✅ 3 device types (mobile, tablet, desktop)</li>
-<li>✅ Correct display at different resolutions</li>
-<li>✅ Relative units throughout</li>
-<li>✅ Scalable fonts and icons</li>
-<li>✅ 44px+ touch targets</li>
-<li>✅ WCAG 2.1 AA contrast</li>
-<li>✅ Adaptive grid system</li>
-<li>✅ Always accessible navigation</li>
-</ul>
-<h3 id="enhanced-features">Enhanced Features ✅</h3>
-<ul>
-<li>✅ Light/dark theme support</li>
-<li>✅ SVG icons throughout</li>
-<li>✅ System theme detection</li>
-<li>✅ Smooth theme transitions</li>
-<li>✅ Mobile-optimized layouts</li>
-</ul>
-<hr />
-<h2 id="conclusion">Conclusion</h2>
-<p>AutomaSpec provides a comprehensive adaptive UI that meets all
-requirements for responsive design, ensuring functional consistency,
-visual integrity, and optimal user experience across all device
-types.</p>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="pandoc" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+        <title>adaptive-ui-documentation</title>
+        <style>
+            /* Default styles provided by pandoc.
+            ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+            */
+            code{white-space: pre-wrap;}
+            span.smallcaps{font-variant: small-caps;}
+            div.columns{display: flex; gap: min(4vw, 1.5em);}
+            div.column{flex: auto; overflow-x: auto;}
+            div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+            /* The extra [class] is a hack that increases specificity enough to
+               override a similar rule in reveal.js */
+            ul.task-list[class]{list-style: none;}
+            ul.task-list li input[type="checkbox"] {
+              font-size: inherit;
+              width: 0.8em;
+              margin: 0 0.8em 0.2em -1.6em;
+              vertical-align: middle;
+            }
+            .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+        </style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
+    </head>
+    <body>
+        <nav id="TOC" role="doc-toc">
+            <ul>
+                <li>
+                    <a href="#adaptive-ui-documentation" id="toc-adaptive-ui-documentation"
+                        >Adaptive UI Documentation</a
+                    >
+                    <ul>
+                        <li><a href="#overview" id="toc-overview">Overview</a></li>
+                        <li>
+                            <a href="#device-support" id="toc-device-support">Device Support</a>
+                            <ul>
+                                <li>
+                                    <a href="#three-device-types-supported" id="toc-three-device-types-supported"
+                                        >✅ Three Device Types Supported</a
+                                    >
+                                </li>
+                                <li><a href="#key-features" id="toc-key-features">Key Features</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#visual-criteria" id="toc-visual-criteria">Visual Criteria</a>
+                            <ul>
+                                <li>
+                                    <a href="#typography-icons" id="toc-typography-icons">Typography &amp; Icons</a>
+                                </li>
+                                <li>
+                                    <a href="#interactive-elements" id="toc-interactive-elements"
+                                        >Interactive Elements</a
+                                    >
+                                </li>
+                                <li><a href="#theme-support" id="toc-theme-support">Theme Support</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#structural-criteria" id="toc-structural-criteria">Structural Criteria</a>
+                            <ul>
+                                <li><a href="#adaptive-layout" id="toc-adaptive-layout">Adaptive Layout</a></li>
+                                <li><a href="#component-library" id="toc-component-library">Component Library</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#screenshots" id="toc-screenshots">Screenshots</a>
+                            <ul>
+                                <li><a href="#login-page" id="toc-login-page">Login Page</a></li>
+                                <li><a href="#dashboard-page" id="toc-dashboard-page">Dashboard Page</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#technical-implementation" id="toc-technical-implementation"
+                                >Technical Implementation</a
+                            >
+                            <ul>
+                                <li><a href="#framework-tools" id="toc-framework-tools">Framework &amp; Tools</a></li>
+                                <li>
+                                    <a href="#responsive-features" id="toc-responsive-features">Responsive Features</a>
+                                </li>
+                                <li><a href="#browser-support" id="toc-browser-support">Browser Support</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#compliance-summary" id="toc-compliance-summary">Compliance Summary</a>
+                            <ul>
+                                <li>
+                                    <a href="#minimum-requirements" id="toc-minimum-requirements"
+                                        >Minimum Requirements ✅</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="#enhanced-features" id="toc-enhanced-features">Enhanced Features ✅</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <h1 id="adaptive-ui-documentation">Adaptive UI Documentation</h1>
+        <h2 id="overview">Overview</h2>
+        <p>
+            AutomaSpec implements a fully responsive interface that adapts seamlessly across mobile, tablet, and desktop
+            devices while maintaining functionality and visual consistency.
+        </p>
+        <hr />
+        <h2 id="device-support">Device Support</h2>
+        <h3 id="three-device-types-supported">✅ Three Device Types Supported</h3>
+        <ul>
+            <li><strong>Mobile</strong> (375px - 767px): Touch-optimized, single-column layout</li>
+            <li><strong>Tablet</strong> (768px - 1023px): Enhanced layouts with balanced information density<br /></li>
+            <li><strong>Desktop</strong> (1024px+): Full two-panel dashboard with maximum functionality</li>
+        </ul>
+        <h3 id="key-features">Key Features</h3>
+        <ul>
+            <li>✅ Relative units throughout (rem, em, %, vw, vh)</li>
+            <li>✅ No overlapping elements at any screen size</li>
+            <li>✅ Correct functionality with browser zoom</li>
+            <li>✅ Responsive breakpoints: 640px, 768px, 1024px, 1280px, 1536px</li>
+        </ul>
+        <hr />
+        <h2 id="visual-criteria">Visual Criteria</h2>
+        <h3 id="typography-icons">Typography &amp; Icons</h3>
+        <ul>
+            <li>✅ Scalable fonts using relative units</li>
+            <li>✅ SVG icons (Lucide React) - scale without distortion</li>
+            <li>✅ Unified typography across all devices</li>
+            <li>✅ Consistent color palette via CSS custom properties</li>
+        </ul>
+        <h3 id="interactive-elements">Interactive Elements</h3>
+        <ul>
+            <li>✅ Minimum 44px touch targets for mobile</li>
+            <li>✅ WCAG 2.1 AA contrast compliance (4.5:1 minimum)</li>
+            <li>✅ Accessible form elements and buttons</li>
+        </ul>
+        <h3 id="theme-support">Theme Support</h3>
+        <ul>
+            <li>✅ Light/Dark theme with smooth transitions</li>
+            <li>✅ System preference detection</li>
+            <li>✅ Theme toggle available throughout</li>
+        </ul>
+        <hr />
+        <h2 id="structural-criteria">Structural Criteria</h2>
+        <h3 id="adaptive-layout">Adaptive Layout</h3>
+        <ul>
+            <li>✅ Flexbox/Grid-based responsive system</li>
+            <li>✅ Blocks scale appropriately with screen width</li>
+            <li>✅ Navigation always accessible</li>
+            <li>✅ Mobile: Sheet-based sidebar</li>
+            <li>✅ Desktop: Fixed sidebar with collapse</li>
+        </ul>
+        <h3 id="component-library">Component Library</h3>
+        <ul>
+            <li>✅ Reusable responsive components</li>
+            <li>✅ Size variants (sm, md, lg)</li>
+            <li>✅ Mobile-aware dialogs and sheets</li>
+        </ul>
+        <hr />
+        <h2 id="screenshots">Screenshots</h2>
+        <h3 id="login-page">Login Page</h3>
+        <h4 id="desktop-19201080">Desktop (1920×1080)</h4>
+        <figure>
+            <img src="docs/screenshots/login-desktop-1920x1080.png" alt="Login Desktop" />
+            <figcaption aria-hidden="true">Login Desktop</figcaption>
+        </figure>
+        <p>
+            <strong>Features:</strong> - Centered layout with optimal spacing - Full-width form elements - Clear visual
+            hierarchy
+        </p>
+        <h4 id="tablet-7681024">Tablet (768×1024)</h4>
+        <figure>
+            <img src="docs/screenshots/login-tablet-768x1024.png" alt="Login Tablet" />
+            <figcaption aria-hidden="true">Login Tablet</figcaption>
+        </figure>
+        <p><strong>Adaptations:</strong> - Maintained centered layout - Touch-friendly buttons - Readable typography</p>
+        <h4 id="mobile-375667">Mobile (375×667)</h4>
+        <figure>
+            <img src="docs/screenshots/login-mobile-375x667.png" alt="Login Mobile" />
+            <figcaption aria-hidden="true">Login Mobile</figcaption>
+        </figure>
+        <p><strong>Adaptations:</strong> - Full-width form - Stacked social login buttons - Single-column layout</p>
+        <hr />
+        <h3 id="dashboard-page">Dashboard Page</h3>
+        <h4 id="desktop-19201080-1">Desktop (1920×1080)</h4>
+        <figure>
+            <img src="docs/screenshots/dashboard-desktop-1920x1080.png" alt="Dashboard Desktop" />
+            <figcaption aria-hidden="true">Dashboard Desktop</figcaption>
+        </figure>
+        <p>
+            <strong>Layout:</strong> - Two-panel layout (50/50 split) - Tree navigation left, details panel right - Full
+            header navigation
+        </p>
+        <h4 id="tablet-7681024-1">Tablet (768×1024)</h4>
+        <figure>
+            <img src="docs/screenshots/dashboard-tablet-768x1024.png" alt="Dashboard Tablet" />
+            <figcaption aria-hidden="true">Dashboard Tablet</figcaption>
+        </figure>
+        <p>
+            <strong>Adaptations:</strong> - Responsive panel widths - Maintained two-column layout - Touch-optimized
+            interactions
+        </p>
+        <h4 id="mobile-375667-1">Mobile (375×667)</h4>
+        <figure>
+            <img src="docs/screenshots/dashboard-mobile-375x667.png" alt="Dashboard Mobile" />
+            <figcaption aria-hidden="true">Dashboard Mobile</figcaption>
+        </figure>
+        <p>
+            <strong>Adaptations:</strong> - Single-column stacked layout - Full-width panels - Mobile-optimized
+            navigation
+        </p>
+        <hr />
+        <h2 id="technical-implementation">Technical Implementation</h2>
+        <h3 id="framework-tools">Framework &amp; Tools</h3>
+        <ul>
+            <li><strong>Next.js 16</strong> - React framework</li>
+            <li><strong>Tailwind CSS 4</strong> - Utility-first CSS</li>
+            <li><strong>TypeScript</strong> - Type safety</li>
+            <li><strong>Lucide React</strong> - SVG icons</li>
+        </ul>
+        <h3 id="responsive-features">Responsive Features</h3>
+        <ul>
+            <li>Custom <code>useIsMobile()</code> hook (breakpoint: 768px)</li>
+            <li>Tailwind responsive utilities (<code>sm:</code>, <code>md:</code>, <code>lg:</code>)</li>
+            <li>CSS custom properties for theming</li>
+            <li>Container queries where applicable</li>
+        </ul>
+        <h3 id="browser-support">Browser Support</h3>
+        <ul>
+            <li>✅ Modern browsers (Chrome, Firefox, Safari, Edge)</li>
+            <li>✅ Mobile browsers (iOS Safari, Chrome Mobile)</li>
+            <li>✅ Full touch support</li>
+        </ul>
+        <hr />
+        <h2 id="compliance-summary">Compliance Summary</h2>
+        <h3 id="minimum-requirements">Minimum Requirements ✅</h3>
+        <ul>
+            <li>✅ 3 device types (mobile, tablet, desktop)</li>
+            <li>✅ Correct display at different resolutions</li>
+            <li>✅ Relative units throughout</li>
+            <li>✅ Scalable fonts and icons</li>
+            <li>✅ 44px+ touch targets</li>
+            <li>✅ WCAG 2.1 AA contrast</li>
+            <li>✅ Adaptive grid system</li>
+            <li>✅ Always accessible navigation</li>
+        </ul>
+        <h3 id="enhanced-features">Enhanced Features ✅</h3>
+        <ul>
+            <li>✅ Light/dark theme support</li>
+            <li>✅ SVG icons throughout</li>
+            <li>✅ System theme detection</li>
+            <li>✅ Smooth theme transitions</li>
+            <li>✅ Mobile-optimized layouts</li>
+        </ul>
+        <hr />
+        <h2 id="conclusion">Conclusion</h2>
+        <p>
+            AutomaSpec provides a comprehensive adaptive UI that meets all requirements for responsive design, ensuring
+            functional consistency, visual integrity, and optimal user experience across all device types.
+        </p>
+    </body>
 </html>

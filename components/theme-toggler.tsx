@@ -1,10 +1,10 @@
 'use client'
 
+import { useThemeAnimation } from '@space-man/react-theme-animation'
 import { Moon, Sun } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { useThemeAnimation } from '@space-man/react-theme-animation'
 
 export function ModeToggle() {
     const { toggleTheme, ref } = useThemeAnimation()

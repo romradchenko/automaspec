@@ -39,39 +39,43 @@ pnpm test __tests__/components/tree.test.tsx
 ## Test Coverage
 
 ### Component Tests
+
 - **Tree Component** (`tree.test.tsx`)
-  - Display test folders in tree structure
-  - Handle empty folders array
-  - Display specs within folders
+    - Display test folders in tree structure
+    - Handle empty folders array
+    - Display specs within folders
 
 - **Test Details Panel** (`test-details-panel.test.tsx`)
-  - Display test spec details (name, description)
-  - Display test statistics and requirements
-  - Handle empty state (no spec selected)
+    - Display test spec details (name, description)
+    - Display test statistics and requirements
+    - Handle empty state (no spec selected)
 
 ### Library Tests
+
 - **Constants** (`constants.test.ts`)
-  - Test status constants
-  - Spec status constants
-  - Status configuration objects
+    - Test status constants
+    - Spec status constants
+    - Status configuration objects
 
 - **Types** (`types.test.ts`)
-  - Test spec schema validation
-  - Test folder schema validation
+    - Test spec schema validation
+    - Test folder schema validation
 
 - **Utils** (`utils.test.ts`)
-  - Class name merger (`cn`) utility
+    - Class name merger (`cn`) utility
 
 ### Database Tests
+
 - **Schema** (`schema.test.ts`)
-  - Table definitions
-  - Column structure
-  - Table names
+    - Table definitions
+    - Column structure
+    - Table names
 
 ### Integration Tests
+
 - **Test Workflow** (`test-workflow.test.ts`)
-  - Currently skipped (requires DATABASE_URL setup)
-  - Tests full CRUD workflow for tests
+    - Currently skipped (requires DATABASE_URL setup)
+    - Tests full CRUD workflow for tests
 
 ## Test Framework
 
@@ -82,6 +86,7 @@ pnpm test __tests__/components/tree.test.tsx
 ## Sample Data
 
 Sample data has been updated to match the real project structure:
+
 - Test folders: Dashboard Tests, Authentication, Test Management, API Routes, Organization Management
 - Test specs: Realistic test files related to the project
 - Test requirements: Actual features being tested

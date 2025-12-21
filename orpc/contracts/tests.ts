@@ -1,3 +1,4 @@
+import { oc } from '@orpc/contract'
 import * as z from 'zod'
 
 import {
@@ -11,7 +12,6 @@ import {
     testInsertSchema,
     vitestReportSchema
 } from '@/lib/types'
-import { oc } from '@orpc/contract'
 
 const getTestFolderContract = oc
     .route({

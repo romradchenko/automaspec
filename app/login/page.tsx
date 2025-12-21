@@ -1,5 +1,6 @@
 'use client'
 
+import { useForm, type AnyFieldApi } from '@tanstack/react-form'
 import { Code, Eye, EyeOff, Chrome, Github } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -17,7 +18,6 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { FieldInfo } from '@/lib/shared/tanstack-form'
-import { useForm, type AnyFieldApi } from '@tanstack/react-form'
 
 const SignInSchema = z.object({
     email: z.email('Invalid email address'),

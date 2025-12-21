@@ -1,9 +1,3 @@
-import { NextResponse } from 'next/server'
-import pino from 'pino'
-import pretty from 'pino-pretty'
-
-import { createContext } from '@/lib/orpc/context'
-import { router } from '@/orpc/routes'
 import { LoggingHandlerPlugin } from '@orpc/experimental-pino'
 import { SmartCoercionPlugin } from '@orpc/json-schema'
 import { OpenAPIHandler } from '@orpc/openapi/fetch'
@@ -11,6 +5,12 @@ import { OpenAPIReferencePlugin } from '@orpc/openapi/plugins'
 import { onError } from '@orpc/server'
 import { CORSPlugin } from '@orpc/server/plugins'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
+import { NextResponse } from 'next/server'
+import pino from 'pino'
+import pretty from 'pino-pretty'
+
+import { createContext } from '@/lib/orpc/context'
+import { router } from '@/orpc/routes'
 
 const logger = pino(pretty({ colorize: true, singleLine: true }))
 

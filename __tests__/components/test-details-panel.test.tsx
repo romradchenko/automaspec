@@ -1,11 +1,11 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, screen } from '@testing-library/react'
 import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 
 import type { TestSpec, TestRequirement } from '@/lib/types'
 
 import { TestDetailsPanel } from '@/app/dashboard/components/test-details-panel'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
 
 vi.mock('@/lib/shared/better-auth-client', () => ({
     authClient: {

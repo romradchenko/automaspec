@@ -1,3 +1,6 @@
+import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'
+import { implement, ORPCError } from '@orpc/server'
 import { stepCountIs, streamText, tool, type ModelMessage } from 'ai'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
@@ -18,9 +21,6 @@ import {
 } from '@/lib/constants'
 import { aiContract } from '@/orpc/contracts/ai'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
-import { createGoogleGenerativeAI } from '@ai-sdk/google'
-import { createOpenRouter } from '@openrouter/ai-sdk-provider'
-import { implement, ORPCError } from '@orpc/server'
 
 const ACTION_SYSTEM_PROMPT =
     'You are the Automaspec copilot. Stay within test management. ' +

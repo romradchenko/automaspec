@@ -1,5 +1,6 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import type { AnalyticsPeriod } from '@/lib/types'
@@ -7,7 +8,6 @@ import type { AnalyticsPeriod } from '@/lib/types'
 import Loader from '@/components/loader'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { orpc } from '@/lib/orpc/orpc'
-import { useQuery } from '@tanstack/react-query'
 
 import { AnalyticsHeader } from './components/analytics-header'
 import { MetricsCards } from './components/metrics-cards'

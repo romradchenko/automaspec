@@ -1,3 +1,4 @@
+import { implement } from '@orpc/server'
 import { sql, eq, and, count } from 'drizzle-orm'
 
 import type { AnalyticsPeriod, TestsGrowthItem, StaleTest } from '@/lib/types'
@@ -7,7 +8,6 @@ import { testSpec, testRequirement, test, member } from '@/db/schema'
 import { ANALYTICS_PERIODS, SPEC_STATUSES } from '@/lib/constants'
 import { analyticsContract } from '@/orpc/contracts/analytics'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
-import { implement } from '@orpc/server'
 
 const os = implement(analyticsContract).use(authMiddleware).use(organizationMiddleware)
 

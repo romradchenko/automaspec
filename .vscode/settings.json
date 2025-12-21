@@ -1,16 +1,16 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "yaml.schemas": {
-    "https://raw.githubusercontent.com/evilmartians/lefthook/master/schema.json": "file:///home/qweered/Projects/automaspec/lefthook.yml"
-  },
-  "oxc.enable": true,
-  "oxc.fmt.experimental": true,
-  "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "oxc.typeAware": true,
-  "oxc.requireConfig": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/evilmartians/lefthook/master/schema.json": "file:///home/qweered/Projects/automaspec/lefthook.yml"
+    },
+    "oxc.enable": true,
+    "oxc.fmt.experimental": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode"
+    },
+    "oxc.typeAware": true,
+    "oxc.requireConfig": true
 }

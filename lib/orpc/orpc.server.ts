@@ -1,8 +1,8 @@
 import 'server-only'
+import { createRouterClient } from '@orpc/server'
 import { headers } from 'next/headers'
 
 import { router } from '@/orpc/routes'
-import { createRouterClient } from '@orpc/server'
 
 globalThis.$client = createRouterClient(router, {
     /**

@@ -1,9 +1,9 @@
+import { createRouterClient } from '@orpc/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { testSpec as testSpecTable, test as testTable } from '@/db/schema'
 import { TEST_STATUSES } from '@/lib/constants'
 import { router } from '@/orpc/routes'
-import { createRouterClient } from '@orpc/server'
 
 let orgTests: Array<Record<string, unknown>> = []
 let allSpecTests: Array<Record<string, unknown>> = []

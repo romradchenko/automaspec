@@ -22,7 +22,7 @@
     ],
     "categories": {
         // "perf": "warn",
-        "restriction": "error",
+        "restriction": "error"
         // "suspicious": "error",
         // "pedantic": "warn",
         // "style": "warn"
@@ -53,6 +53,6 @@
                 "allowExpressions": true,
                 "allowFunctionsWithoutTypeParameters": true
             }
-        ],
+        ]
     }
 }

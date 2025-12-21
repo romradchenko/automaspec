@@ -1,5 +1,6 @@
 'use client'
 
+import { useForm } from '@tanstack/react-form'
 import { Loader2, Building2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -11,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/shared/better-auth-client'
-import { useForm } from '@tanstack/react-form'
 
 export default function CreateOrganizationPage() {
     const router = useRouter()

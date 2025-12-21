@@ -1,5 +1,6 @@
-import { analyticsMetricsInputSchema, analyticsMetricsOutputSchema } from '@/lib/types'
 import { oc } from '@orpc/contract'
+
+import { analyticsMetricsInputSchema, analyticsMetricsOutputSchema } from '@/lib/types'
 
 const getMetricsContract = oc
     .route({
