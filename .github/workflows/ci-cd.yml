@@ -4,8 +4,6 @@ env:
     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 on:
-    push:
-        branches: [main, master, dev]
     pull_request:
         branches: [main, master, dev]
 
@@ -40,6 +38,7 @@ jobs:
         needs: quality-checks
         runs-on: ubuntu-latest
         name: Deploy Preview
+        if: github.ref == 'refs/heads/dev'
         steps:
             - uses: actions/checkout@v2
             - name: Install Vercel CLI
