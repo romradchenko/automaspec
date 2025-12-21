@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "build": "next build",
+        "wd": "pnpm i && next dev --webpack",
         "dev": "pnpm i && next dev",
         "start": "next start",
         "compose:up": "docker compose up --build",
