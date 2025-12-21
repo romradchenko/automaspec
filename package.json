@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "build": "next build",
+        "start": "cp -r .next/static .next/standalone/.next/ && node .next/standalone/server.js",
         "wd": "pnpm i && next dev --webpack",
         "dev": "pnpm i && next dev",
         "compose:up": "docker compose up --build",
