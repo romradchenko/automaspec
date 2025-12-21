@@ -143,12 +143,8 @@ export const STATUS_CONFIGS = {
     }
 } as const satisfies { [K in SpecStatus]: StatusConfig }
 
-export const TEST_RESULTS_FILE = 'test-results.json'
-
 export const ANALYTICS_PERIODS = {
     '7d': 7,
     '30d': 30,
     '90d': 90
 } as const
-
-export const STALE_THRESHOLD_DAYS = 30
