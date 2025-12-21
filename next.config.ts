@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
     experimental: {
         browserDebugInfoInTerminal: true,
         typedEnv: true,
-        useLightningcss: true,
         turbopackFileSystemCacheForDev: true
     },
     logging: {
