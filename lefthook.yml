@@ -24,7 +24,7 @@ pre-push:
             if [ "$LEFTHOOK_FORCE" == "1" ]; then
               exit 0
             fi
-            git pull --rebase
+            git pull --ff-only
           fail_text: '❌ Git pull failed'
 
         - group:
