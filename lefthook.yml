@@ -18,26 +18,16 @@ pre-commit:
           fail_text: '❌ oxlint failed'
 
 pre-push:
+    parallel: true
     jobs:
-        - name: git pull
-          run: |
-              if [ "$LEFTHOOK_FORCE" == "1" ]; then
-                exit 0
-              fi
-              git pull --rebase
-          fail_text: '❌ Git pull failed'
+        - name: typecheck
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm typecheck
+          fail_text: '❌ TypeScript type checking failed'
 
-        - group:
-              parallel: true
-              jobs:
-                  - name: typecheck
-                    glob: '*.{ts,tsx,mts}'
-                    run: pnpm typecheck
-                    fail_text: '❌ TypeScript type checking failed'
-
-                  - name: tests
-                    glob: '*.{ts,tsx,mts}'
-                    run: pnpm test run
-                    fail_text: '❌ Tests failed'
+        - name: tests
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm test run
+          fail_text: '❌ Tests failed'
 
 colors: true
