@@ -229,7 +229,7 @@ Response example (shortened):
 Tooling:
 
 - Vitest (`pnpm test`)
-- React Testing Library (jsdom, setup in `tests/setup.ts`)
+- React Testing Library (jsdom, setup in `__tests__/setup.ts`)
 
 Coverage in repo:
 

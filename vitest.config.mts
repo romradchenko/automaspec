@@ -6,13 +6,15 @@ export default defineConfig({
     plugins: [tsconfigPaths(), react()],
     test: {
         environment: 'jsdom',
-        setupFiles: ['./tests/setup.ts'],
+        setupFiles: ['./__tests__/setup.ts'],
+        exclude: ['e2e/**', '__tests__/e2e/**', 'node_modules/**', 'dist/**', '.next/**'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
             exclude: [
                 'node_modules/',
-                'tests/',
+                '__tests__/',
+                'e2e/**',
                 '**/*.test.ts',
                 '**/*.test.tsx',
                 '**/*.config.*',

@@ -31,3 +31,4 @@ mermaid-filter.err
 coverage/
 diploma_requirments/
 test-results/
+.last-run.json

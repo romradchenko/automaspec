@@ -200,3 +200,25 @@ export type RpcErrorCause = {
 export type RpcError = {
     cause?: RpcErrorCause
 }
+
+export type AuthEmailSignInInput = {
+    email: string
+    password: string
+    remember?: boolean
+}
+
+export type AuthEmailSignUpInput = {
+    name: string
+    email: string
+    password: string
+}
+
+export type AuthCallbackResult = {
+    data: Session
+    error: null
+}
+
+export type AuthCallbacks = {
+    onSuccess?: (result: AuthCallbackResult) => void | Promise<void>
+    onError?: (context: unknown) => void | Promise<void>
+}

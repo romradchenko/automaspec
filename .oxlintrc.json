@@ -38,7 +38,7 @@
         "node/no-process-env": "allow", // not applicable for nextjs
 
         "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
-        "eslint/no-console": ["error", { "allow": ["error"] }],
+        "eslint/no-console": ["error", { "allow": ["error", "debug"] }],
         "typescript/array-type": [
             "error",
             {
