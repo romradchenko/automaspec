@@ -203,10 +203,10 @@ function SignInForm({ switchHref }: { switchHref: string }) {
 
                 <form
                     className="space-y-4"
-                    onSubmit={(event) => {
+                    onSubmit={async (event) => {
                         event.preventDefault()
                         event.stopPropagation()
-                        form.handleSubmit()
+                        await form.handleSubmit()
                     }}
                 >
                     <EmailField form={form} fieldName="email" />
@@ -306,10 +306,10 @@ function SignUpForm({ switchHref }: { switchHref: string }) {
 
                 <form
                     className="space-y-4"
-                    onSubmit={(event) => {
+                    onSubmit={async (event) => {
                         event.preventDefault()
                         event.stopPropagation()
-                        form.handleSubmit()
+                        await form.handleSubmit()
                     }}
                 >
                     <NameField form={form} fieldName="name" />
@@ -386,7 +386,7 @@ export function AuthPage({ mode }: { mode: AuthMode }) {
                                     <Button
                                         variant="link"
                                         className="p-0 h-auto text-primary hover:underline"
-                                        onClick={() => authClient.signOut()}
+                                        onClick={async () => authClient.signOut()}
                                     >
                                         sign out
                                     </Button>
