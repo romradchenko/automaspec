@@ -2,7 +2,7 @@ import { implement } from '@orpc/server'
 import { ORPCError } from '@orpc/server'
 import { eq, and, inArray, isNull } from 'drizzle-orm'
 
-import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestSpec } from '@/lib/types'
+import type { TestStatus, SpecStatus, VitestTestResult, TestFolder } from '@/lib/types'
 
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
@@ -52,10 +52,10 @@ const getFolderChildren = os.testFolders.getChildren.handler(async ({ input, con
         currentDepth: number
     ): Promise<
         Array<{
-            id: TestFolder['id'] | TestSpec['id']
+            id: TestFolder['id']
             name: string
             type: 'folder' | 'spec'
-            children?: Array<{ id: TestFolder['id'] | TestSpec['id']; name: string; type: 'folder' | 'spec' }>
+            children?: Array<{ id: TestFolder['id']; name: string; type: 'folder' | 'spec' }>
         }>
     > {
         let folders

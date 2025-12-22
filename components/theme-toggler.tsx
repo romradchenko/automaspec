@@ -19,8 +19,8 @@ export function ModeToggle() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => toggleTheme()}>Light</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toggleTheme()}>Dark</DropdownMenuItem>
+                <DropdownMenuItem onClick={async () => toggleTheme()}>Light</DropdownMenuItem>
+                <DropdownMenuItem onClick={async () => toggleTheme()}>Dark</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

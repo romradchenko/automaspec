@@ -176,7 +176,7 @@ function SignInForm({ onToggle }: AuthFormProps) {
                     onSubmit={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
-                        form.handleSubmit()
+                        void form.handleSubmit()
                     }}
                 >
                     <EmailField form={form} fieldName="email" />
@@ -259,10 +259,10 @@ function SignUpForm({ onToggle }: AuthFormProps) {
             <CardContent className="space-y-4">
                 <form
                     className="space-y-4"
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                         e.preventDefault()
                         e.stopPropagation()
-                        form.handleSubmit()
+                        await form.handleSubmit()
                     }}
                 >
                     <NameField form={form} fieldName="name" />
@@ -348,7 +348,7 @@ export default function LoginPage() {
                                     <Button
                                         variant="link"
                                         className="p-0 h-auto text-primary hover:underline"
-                                        onClick={() => authClient.signOut()}
+                                        onClick={async () => authClient.signOut()}
                                     >
                                         sign out
                                     </Button>

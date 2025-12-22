@@ -43,7 +43,7 @@ export function AnalyticsHeader() {
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                            <Link href="/login" onClick={() => authClient.signOut()}>
+                            <Link href="/login" onClick={async () => authClient.signOut()}>
                                 <LogOut className="mr-2 size-4" />
                                 Logout
                             </Link>

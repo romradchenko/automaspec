@@ -14,6 +14,6 @@ function createQueryPredicate(path: string) {
 
 export async function invalidateAndRefetchQueries(queryClient: QueryClient, path: string) {
     const predicate = createQueryPredicate(path)
-    queryClient.invalidateQueries({ predicate })
+    await queryClient.invalidateQueries({ predicate })
     await queryClient.refetchQueries({ predicate })
 }

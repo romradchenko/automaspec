@@ -352,7 +352,7 @@ export default function Dashboard() {
                         <FolderDetailsPanel
                             selectedFolder={selectedFolder}
                             onDeleteFolder={handleDeleteFolder}
-                            onRefreshTreeChildren={(parentFolderId: string | null) =>
+                            onRefreshTreeChildren={async (parentFolderId: string | null) =>
                                 treeRef.current?.refreshItemChildren(parentFolderId ?? 'root')
                             }
                         />
@@ -362,7 +362,7 @@ export default function Dashboard() {
                             selectedRequirements={selectedRequirements}
                             selectedTests={selectedTests}
                             onDeleteSpec={handleDeleteSpec}
-                            onRefreshTreeChildren={(parentFolderId: string | null) =>
+                            onRefreshTreeChildren={async (parentFolderId: string | null) =>
                                 treeRef.current?.refreshItemChildren(parentFolderId ?? 'root')
                             }
                         />

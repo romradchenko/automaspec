@@ -19,7 +19,7 @@ const dbMocks = vi.hoisted(() => {
         from: () => ({
             innerJoin: () => ({
                 innerJoin: () => ({
-                    where: () => {
+                    where: async () => {
                         const result = selectCall === 0 ? orgTests : allSpecTests
                         selectCall += 1
                         return Promise.resolve(result)
