@@ -115,19 +115,19 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.1.0
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Run tests with JSON reporter
-        run: npm test -- --reporter=json --outputFile=test-results.json
+        run: pnpm test -- --reporter=json --outputFile=test-results.json
         continue-on-error: true
 
       - name: Sync test results to Automaspec

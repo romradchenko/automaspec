@@ -1,11 +1,11 @@
 services:
     app:
-        image: automaspec-web:prod-${VERSION:-latest}
+        image: automaspec:prod-${VERSION:-latest}
         build:
             context: .
             target: runner
             tags:
-                - automaspec-web:prod-${VERSION:-latest}
+                - automaspec:prod-${VERSION:-latest}
         ports:
             - '${PORT:-3000}:${PORT:-3000}'
         environment:

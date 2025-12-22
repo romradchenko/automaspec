@@ -21,7 +21,13 @@
         "format": "oxfmt",
         "typecheck": "next typegen && tsc --noEmit",
         "precommit": "lefthook run pre-commit",
-        "prepush": "lefthook run pre-push"
+        "prepush": "lefthook run pre-push",
+        "docker:dev:up": "docker compose -f docker-compose.dev.yml up",
+        "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
+        "docker:dev:build": "docker compose -f docker-compose.dev.yml build",
+        "docker:prod:up": "docker compose -f docker-compose.prod.yml up -d",
+        "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
+        "docker:prod:build": "docker compose -f docker-compose.prod.yml build"
     },
     "dependencies": {
         "@ai-sdk/google": "^2.0.51",
