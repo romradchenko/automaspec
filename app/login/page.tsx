@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm, type AnyFieldApi } from '@tanstack/react-form'
-import { Code, Eye, EyeOff, Chrome, Github } from 'lucide-react'
+import { Code, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { type ReactNode, useState } from 'react'
@@ -12,17 +12,14 @@ import Loader from '@/components/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { FieldInfo } from '@/lib/shared/tanstack-form'
 
 const SignInSchema = z.object({
     email: z.email('Invalid email address'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    remember: z.boolean()
+    password: z.string().min(8, 'Password must be at least 8 characters')
 })
 
 const SignUpSchema = z.object({
@@ -34,30 +31,6 @@ const SignUpSchema = z.object({
 type FormWithField = {
     Field: (props: { name: string; children: (field: AnyFieldApi) => ReactNode }) => ReactNode | Promise<ReactNode>
 }
-
-const SocialAuthButtons = () => (
-    <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" type="button">
-            <Github className="mr-2 h-4 w-4" />
-            GitHub
-        </Button>
-        <Button variant="outline" type="button">
-            <Chrome className="mr-2 h-4 w-4" />
-            Google
-        </Button>
-    </div>
-)
-
-const AuthSeparator = () => (
-    <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-            <Separator />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-        </div>
-    </div>
-)
 
 function EmailField({ form, fieldName = 'email' }: { form: FormWithField; fieldName?: string }) {
     return (
@@ -162,8 +135,7 @@ function SignInForm({ onToggle }: AuthFormProps) {
     const form = useForm({
         defaultValues: {
             email: '',
-            password: '',
-            remember: true
+            password: ''
         },
         validators: {
             onSubmit: SignInSchema
@@ -172,8 +144,7 @@ function SignInForm({ onToggle }: AuthFormProps) {
             await authClient.signIn.email(
                 {
                     email: value.email,
-                    password: value.password,
-                    rememberMe: value.remember
+                    password: value.password
                 },
                 {
                     onSuccess: async () => {
@@ -200,9 +171,6 @@ function SignInForm({ onToggle }: AuthFormProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <SocialAuthButtons />
-                <AuthSeparator />
-
                 <form
                     className="space-y-4"
                     onSubmit={(e) => {
@@ -219,26 +187,6 @@ function SignInForm({ onToggle }: AuthFormProps) {
                         showPassword={showPassword}
                         setShowPassword={setShowPassword}
                     />
-
-                    <div className="flex items-center justify-between">
-                        <form.Field name="remember">
-                            {(field) => (
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id={field.name}
-                                        checked={field.state.value}
-                                        onCheckedChange={(checked) => field.handleChange(!!checked)}
-                                    />
-                                    <Label className="text-primary text-sm" htmlFor={field.name}>
-                                        Remember me
-                                    </Label>
-                                </div>
-                            )}
-                        </form.Field>
-                        <Link className="text-primary text-sm hover:underline" href="#">
-                            Forgot password?
-                        </Link>
-                    </div>
 
                     <form.Subscribe>
                         {(state) => (
@@ -309,9 +257,6 @@ function SignUpForm({ onToggle }: AuthFormProps) {
                 <CardDescription className="text-center">Enter your information to create your account</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <SocialAuthButtons />
-                <AuthSeparator />
-
                 <form
                     className="space-y-4"
                     onSubmit={(e) => {

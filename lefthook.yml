@@ -6,7 +6,7 @@ pre-commit:
           fail_text: '❌ Database schema validation failed'
 
         - name: format
-          glob: '*.{ts,tsx,mts}'
+          glob: '*.{ts,tsx,mts,json,yaml,yml}'
           run: pnpm format {staged_files}
           stage_fixed: true
           fail_text: '❌ oxfmt failed'
@@ -21,23 +21,23 @@ pre-push:
     jobs:
         - name: git pull
           run: |
-            if [ "$LEFTHOOK_FORCE" == "1" ]; then
-              exit 0
-            fi
-            git pull --rebase
+              if [ "$LEFTHOOK_FORCE" == "1" ]; then
+                exit 0
+              fi
+              git pull --rebase
           fail_text: '❌ Git pull failed'
 
         - group:
-            parallel: true
-            jobs:
-                - name: typecheck
-                  glob: '*.{ts,tsx,mts}'
-                  run: pnpm typecheck
-                  fail_text: '❌ TypeScript type checking failed'
+              parallel: true
+              jobs:
+                  - name: typecheck
+                    glob: '*.{ts,tsx,mts}'
+                    run: pnpm typecheck
+                    fail_text: '❌ TypeScript type checking failed'
 
-                - name: tests
-                  glob: '*.{ts,tsx,mts}'
-                  run: pnpm test run
-                  fail_text: '❌ Tests failed'
+                  - name: tests
+                    glob: '*.{ts,tsx,mts}'
+                    run: pnpm test run
+                    fail_text: '❌ Tests failed'
 
 colors: true
