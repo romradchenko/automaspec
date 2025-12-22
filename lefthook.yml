@@ -30,4 +30,14 @@ pre-push:
           run: pnpm test run
           fail_text: '❌ Tests failed'
 
+        - name: lint all
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm lint
+          fail_text: '❌ Lint failed'
+
+        - name: format all
+          glob: '*.{ts,tsx,mts,json,yaml,yml}'
+          run: pnpm format
+          fail_text: '❌ Format failed'
+
 colors: true
