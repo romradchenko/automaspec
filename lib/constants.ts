@@ -150,15 +150,6 @@ export const ANALYTICS_PERIODS = {
 } as const
 
 export const ERROR_PAGE_CONTENT = {
-    forbidden: {
-        code: '403',
-        title: 'Access denied',
-        description: 'You do not have permission to access this page. Check your permissions or switch organizations.',
-        primaryActionLabel: 'Go to dashboard',
-        primaryActionHref: '/dashboard',
-        secondaryActionLabel: 'Back home',
-        secondaryActionHref: '/'
-    },
     notFound: {
         code: '404',
         title: 'Page not found',
@@ -175,5 +166,31 @@ export const ERROR_PAGE_CONTENT = {
         primaryActionLabel: 'Try again',
         secondaryActionLabel: 'Back home',
         secondaryActionHref: '/'
+    },
+    badRequest: {
+        code: '400',
+        title: 'Bad request',
+        description: 'The request was invalid or cannot be processed.',
+        primaryActionLabel: 'Try again',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    },
+    unauthorized: {
+        code: '401',
+        title: 'Unauthorized',
+        description: 'You need to be logged in to access this page.',
+        primaryActionLabel: 'Log in',
+        primaryActionHref: '/login',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    },
+    forbidden: {
+        code: '403',
+        title: 'Forbidden',
+        description: 'You do not have permission to access this page.',
+        primaryActionLabel: 'Back home',
+        primaryActionHref: '/',
+        secondaryActionLabel: 'Open dashboard',
+        secondaryActionHref: '/dashboard'
     }
 } as const
