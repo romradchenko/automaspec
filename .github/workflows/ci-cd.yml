@@ -6,6 +6,8 @@ env:
 on:
     pull_request:
         branches: [main, master, dev]
+    push:
+        branches: [main]
 
 jobs:
     quality-checks:
@@ -14,15 +16,15 @@ jobs:
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6.0.1
 
             - name: Install pnpm
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@v4.2.0
 
             - name: Setup Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6.1.0
               with:
-                  node-version: '22'
+                  node-version: '24'
                   cache: 'pnpm'
 
             - name: Install dependencies
@@ -35,9 +37,11 @@ jobs:
         needs: quality-checks
         runs-on: ubuntu-latest
         name: Deploy Preview
-        if: github.ref == 'refs/heads/dev'
+        if: |
+            (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+            (github.event_name == 'pull_request' && github.base_ref == 'dev')
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6.0.1
             - name: Install Vercel CLI
               run: npm install --global vercel@latest
             - name: Pull Vercel Environment Information
@@ -51,9 +55,11 @@ jobs:
         needs: quality-checks
         runs-on: ubuntu-latest
         name: Deploy Production
-        if: github.ref == 'refs/heads/main'
+        if: |
+            (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+            (github.event_name == 'pull_request' && github.base_ref == 'main')
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6.0.1
             - name: Install Vercel CLI
               run: npm install --global vercel@latest
             - name: Pull Vercel Environment Information
