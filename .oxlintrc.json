@@ -3,7 +3,6 @@
     "env": {
         "browser": true
     },
-    // TODO: enable type-aware when it's ready
     "plugins": [
         "eslint",
         "typescript",
@@ -28,26 +27,28 @@
         // "style": "warn"
     },
     "rules": {
-        "eslint/no-undefined": "allow", // too strict
-        "eslint/no-plusplus": "allow", // too strict
-        "eslint-plugin-jest/no-conditional-in-test": "allow", // too strict
-        "eslint-plugin-jest/require-to-throw-message": "allow", // allow toThrow() without message for generic error tests
-        "oxc/no-async-await": "allow", // this is stupid
-        "oxc/no-rest-spread-properties": "allow", // this is stupid
-        "oxc/no-optional-chaining": "allow", // this is stupid
-        "node/no-process-env": "allow", // not applicable for nextjs
+        "no-undefined": "allow", // too strict
+        "no-plusplus": "allow", // too strict
+        "no-conditional-in-test": "allow", // too strict
+        "require-to-throw-message": "allow", // allow toThrow() without message for generic error tests
+        "no-async-await": "allow", // this is stupid
+        "no-rest-spread-properties": "allow", // this is stupid
+        "no-optional-chaining": "allow", // this is stupid
+        "no-process-env": "allow", // not applicable for nextjs
 
-        "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
-        "eslint/no-console": ["error", { "allow": ["error", "debug"] }],
-        "typescript/array-type": [
+        "jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+        "no-console": ["error", { "allow": ["error", "debug"] }],
+        "no-void": ["error", { "allowAsStatement": true }],
+        "array-type": [
             "error",
             {
                 "default": "array-simple"
             }
         ],
-        "typescript/explicit-module-boundary-types": "allow", // too strict for now
-        "import/no-default-export": "allow", // not for nextjs
-        "typescript/explicit-function-return-type": [
+
+        "explicit-module-boundary-types": "allow", // too strict for now
+        "no-default-export": "allow", // not for nextjs
+        "explicit-function-return-type": [
             "error",
             {
                 "allowExpressions": true,

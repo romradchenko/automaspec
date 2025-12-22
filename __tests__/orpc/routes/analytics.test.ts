@@ -9,7 +9,7 @@ const dbMocks = vi.hoisted(() => {
     let tests: Array<Record<string, unknown>> = []
     const createChain = () => ({
         from: () => createChain(),
-        where: () => {
+        where: async () => {
             const idx = callIndex++
             if (idx === 0) return Promise.resolve([{ count: 2 }])
             if (idx === 1) return Promise.resolve(specs)

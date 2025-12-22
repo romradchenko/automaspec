@@ -28,7 +28,7 @@ const link = new OpenAPILink(contract, {
         const { headers } = await import('next/headers')
         return await headers()
     },
-    fetch: (request, init) =>
+    fetch: async (request, init) =>
         globalThis.fetch(request, {
             ...init,
             credentials: 'include'

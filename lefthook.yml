@@ -6,7 +6,7 @@ pre-commit:
           fail_text: '❌ Database schema validation failed'
 
         - name: format
-          glob: '*.{ts,tsx,mts}'
+          glob: '*.{ts,tsx,mts,json,yaml,yml}'
           run: pnpm format {staged_files}
           stage_fixed: true
           fail_text: '❌ oxfmt failed'
@@ -20,14 +20,24 @@ pre-commit:
 pre-push:
     parallel: true
     jobs:
-      - name: typecheck
-        glob: '*.{ts,tsx,mts}'
-        run: pnpm typecheck
-        fail_text: '❌ TypeScript type checking failed'
+        - name: typecheck
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm typecheck
+          fail_text: '❌ TypeScript type checking failed'
 
-      - name: tests
-        glob: '*.{ts,tsx,mts}'
-        run: pnpm test run
-        fail_text: '❌ Tests failed'
+        - name: tests
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm test run
+          fail_text: '❌ Tests failed'
+
+        - name: lint all
+          glob: '*.{ts,tsx,mts}'
+          run: pnpm lint
+          fail_text: '❌ Lint failed'
+
+        - name: format all
+          glob: '*.{ts,tsx,mts,json,yaml,yml}'
+          run: pnpm format
+          fail_text: '❌ Format failed'
 
 colors: true

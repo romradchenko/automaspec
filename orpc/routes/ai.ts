@@ -399,7 +399,7 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
         })
 
         try {
-            const result = await streamText({
+            const result = streamText({
                 model: openrouter.chat(model),
                 system: ACTION_SYSTEM_PROMPT,
                 messages,
@@ -439,7 +439,7 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
     })
 
     try {
-        const result = await streamText({
+        const result = streamText({
             model: googleProvider(model),
             messages,
             system: ACTION_SYSTEM_PROMPT,

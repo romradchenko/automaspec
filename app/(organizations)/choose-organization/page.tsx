@@ -62,7 +62,7 @@ export default function ChooseOrganizationPage() {
                                             <div className="font-medium">{org.name}</div>
                                             <div className="text-xs text-muted-foreground">{org.slug}</div>
                                         </div>
-                                        <Button onClick={() => handleSetActiveOrganization(org.id)}>
+                                        <Button onClick={async () => handleSetActiveOrganization(org.id)}>
                                             Set as active
                                         </Button>
                                     </div>

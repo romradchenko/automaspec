@@ -115,7 +115,7 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
         canReorder: true,
         createLoadingItemData: () => ({ type: 'folder', id: 'loading', name: 'Loading...' }),
         dataLoader: {
-            getItem: (itemId) => getFolderItemData(itemId),
+            getItem: async (itemId) => getFolderItemData(itemId),
             getChildrenWithData: async (itemId) => {
                 if (preloadedChildrenCache.current[itemId]) {
                     const cached = preloadedChildrenCache.current[itemId]

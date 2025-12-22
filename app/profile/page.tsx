@@ -73,7 +73,7 @@ export default function ProfilePage() {
     }, [])
 
     useEffect(() => {
-        fetchApiKeys()
+        void fetchApiKeys()
     }, [fetchApiKeys, session, activeOrganization])
 
     const userName = session?.user.name || ''
@@ -104,7 +104,7 @@ export default function ProfilePage() {
             if (error) throw error
             setNewKeyValue(data.key)
             setNewKeyName('')
-            fetchApiKeys()
+            void fetchApiKeys()
             toast.success('API key created successfully')
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Failed to create API key')
@@ -127,7 +127,7 @@ export default function ProfilePage() {
         try {
             const { error } = await authClient.apiKey.delete({ keyId })
             if (error) throw error
-            fetchApiKeys()
+            void fetchApiKeys()
             toast.success('API key deleted')
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Failed to delete API key')
@@ -217,7 +217,7 @@ export default function ProfilePage() {
                                     placeholder="API key name (e.g., CI/CD Pipeline)"
                                     value={newKeyName}
                                     onChange={(e) => setNewKeyName(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleCreateApiKey()}
+                                    onKeyDown={async (e) => e.key === 'Enter' && handleCreateApiKey()}
                                 />
                                 <Button onClick={handleCreateApiKey} disabled={creatingKey}>
                                     {creatingKey ? (
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                                                 size="sm"
                                                 variant="ghost"
                                                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => handleDeleteApiKey(key.id)}
+                                                onClick={async () => handleDeleteApiKey(key.id)}
                                                 disabled={deletingKeyId === key.id}
                                             >
                                                 {deletingKeyId === key.id ? (
