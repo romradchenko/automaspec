@@ -1,7 +1,10 @@
 import type { NextConfig } from 'next'
 
+import path from 'node:path'
+
 const nextConfig: NextConfig = {
     output: 'standalone',
+    outputFileTracingRoot: path.join(__dirname),
     typescript: {
         // We already run typecheck as a part of ci and pre-push hooks
         // This speeds up build time considerably

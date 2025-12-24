@@ -36,10 +36,6 @@ const link = new OpenAPILink(contract, {
     plugins: [new RequestValidationPlugin(contract), new ResponseValidationPlugin(contract)]
 })
 
-/**
- * Fallback to client-side client if server-side client is not available.
- */
 const client: ContractRouterClient<typeof contract> = globalThis.$client ?? createORPCClient(link)
 export const safeClient = createSafeClient(client)
-
 export const orpc = createTanstackQueryUtils(client)

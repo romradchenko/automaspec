@@ -1,5 +1,6 @@
 import { loadEnvConfig } from '@next/env'
 import { defineConfig } from '@playwright/test'
+import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 
@@ -13,6 +14,24 @@ const baseURL = `http://${hostname}:${port}`
 if (!hostname || !port) {
     throw new Error('E2E_HOSTNAME and E2E_PORT must be set')
 }
+
+const localDbUrl = process.env.NEXT_PUBLIC_DATABASE_LOCAL_URL
+if (!localDbUrl) {
+    throw new Error('NEXT_PUBLIC_DATABASE_LOCAL_URL must be set')
+}
+if (!localDbUrl.startsWith('file:')) {
+    throw new Error('NEXT_PUBLIC_DATABASE_LOCAL_URL must start with file:')
+}
+
+const localDbPath = localDbUrl.replace('file:', '').replaceAll('/', path.sep)
+const resolvedLocalDbPath = path.isAbsolute(localDbPath) ? localDbPath : path.resolve(projectDir, localDbPath)
+
+const e2eDbPath = path.join(os.tmpdir(), 'automaspec-playwright-db', 'e2e.db')
+fs.mkdirSync(path.dirname(e2eDbPath), { recursive: true })
+fs.copyFileSync(resolvedLocalDbPath, e2eDbPath)
+
+const e2eDbUrl = `file:${e2eDbPath.replaceAll('\\', '/')}`
+process.env.E2E_DATABASE_URL = e2eDbUrl
 
 export default defineConfig({
     testDir: path.join(__dirname, 'e2e'),
@@ -31,10 +50,12 @@ export default defineConfig({
     webServer: {
         command: `pnpm exec next dev --webpack --hostname ${hostname} --port ${port}`,
         url: baseURL,
-        reuseExistingServer: true,
+        reuseExistingServer: false,
         timeout: 120 * 1000,
         env: {
-            NEXT_PUBLIC_E2E_MOCK: 'true'
+            E2E_DATABASE_URL: e2eDbUrl,
+            NEXT_PUBLIC_DATABASE_URL: e2eDbUrl,
+            NEXT_PUBLIC_DATABASE_LOCAL_URL: e2eDbUrl
         }
     }
 })

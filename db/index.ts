@@ -1,9 +1,10 @@
 import { createClient } from '@libsql/client'
 import { drizzle } from 'drizzle-orm/libsql/web'
 
+import { getDatabaseUrl } from '@/lib/get-database-url'
+
 const client = createClient({
-    // NEXT_PUBLIC prefix is needed for client-side orpc client
-    url: process.env.NODE_ENV === 'development' ? 'file:db/local.db' : (process.env.NEXT_PUBLIC_DATABASE_URL ?? ''),
+    url: getDatabaseUrl(),
     authToken: process.env.DATABASE_AUTH_TOKEN
 })
 

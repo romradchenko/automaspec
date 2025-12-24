@@ -1,6 +1,11 @@
 import { expect, test } from '@playwright/test'
 
 import { attachPageLogs, ensureDashboard, waitForAppReady } from './helpers'
+import { seedE2eDatabase } from './seed-db'
+
+test.beforeAll(async () => {
+    await seedE2eDatabase()
+})
 
 test.beforeEach(async ({ page }) => {
     await attachPageLogs(page)
@@ -29,5 +34,5 @@ test('analytics view renders mock metrics', async ({ page }) => {
     await waitForAppReady(page)
     await expect(page.getByText('Analytics Dashboard')).toBeVisible({ timeout: 30_000 })
     await expect(page.getByText('Tests Growth')).toBeVisible({ timeout: 30_000 })
-    await expect(page.getByText('Stale Tests')).toBeVisible({ timeout: 30_000 })
+    await expect(page.getByText('Stale Tests', { exact: true })).toBeVisible({ timeout: 30_000 })
 })

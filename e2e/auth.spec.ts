@@ -1,6 +1,11 @@
 import { expect, test } from '@playwright/test'
 
 import { attachPageLogs, ensureDashboard } from './helpers'
+import { seedE2eDatabase } from './seed-db'
+
+test.beforeAll(async () => {
+    await seedE2eDatabase()
+})
 
 test.beforeEach(async ({ page }) => {
     await attachPageLogs(page)
