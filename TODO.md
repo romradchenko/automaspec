@@ -1,4 +1,4 @@
 - Split signin / signup flow
 - Use orpc routes inside ai tools
-- Write end to end tests
+- Write CI for e2e tests: on merge in main
 - Use docker for ci
