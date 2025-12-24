@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Folder, FileText, CircleCheck, CircleX, CircleSlash, CircleDashed } from 'lucide-react'
+import { Folder, FileText, CircleCheck, CircleX, CircleSlash, CircleDashed, Plus, FolderOpen } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -138,7 +138,7 @@ export function FolderDetailsPanel({
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
             await onRefreshTreeChildren?.(selectedFolder?.id ?? null)
-            toast.success('Test created successfully')
+            toast.success('Spec created successfully')
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to create test')
@@ -181,58 +181,76 @@ export function FolderDetailsPanel({
                     <div>
                         <h3 className="mb-3 font-medium text-sm sm:text-base">Statistics</h3>
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                            <div className="rounded-lg border bg-card p-3">
-                                <div className="flex items-center gap-2 text-muted-foreground">
+                            <div className="rounded-xl border bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 border-blue-200 dark:border-blue-800 p-3">
+                                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                                     <Folder className="size-4" />
-                                    <span className="text-xs">Subfolders</span>
+                                    <span className="text-xs font-medium">Subfolders</span>
                                 </div>
-                                <p className="mt-1 text-2xl font-semibold">{stats.subfolders}</p>
+                                <p className="mt-1 text-2xl font-semibold text-blue-700 dark:text-blue-300">
+                                    {stats.subfolders}
+                                </p>
                             </div>
-                            <div className="rounded-lg border bg-card p-3">
-                                <div className="flex items-center gap-2 text-muted-foreground">
+                            <div className="rounded-xl border bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 border-purple-200 dark:border-purple-800 p-3">
+                                <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
                                     <FileText className="size-4" />
-                                    <span className="text-xs">Test Specs</span>
+                                    <span className="text-xs font-medium">Test Specs</span>
                                 </div>
-                                <p className="mt-1 text-2xl font-semibold">{stats.specs}</p>
+                                <p className="mt-1 text-2xl font-semibold text-purple-700 dark:text-purple-300">
+                                    {stats.specs}
+                                </p>
                             </div>
-                            <div className="rounded-lg border bg-card p-3">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <CircleCheck className="size-4 text-green-500" />
-                                    <span className="text-xs">Passed</span>
+                            <div className="rounded-xl border bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 border-green-200 dark:border-green-800 p-3">
+                                <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                                    <CircleCheck className="size-4" />
+                                    <span className="text-xs font-medium">Passed</span>
                                 </div>
-                                <p className="mt-1 text-2xl font-semibold">{stats.passed}</p>
+                                <p className="mt-1 text-2xl font-semibold text-green-700 dark:text-green-300">
+                                    {stats.passed}
+                                </p>
                             </div>
-                            <div className="rounded-lg border bg-card p-3">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <CircleX className="size-4 text-red-500" />
-                                    <span className="text-xs">Failed</span>
+                            <div className="rounded-xl border bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/20 border-red-200 dark:border-red-800 p-3">
+                                <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+                                    <CircleX className="size-4" />
+                                    <span className="text-xs font-medium">Failed</span>
                                 </div>
-                                <p className="mt-1 text-2xl font-semibold">{stats.failed}</p>
+                                <p className="mt-1 text-2xl font-semibold text-red-700 dark:text-red-300">
+                                    {stats.failed}
+                                </p>
                             </div>
                         </div>
                         <div className="mt-3 grid grid-cols-2 gap-3">
-                            <div className="rounded-lg border bg-card p-3">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <CircleSlash className="size-4 text-yellow-500" />
-                                    <span className="text-xs">Skipped</span>
+                            <div className="rounded-xl border bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 border-amber-200 dark:border-amber-800 p-3">
+                                <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                                    <CircleSlash className="size-4" />
+                                    <span className="text-xs font-medium">Skipped</span>
                                 </div>
-                                <p className="mt-1 text-2xl font-semibold">{stats.skipped}</p>
+                                <p className="mt-1 text-2xl font-semibold text-amber-700 dark:text-amber-300">
+                                    {stats.skipped}
+                                </p>
                             </div>
-                            <div className="rounded-lg border bg-card p-3">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <CircleDashed className="size-4 text-gray-500" />
-                                    <span className="text-xs">Pending</span>
+                            <div className="rounded-xl border bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950/20 dark:to-gray-900/20 border-gray-200 dark:border-gray-800 p-3">
+                                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                    <CircleDashed className="size-4" />
+                                    <span className="text-xs font-medium">Pending</span>
                                 </div>
-                                <p className="mt-1 text-2xl font-semibold">{stats.pending}</p>
+                                <p className="mt-1 text-2xl font-semibold text-gray-700 dark:text-gray-300">
+                                    {stats.pending}
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    {folderSpecs.length > 0 && (
+                    {folderSpecs.length > 0 ? (
                         <div>
                             <div className="mb-3 flex items-center justify-between">
                                 <h3 className="font-medium text-sm sm:text-base">Test Specs</h3>
-                                <Button onClick={() => setCreateSpecDialogOpen(true)} size="sm" variant="outline">
+                                <Button
+                                    onClick={() => setCreateSpecDialogOpen(true)}
+                                    size="sm"
+                                    variant="default"
+                                    className="gap-2"
+                                >
+                                    <Plus className="size-4" />
                                     New Spec
                                 </Button>
                             </div>
@@ -240,7 +258,7 @@ export function FolderDetailsPanel({
                                 {folderSpecs.map((spec) => (
                                     <div
                                         key={spec.id}
-                                        className="flex items-center justify-between rounded-lg border bg-card p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+                                        className="group flex items-center justify-between rounded-xl border bg-card p-4 cursor-pointer hover:bg-muted/50 hover:border-primary/50 transition-all duration-200 hover:shadow-md"
                                         onClick={() => onSpecSelect?.(spec)}
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter' || e.key === ' ') {
@@ -253,12 +271,12 @@ export function FolderDetailsPanel({
                                     >
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
-                                                <FileText className="size-4 text-muted-foreground" />
+                                                <FileText className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                                 <span className="font-medium">{spec.name}</span>
                                             </div>
                                             <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                                 <span>{spec.fileName || 'No file'}</span>
-                                                <span>•</span>
+                                                <span className="text-muted-foreground/50">•</span>
                                                 <span>{spec.numberOfTests} tests</span>
                                             </div>
                                         </div>
@@ -268,7 +286,11 @@ export function FolderDetailsPanel({
                                                 .map(([status, count]) => {
                                                     const config = STATUS_CONFIGS[status as keyof typeof STATUS_CONFIGS]
                                                     return (
-                                                        <Badge key={status} variant="outline" className={config.color}>
+                                                        <Badge
+                                                            key={status}
+                                                            variant="outline"
+                                                            className={config.badgeClassName}
+                                                        >
                                                             {count} {config.label}
                                                         </Badge>
                                                     )
@@ -278,16 +300,50 @@ export function FolderDetailsPanel({
                                 ))}
                             </div>
                         </div>
+                    ) : (
+                        <div className="rounded-xl border border-dashed bg-muted/30 p-6">
+                            <div className="flex flex-col items-center justify-center gap-3 text-center">
+                                <div className="rounded-full bg-muted-foreground/10 p-3">
+                                    <FileText className="size-8 text-muted-foreground/50" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium">No test specs yet</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Create your first test spec to get started
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => setCreateSpecDialogOpen(true)}
+                                    size="sm"
+                                    variant="default"
+                                    className="gap-2"
+                                >
+                                    <Plus className="size-4" />
+                                    New Spec
+                                </Button>
+                            </div>
+                        </div>
                     )}
 
-                    {subfolders.length > 0 && (
+                    {subfolders.length > 0 ? (
                         <div>
-                            <h3 className="mb-3 font-medium text-sm sm:text-base">Subfolders</h3>
+                            <div className="mb-3 flex items-center justify-between">
+                                <h3 className="font-medium text-sm sm:text-base">Subfolders</h3>
+                                <Button
+                                    onClick={() => setCreateFolderDialogOpen(true)}
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-2"
+                                >
+                                    <Plus className="size-4" />
+                                    New Folder
+                                </Button>
+                            </div>
                             <div className="space-y-2">
                                 {subfolders.map((folder) => (
                                     <div
                                         key={folder.id}
-                                        className="flex items-center justify-between rounded-lg border bg-card p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+                                        className="group flex items-center justify-between rounded-xl border bg-card p-4 cursor-pointer hover:bg-muted/50 hover:border-primary/50 transition-all duration-200 hover:shadow-md"
                                         onClick={() => onFolderSelect?.(folder.id)}
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter' || e.key === ' ') {
@@ -298,17 +354,42 @@ export function FolderDetailsPanel({
                                         role="button"
                                         tabIndex={0}
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <Folder className="size-4 text-muted-foreground" />
-                                            <span className="font-medium">{folder.name}</span>
+                                        <div className="flex items-center gap-3">
+                                            <FolderOpen className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                                            <div className="flex-1">
+                                                <span className="font-medium">{folder.name}</span>
+                                                {folder.description && (
+                                                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                                                        {folder.description}
+                                                    </p>
+                                                )}
+                                            </div>
                                         </div>
-                                        {folder.description && (
-                                            <span className="text-xs text-muted-foreground line-clamp-1">
-                                                {folder.description}
-                                            </span>
-                                        )}
                                     </div>
                                 ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="rounded-xl border border-dashed bg-muted/30 p-6">
+                            <div className="flex flex-col items-center justify-center gap-3 text-center">
+                                <div className="rounded-full bg-muted-foreground/10 p-3">
+                                    <FolderOpen className="size-8 text-muted-foreground/50" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium">No subfolders yet</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Create subfolders to organize your test specs
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => setCreateFolderDialogOpen(true)}
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-2"
+                                >
+                                    <Plus className="size-4" />
+                                    New Folder
+                                </Button>
                             </div>
                         </div>
                     )}

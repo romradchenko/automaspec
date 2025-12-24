@@ -292,10 +292,10 @@ export default function Dashboard() {
         onSuccess: async (_, variables) => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
             await treeRef.current?.refreshItemChildren(variables.folderId ?? 'root')
-            toast.success('Test created successfully')
+            toast.success('Spec created successfully')
         },
         onError: (error) => {
-            toast.error(error.message || 'Failed to create test')
+            toast.error(error.message || 'Failed to create spec')
         }
     })
 

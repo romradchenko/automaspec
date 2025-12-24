@@ -87,7 +87,7 @@ export function TestDetailsPanel({
         onSuccess: async () => {
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
             await onRefreshTreeChildren?.(null)
-            toast.success('Test created successfully')
+            toast.success('Spec created successfully')
         },
         onError: (error) => {
             toast.error(error.message || 'Failed to create test')
