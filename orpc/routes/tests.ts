@@ -285,21 +285,42 @@ const deleteTest = os.tests.delete.handler(async ({ input }) => {
     return { success: true }
 })
 
-const listTestRequirements = os.testRequirements.list.handler(async ({ input }) => {
-    const conditions = []
+const listTestRequirements = os.testRequirements.list.handler(async ({ input, context }) => {
+    const organizationId = context.organizationId
+    const conditions = [eq(testSpec.organizationId, organizationId)]
 
     if (input.specId) {
         conditions.push(eq(testRequirement.specId, input.specId))
     }
 
     return await db
-        .select()
+        .select({
+            id: testRequirement.id,
+            name: testRequirement.name,
+            description: testRequirement.description,
+            order: testRequirement.order,
+            specId: testRequirement.specId,
+            createdAt: testRequirement.createdAt,
+            updatedAt: testRequirement.updatedAt
+        })
         .from(testRequirement)
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
         .where(and(...conditions))
 })
 
-const upsertTestRequirement = os.testRequirements.upsert.handler(async ({ input }) => {
+const upsertTestRequirement = os.testRequirements.upsert.handler(async ({ input, context }) => {
     const { id = crypto.randomUUID(), ...updates } = input
+    const organizationId = context.organizationId
+
+    const spec = await db
+        .select({ id: testSpec.id, organizationId: testSpec.organizationId })
+        .from(testSpec)
+        .where(eq(testSpec.id, updates.specId))
+        .limit(1)
+
+    if (!spec || spec.length === 0 || spec[0].organizationId !== organizationId) {
+        throw new ORPCError('Spec not found or access denied')
+    }
 
     const result = await db
         .insert(testRequirement)
@@ -316,7 +337,20 @@ const upsertTestRequirement = os.testRequirements.upsert.handler(async ({ input 
     return result[0]
 })
 
-const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input }) => {
+const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input, context }) => {
+    const organizationId = context.organizationId
+
+    const requirement = await db
+        .select({ id: testRequirement.id, specId: testRequirement.specId })
+        .from(testRequirement)
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(and(eq(testRequirement.id, input.id), eq(testSpec.organizationId, organizationId)))
+        .limit(1)
+
+    if (!requirement || requirement.length === 0) {
+        throw new ORPCError('Requirement not found or access denied')
+    }
+
     await db.delete(testRequirement).where(eq(testRequirement.id, input.id))
     return { success: true }
 })

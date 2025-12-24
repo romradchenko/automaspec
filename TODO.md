@@ -1,4 +1,6 @@
 - Split signin / signup flow
 - Use orpc routes inside ai tools
 - Write CI for e2e tests: on merge in main
-- Use docker for ci
+- Add more error codes to orpc routes, like NOT_FOUND, BAD_REQUEST, etc. Use ORPCError class
+- Run all tests in ci
+- Run only unit tests in pre-push hook

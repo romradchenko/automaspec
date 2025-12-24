@@ -35,9 +35,11 @@
         "no-rest-spread-properties": "allow", // this is stupid
         "no-optional-chaining": "allow", // this is stupid
         "no-process-env": "allow", // not applicable for nextjs
+        "prefer-tag-over-role": "allow", // this is stupid
 
         "jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
-        "no-console": ["error", { "allow": ["error", "debug"] }],
+        "no-console": ["error", { "allow": ["error", "debug", "log"] }],
+        "no-autofocus": "allow", // this is useful
         "no-void": ["error", { "allowAsStatement": true }],
         "array-type": [
             "error",

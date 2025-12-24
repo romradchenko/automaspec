@@ -65,6 +65,7 @@ describe('Test Details Panel', () => {
                 selectedSpec={mockSpec}
                 selectedRequirements={[]}
                 selectedTests={[]}
+                onRenameSpec={vi.fn()}
                 onDeleteSpec={vi.fn()}
             />
         )
@@ -114,6 +115,7 @@ describe('Test Details Panel', () => {
                 selectedSpec={mockSpec}
                 selectedRequirements={mockRequirements}
                 selectedTests={[]}
+                onRenameSpec={vi.fn()}
                 onDeleteSpec={vi.fn()}
             />
         )
@@ -126,7 +128,13 @@ describe('Test Details Panel', () => {
 
     it('should handle no spec selected', () => {
         renderWithProviders(
-            <TestDetailsPanel selectedSpec={null} selectedRequirements={[]} selectedTests={[]} onDeleteSpec={vi.fn()} />
+            <TestDetailsPanel
+                selectedSpec={null}
+                selectedRequirements={[]}
+                selectedTests={[]}
+                onRenameSpec={vi.fn()}
+                onDeleteSpec={vi.fn()}
+            />
         )
 
         expect(screen.getByText('Select a spec to view details and requirements')).toBeDefined()

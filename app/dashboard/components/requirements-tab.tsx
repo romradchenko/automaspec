@@ -14,14 +14,32 @@ interface RequirementsTabProps {
     requirements: TestRequirement[]
     tests: Test[]
     specId: string
-    onSaveRequirements: (requirements: TestRequirement[]) => void
+    onSaveRequirements: (requirements: TestRequirement[], deletedIds: string[]) => void
+    onRequirementsUpdated?: (requirements: TestRequirement[]) => void
 }
 
-export function RequirementsTab({ requirements, tests, specId, onSaveRequirements }: RequirementsTabProps) {
+export function RequirementsTab({
+    requirements,
+    tests,
+    specId,
+    onSaveRequirements,
+    onRequirementsUpdated
+}: RequirementsTabProps) {
     const [editingRequirements, setEditingRequirements] = useState(false)
+    const [originalRequirements, setOriginalRequirements] = useState<TestRequirement[]>([])
+
+    const handleEditStart = () => {
+        setOriginalRequirements(requirements)
+        setEditingRequirements(true)
+    }
 
     const handleSave = (updatedRequirements: TestRequirement[]) => {
-        onSaveRequirements(updatedRequirements)
+        const originalIds = new Set(originalRequirements.map((req) => req.id))
+        const newIds = new Set(updatedRequirements.map((req) => req.id))
+        const deletedIds = Array.from(originalIds).filter((id) => !newIds.has(id))
+
+        onSaveRequirements(updatedRequirements, deletedIds)
+        onRequirementsUpdated?.(updatedRequirements)
         setEditingRequirements(false)
     }
 
@@ -30,7 +48,7 @@ export function RequirementsTab({ requirements, tests, specId, onSaveRequirement
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <h3 className="font-medium text-sm sm:text-base">Test Requirements</h3>
                 <Button
-                    onClick={() => setEditingRequirements(!editingRequirements)}
+                    onClick={() => (editingRequirements ? setEditingRequirements(false) : handleEditStart())}
                     size="sm"
                     variant="outline"
                     className="w-full sm:w-auto"

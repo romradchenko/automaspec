@@ -191,7 +191,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ updated: updatedCount, missing: missingIds.length })
     } catch (error) {
-        console.error('Webhook error:', error)
+        console.log('Webhook error:', error)
         return NextResponse.json({ error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
     }
 }

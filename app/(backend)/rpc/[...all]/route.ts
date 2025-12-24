@@ -55,13 +55,13 @@ const handler = new OpenAPIHandler(router, {
     ],
     interceptors: [
         onError((error) => {
-            console.error('RPC Error:', error)
+            console.log('RPC Error:', error)
             const cause = getErrorCause(error)
             if (cause?.issues) {
-                console.error('Validation Issues:', JSON.stringify(cause.issues, null, 2))
+                console.log('Validation Issues:', JSON.stringify(cause.issues, null, 2))
             }
             if (cause?.data) {
-                console.error('Data that failed validation:', JSON.stringify(cause.data, null, 2))
+                console.log('Data that failed validation:', JSON.stringify(cause.data, null, 2))
             }
         })
     ]

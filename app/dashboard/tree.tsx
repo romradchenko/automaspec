@@ -29,6 +29,7 @@ interface TreeProps {
     onCreateTest?: (folderId: string) => void
     onDeleteFolder?: (folderId: string, parentFolderId: string | null) => void
     onDeleteSpec?: (specId: string, parentFolderId: string | null) => void
+    onEmptySpaceClick?: () => void
 }
 
 export type TreeHandle = {
@@ -81,7 +82,16 @@ async function getFolderItemData(itemId: string): Promise<{ name: string; type: 
 }
 
 export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
-    { selectedSpecId, selectedFolderId, onSelectSpec, onSelectFolder, onCreateTest, onDeleteFolder, onDeleteSpec },
+    {
+        selectedSpecId,
+        selectedFolderId,
+        onSelectSpec,
+        onSelectFolder,
+        onCreateTest,
+        onDeleteFolder,
+        onDeleteSpec,
+        onEmptySpaceClick
+    },
     ref
 ) {
     const queryClient = useQueryClient()
@@ -313,7 +323,22 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
     }))
 
     return (
-        <div {...tree.getContainerProps()} className="flex flex-col">
+        <div
+            {...tree.getContainerProps()}
+            className="flex flex-col"
+            onClick={(e) => {
+                if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('h-0.5')) {
+                    onEmptySpaceClick?.()
+                }
+            }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    onEmptySpaceClick?.()
+                }
+            }}
+            role="button"
+            tabIndex={0}
+        >
             {tree.getItems().map((item) => {
                 const payload = item.getItemData()
                 const level = item.getItemMeta().level

@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, GripVertical } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -9,7 +9,7 @@ import { TestRequirement } from '@/lib/types'
 interface RequirementsEditorProps {
     requirements: TestRequirement[]
     specId: string
-    onSave: (requirements: TestRequirement[]) => void
+    onSave: (requirements: TestRequirement[], deletedIds: string[]) => void
     onCancel: () => void
 }
 
@@ -49,31 +49,39 @@ export function RequirementsEditor({
     }
 
     const handleSave = () => {
-        onSave(requirements)
+        const nonEmptyRequirements = requirements.filter((req) => req.name && req.name.trim() !== '')
+        const originalIds = new Set(initialRequirements.map((req) => req.id))
+        const newIds = new Set(nonEmptyRequirements.map((req) => req.id))
+        const deletedIds = Array.from(originalIds).filter((id) => !newIds.has(id))
+        onSave(nonEmptyRequirements, deletedIds)
     }
 
     return (
         <div className="space-y-4">
             <div className="space-y-2">
                 {requirements.map((req: TestRequirement, index: number) => (
-                    <div key={req.id || index} className="flex items-center gap-2 rounded-lg border p-2 sm:p-3">
+                    <div
+                        key={req.id || index}
+                        className="flex items-center gap-2 rounded-lg border bg-muted/30 p-3 transition-colors hover:bg-muted/50"
+                    >
+                        <GripVertical className="text-muted-foreground size-4 shrink-0" />
                         <input
-                            className="min-w-0 flex-1 bg-transparent text-xs sm:text-sm outline-none"
+                            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                             onChange={(e) => handleRequirementChange(index, e.target.value)}
-                            placeholder="Enter requirement..."
+                            placeholder="Enter requirement name..."
                             value={req.name || ''}
                         />
                         <Button
                             onClick={() => handleDeleteRequirement(index)}
-                            size="sm"
+                            size="icon"
                             variant="ghost"
-                            className="shrink-0"
+                            className="shrink-0 text-muted-foreground hover:text-destructive"
                         >
                             <Trash2 className="size-4" />
                         </Button>
                     </div>
                 ))}
-                <Button onClick={handleAddRequirement} size="sm" variant="outline" className="w-full sm:w-auto">
+                <Button onClick={handleAddRequirement} size="sm" variant="outline" className="w-full">
                     <Plus className="mr-2 size-4" />
                     Add Requirement
                 </Button>
@@ -83,7 +91,7 @@ export function RequirementsEditor({
                     Cancel
                 </Button>
                 <Button onClick={handleSave} className="w-full sm:w-auto">
-                    Save Requirements
+                    Save Changes
                 </Button>
             </div>
         </div>

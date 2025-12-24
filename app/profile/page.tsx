@@ -66,7 +66,7 @@ export default function ProfilePage() {
             if (error) throw error
             setApiKeys(data || [])
         } catch (error) {
-            console.error('Failed to fetch API keys:', error)
+            console.log('Failed to fetch API keys:', error)
         } finally {
             setLoadingKeys(false)
         }

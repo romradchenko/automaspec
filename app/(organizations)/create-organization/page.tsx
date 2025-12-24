@@ -155,7 +155,7 @@ export default function CreateOrganizationPage() {
                                                 return 'This slug is already taken'
                                             }
                                         } catch (err) {
-                                            console.error(err)
+                                            console.log(err)
                                         }
                                     }
                                 }}

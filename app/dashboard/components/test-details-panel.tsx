@@ -11,6 +11,8 @@ import { authClient } from '@/lib/shared/better-auth-client'
 import { TestSpec, Test, TestRequirement } from '@/lib/types'
 
 import { invalidateAndRefetchQueries } from '../hooks'
+import { CreateFolderDialog } from './create-folder-dialog'
+import { CreateSpecDialog } from './create-spec-dialog'
 import { DeleteConfirmDialog } from './delete-confirm-dialog'
 import { RequirementsTab } from './requirements-tab'
 import { TestDetailsEmptyState } from './test-details-empty-state'
@@ -21,7 +23,9 @@ export interface TestDetailsPanelProps {
     selectedSpec: TestSpec | null
     selectedRequirements: TestRequirement[]
     selectedTests: Test[]
+    onRenameSpec: (specId: string, name: string) => void
     onDeleteSpec: (specId: string) => void
+    onRequirementsUpdated?: (requirements: TestRequirement[]) => void
     onRefreshTreeChildren?: (parentFolderId: string | null) => Promise<void> | void
 }
 
@@ -29,21 +33,25 @@ export function TestDetailsPanel({
     selectedSpec,
     selectedRequirements,
     selectedTests,
+    onRenameSpec,
     onDeleteSpec,
+    onRequirementsUpdated,
     onRefreshTreeChildren
 }: TestDetailsPanelProps) {
     const [deleteSpecDialogOpen, setDeleteSpecDialogOpen] = useState(false)
+    const [createFolderDialogOpen, setCreateFolderDialogOpen] = useState(false)
+    const [createSpecDialogOpen, setCreateSpecDialogOpen] = useState(false)
     const { data: activeOrganization } = authClient.useActiveOrganization()
     const queryClient = useQueryClient()
 
     const createFolderMutation = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (name: string) => {
             if (!activeOrganization?.id) {
                 throw new Error('No active organization')
             }
             const { data, error } = await safeClient.testFolders.upsert({
                 id: crypto.randomUUID(),
-                name: 'New Folder',
+                name,
                 organizationId: activeOrganization.id,
                 order: 0
             })
@@ -61,13 +69,13 @@ export function TestDetailsPanel({
     })
 
     const createTestSpecMutation = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (name: string) => {
             if (!activeOrganization?.id) {
                 throw new Error('No active organization')
             }
             const { data, error } = await safeClient.testSpecs.upsert({
                 id: crypto.randomUUID(),
-                name: 'New Test',
+                name,
                 folderId: null,
                 organizationId: activeOrganization.id,
                 statuses: DEFAULT_SPEC_STATUSES,
@@ -109,24 +117,72 @@ ${requirements}
 })`
     }
 
-    const handleSaveRequirements = (_requirements: TestRequirement[]) => {
-        return undefined
+    const saveRequirementsMutation = useMutation({
+        mutationFn: async (variables: { requirements: TestRequirement[]; deletedIds: string[] }) => {
+            const { requirements, deletedIds } = variables
+
+            const deletePromises = deletedIds.map(async (id) => safeClient.testRequirements.delete({ id }))
+
+            const updatePromises = requirements.map(async (req) =>
+                safeClient.testRequirements.upsert({
+                    id: req.id,
+                    name: req.name,
+                    description: req.description,
+                    specId: req.specId,
+                    order: req.order
+                })
+            )
+
+            const allResults = await Promise.all([...deletePromises, ...updatePromises])
+            const errors = allResults.filter((r) => r.error)
+            if (errors.length > 0) {
+                throw new Error('Failed to save some requirements')
+            }
+            return allResults.map((r) => r.data)
+        },
+        onSuccess: async () => {
+            await invalidateAndRefetchQueries(queryClient, '/test-requirements')
+            toast.success('Requirements saved successfully')
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to save requirements')
+        }
+    })
+
+    const handleSaveRequirements = (requirements: TestRequirement[], deletedIds: string[]) => {
+        saveRequirementsMutation.mutate({ requirements, deletedIds })
     }
 
     if (!selectedSpec) {
         return (
-            <TestDetailsEmptyState
-                onCreateFolder={() => createFolderMutation.mutate()}
-                onCreateTest={() => createTestSpecMutation.mutate()}
-                isCreatingFolder={createFolderMutation.isPending}
-                isCreatingTest={createTestSpecMutation.isPending}
-            />
+            <>
+                <TestDetailsEmptyState
+                    onCreateFolder={() => setCreateFolderDialogOpen(true)}
+                    onCreateTest={() => setCreateSpecDialogOpen(true)}
+                />
+                <CreateFolderDialog
+                    open={createFolderDialogOpen}
+                    onOpenChange={setCreateFolderDialogOpen}
+                    onCreateFolder={(name) => createFolderMutation.mutate(name)}
+                    isCreating={createFolderMutation.isPending}
+                />
+                <CreateSpecDialog
+                    open={createSpecDialogOpen}
+                    onOpenChange={setCreateSpecDialogOpen}
+                    onCreateSpec={(name) => createTestSpecMutation.mutate(name)}
+                    isCreating={createTestSpecMutation.isPending}
+                />
+            </>
         )
     }
 
     return (
         <>
-            <TestDetailsHeader spec={selectedSpec} onDelete={() => setDeleteSpecDialogOpen(true)} />
+            <TestDetailsHeader
+                spec={selectedSpec}
+                onRename={(name) => onRenameSpec(selectedSpec.id, name)}
+                onDelete={() => setDeleteSpecDialogOpen(true)}
+            />
 
             <div className="flex-1 overflow-auto p-3 sm:p-4">
                 <Tabs className="h-full" defaultValue="requirements">
@@ -145,6 +201,7 @@ ${requirements}
                             tests={selectedTests}
                             specId={selectedSpec.id}
                             onSaveRequirements={handleSaveRequirements}
+                            onRequirementsUpdated={onRequirementsUpdated}
                         />
                     </TabsContent>
 
@@ -170,6 +227,18 @@ ${requirements}
                         setDeleteSpecDialogOpen(false)
                     }
                 }}
+            />
+            <CreateFolderDialog
+                open={createFolderDialogOpen}
+                onOpenChange={setCreateFolderDialogOpen}
+                onCreateFolder={(name) => createFolderMutation.mutate(name)}
+                isCreating={createFolderMutation.isPending}
+            />
+            <CreateSpecDialog
+                open={createSpecDialogOpen}
+                onOpenChange={setCreateSpecDialogOpen}
+                onCreateSpec={(name) => createTestSpecMutation.mutate(name)}
+                isCreating={createTestSpecMutation.isPending}
             />
         </>
     )
