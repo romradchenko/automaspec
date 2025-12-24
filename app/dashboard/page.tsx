@@ -318,6 +318,8 @@ export default function Dashboard() {
     const handleEmptySpaceClick = () => {
         setSelectedFolder(null)
         setSelectedSpec(null)
+        setSelectedRequirements([])
+        setSelectedTests([])
     }
 
     const handleRequirementsUpdated = (updatedRequirements: TestRequirement[]) => {

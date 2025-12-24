@@ -14,7 +14,6 @@ import { STATUS_CONFIGS, TEST_STATUSES } from '@/lib/constants'
 import { safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 
-import { invalidateAndRefetchQueries } from '../hooks'
 import { CreateFolderDialog } from './create-folder-dialog'
 import { CreateSpecDialog } from './create-spec-dialog'
 import { DeleteConfirmDialog } from './delete-confirm-dialog'
@@ -110,7 +109,7 @@ export function FolderDetailsPanel({
             return data
         },
         onSuccess: async () => {
-            await invalidateAndRefetchQueries(queryClient, '/test-folders')
+            await queryClient.invalidateQueries({ queryKey: ['test-folders'] })
             await onRefreshTreeChildren?.(selectedFolder?.id ?? null)
             toast.success('Folder created successfully')
         },
@@ -136,7 +135,7 @@ export function FolderDetailsPanel({
             return data
         },
         onSuccess: async () => {
-            await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            await queryClient.invalidateQueries({ queryKey: ['test-specs'] })
             await onRefreshTreeChildren?.(selectedFolder?.id ?? null)
             toast.success('Spec created successfully')
         },

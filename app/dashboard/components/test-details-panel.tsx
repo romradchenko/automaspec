@@ -10,7 +10,6 @@ import { safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 import { TestSpec, Test, TestRequirement } from '@/lib/types'
 
-import { invalidateAndRefetchQueries } from '../hooks'
 import { CreateFolderDialog } from './create-folder-dialog'
 import { CreateSpecDialog } from './create-spec-dialog'
 import { DeleteConfirmDialog } from './delete-confirm-dialog'
@@ -59,7 +58,7 @@ export function TestDetailsPanel({
             return data
         },
         onSuccess: async () => {
-            await invalidateAndRefetchQueries(queryClient, '/test-folders')
+            await queryClient.invalidateQueries({ queryKey: ['test-folders'] })
             await onRefreshTreeChildren?.(null)
             toast.success('Folder created successfully')
         },
@@ -85,7 +84,7 @@ export function TestDetailsPanel({
             return data
         },
         onSuccess: async () => {
-            await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            await queryClient.invalidateQueries({ queryKey: ['test-specs'] })
             await onRefreshTreeChildren?.(null)
             toast.success('Spec created successfully')
         },
@@ -141,7 +140,7 @@ ${requirements}
             return allResults.map((r) => r.data)
         },
         onSuccess: async () => {
-            await invalidateAndRefetchQueries(queryClient, '/test-requirements')
+            await queryClient.invalidateQueries({ queryKey: ['test-requirements'] })
             toast.success('Requirements saved successfully')
         },
         onError: (error) => {
