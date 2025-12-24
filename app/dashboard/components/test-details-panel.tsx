@@ -4,11 +4,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import type { ReplaceTestRequirementsForSpecItem, TestSpec, Test, TestRequirement } from '@/lib/types'
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
-import { TestSpec, Test, TestRequirement } from '@/lib/types'
 
 import { invalidateAndRefetchQueries } from '../hooks'
 import { CreateFolderDialog } from './create-folder-dialog'
@@ -119,29 +120,44 @@ ${requirements}
 
     const saveRequirementsMutation = useMutation({
         mutationFn: async (variables: { requirements: TestRequirement[]; deletedIds: string[] }) => {
-            const { requirements, deletedIds } = variables
+            const { requirements } = variables
 
-            const deletePromises = deletedIds.map(async (id) => safeClient.testRequirements.delete({ id }))
-
-            const updatePromises = requirements.map(async (req) =>
-                safeClient.testRequirements.upsert({
-                    id: req.id,
-                    name: req.name,
-                    description: req.description,
-                    specId: req.specId,
-                    order: req.order
-                })
-            )
-
-            const allResults = await Promise.all([...deletePromises, ...updatePromises])
-            const errors = allResults.filter((r) => r.error)
-            if (errors.length > 0) {
-                throw new Error('Failed to save some requirements')
+            if (!selectedSpec) {
+                throw new Error('No spec selected')
             }
-            return allResults.map((r) => r.data)
+
+            const payload: ReplaceTestRequirementsForSpecItem[] = []
+            for (let index = 0; index < requirements.length; index += 1) {
+                const requirement = requirements[index]
+                const name = requirement.name.trim()
+                if (!name) {
+                    throw new Error('Requirement name cannot be empty')
+                }
+
+                payload.push({
+                    id: requirement.id,
+                    name,
+                    description: requirement.description ?? null,
+                    order: index
+                })
+            }
+
+            const { data, error } = await safeClient.testRequirements.replaceForSpec({
+                specId: selectedSpec.id,
+                requirements: payload
+            })
+
+            if (error) {
+                throw error
+            }
+
+            return data
         },
-        onSuccess: async () => {
+        onSuccess: async (savedRequirements) => {
+            onRequirementsUpdated?.(savedRequirements)
             await invalidateAndRefetchQueries(queryClient, '/test-requirements')
+            await invalidateAndRefetchQueries(queryClient, '/tests')
+            await invalidateAndRefetchQueries(queryClient, '/test-specs')
             toast.success('Requirements saved successfully')
         },
         onError: (error) => {

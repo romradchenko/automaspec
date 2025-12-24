@@ -51,6 +51,7 @@ export async function ensureDashboard(page: Page) {
         await expect(activateButtons.first()).toBeVisible()
         await activateButtons.first().click()
         await page.waitForURL('**/dashboard', { waitUntil: 'commit' })
+        await waitForAppReady(page)
         return
     }
 

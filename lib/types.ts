@@ -65,6 +65,19 @@ export type TestFolder = z.infer<typeof testFolderSelectSchema>
 export type TestSpec = z.infer<typeof testSpecSelectSchema>
 export type TestRequirement = z.infer<typeof testRequirementSelectSchema>
 export type Test = z.infer<typeof testSelectSchema>
+export type TestRequirementUpsertValue = {
+    id: string
+    name: string
+    description: string | null
+    order: number
+    specId: string
+}
+export type ReplaceTestRequirementsForSpecItem = {
+    id: string
+    name: string
+    description: string | null
+    order: number
+}
 
 // Frontend types
 export interface FolderWithChildren extends TestFolder {

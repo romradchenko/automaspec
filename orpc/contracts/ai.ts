@@ -3,7 +3,13 @@ import { oc } from '@orpc/contract'
 import { aiChatRequestSchema, aiChatResponseSchema } from '@/lib/types'
 
 const chatContract = oc
-    .route({ method: 'POST', path: '/ai/chat', tags: ['ai'], description: 'Chat with AI assistant' })
+    .route({
+        method: 'POST',
+        path: '/ai/chat',
+        tags: ['ai'],
+        summary: 'Chat with AI',
+        description: 'Send chat messages to the AI assistant and receive a response'
+    })
     .input(aiChatRequestSchema)
     .output(aiChatResponseSchema)
 

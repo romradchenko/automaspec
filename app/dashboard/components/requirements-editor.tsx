@@ -26,18 +26,18 @@ export function RequirementsEditor({
         updated[index] = {
             ...updated[index],
             name
-        } as TestRequirement
+        }
         setRequirements(updated)
     }
 
     const handleDeleteRequirement = (index: number) => {
-        const updated = requirements.filter((_: unknown, i: number) => i !== index)
+        const updated = requirements.filter((_, i) => i !== index)
         setRequirements(updated)
     }
 
     const handleAddRequirement = () => {
         const newReq: TestRequirement = {
-            id: `req-${Date.now()}`,
+            id: crypto.randomUUID(),
             name: '',
             description: null,
             order: requirements.length,

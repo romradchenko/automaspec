@@ -1,8 +1,8 @@
 import { implement } from '@orpc/server'
 import { ORPCError } from '@orpc/server'
-import { eq, and, inArray, isNull } from 'drizzle-orm'
+import { asc, eq, and, inArray, isNull, notInArray, sql } from 'drizzle-orm'
 
-import type { TestStatus, SpecStatus, VitestTestResult, TestFolder } from '@/lib/types'
+import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestRequirementUpsertValue } from '@/lib/types'
 
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
@@ -147,6 +147,25 @@ const upsertTestFolder = os.testFolders.upsert.handler(async ({ input, context }
     return result[0]
 })
 
+const editTestFolder = os.testFolders.edit.handler(async ({ input, context }) => {
+    const result = await db
+        .update(testFolder)
+        .set({
+            name: input.name,
+            description: input.description,
+            parentFolderId: input.parentFolderId,
+            order: input.order
+        })
+        .where(and(eq(testFolder.id, input.id), eq(testFolder.organizationId, context.organizationId)))
+        .returning()
+
+    if (!result || result.length === 0) {
+        throw new ORPCError('Folder not found')
+    }
+
+    return result[0]
+})
+
 const deleteTestFolder = os.testFolders.delete.handler(async ({ input, context }) => {
     const organizationId = context.organizationId
 
@@ -216,6 +235,25 @@ const upsertTestSpec = os.testSpecs.upsert.handler(async ({ input }) => {
     return result[0]
 })
 
+const editTestSpec = os.testSpecs.edit.handler(async ({ input, context }) => {
+    const result = await db
+        .update(testSpec)
+        .set({
+            name: input.name,
+            fileName: input.fileName,
+            description: input.description,
+            folderId: input.folderId
+        })
+        .where(and(eq(testSpec.id, input.id), eq(testSpec.organizationId, context.organizationId)))
+        .returning()
+
+    if (!result || result.length === 0) {
+        throw new ORPCError('Spec not found')
+    }
+
+    return result[0]
+})
+
 const deleteTestSpec = os.testSpecs.delete.handler(async ({ input, context }) => {
     const organizationId = context.organizationId
 
@@ -280,6 +318,31 @@ const upsertTest = os.tests.upsert.handler(async ({ input }) => {
     return result[0]
 })
 
+const editTest = os.tests.edit.handler(async ({ input, context }) => {
+    const organizationId = context.organizationId
+
+    const requirementIds = db
+        .select({ id: testRequirement.id })
+        .from(testRequirement)
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, organizationId))
+
+    const result = await db
+        .update(test)
+        .set({
+            status: input.status,
+            code: input.code
+        })
+        .where(and(eq(test.id, input.id), inArray(test.requirementId, requirementIds)))
+        .returning()
+
+    if (!result || result.length === 0) {
+        throw new ORPCError('Test not found')
+    }
+
+    return result[0]
+})
+
 const deleteTest = os.tests.delete.handler(async ({ input }) => {
     await db.delete(test).where(eq(test.id, input.id))
     return { success: true }
@@ -335,6 +398,136 @@ const upsertTestRequirement = os.testRequirements.upsert.handler(async ({ input,
         .returning()
 
     return result[0]
+})
+
+const editTestRequirement = os.testRequirements.edit.handler(async ({ input, context }) => {
+    const organizationId = context.organizationId
+
+    const result = await db
+        .update(testRequirement)
+        .set({
+            name: input.name,
+            description: input.description,
+            order: input.order
+        })
+        .where(
+            and(
+                eq(testRequirement.id, input.id),
+                inArray(
+                    testRequirement.specId,
+                    db.select({ id: testSpec.id }).from(testSpec).where(eq(testSpec.organizationId, organizationId))
+                )
+            )
+        )
+        .returning()
+
+    if (!result || result.length === 0) {
+        throw new ORPCError('Requirement not found or access denied')
+    }
+
+    return result[0]
+})
+
+const replaceTestRequirementsForSpec = os.testRequirements.replaceForSpec.handler(async ({ input, context }) => {
+    const organizationId = context.organizationId
+
+    const spec = await db
+        .select({ id: testSpec.id })
+        .from(testSpec)
+        .where(and(eq(testSpec.id, input.specId), eq(testSpec.organizationId, organizationId)))
+        .limit(1)
+
+    if (!spec || spec.length === 0) {
+        throw new ORPCError('Spec not found or access denied')
+    }
+
+    const inputIds: string[] = []
+    for (const requirement of input.requirements) {
+        if (requirement.id) {
+            inputIds.push(requirement.id)
+        }
+    }
+
+    if (inputIds.length > 0) {
+        const existing = await db
+            .select({ id: testRequirement.id, specId: testRequirement.specId })
+            .from(testRequirement)
+            .where(inArray(testRequirement.id, inputIds))
+
+        for (const requirement of existing) {
+            if (requirement.specId !== input.specId) {
+                throw new ORPCError('Requirement does not belong to the selected spec')
+            }
+        }
+    }
+
+    const values: TestRequirementUpsertValue[] = []
+    for (const requirement of input.requirements) {
+        values.push({
+            id: requirement.id ?? crypto.randomUUID(),
+            name: requirement.name,
+            description: requirement.description ?? null,
+            order: requirement.order,
+            specId: input.specId
+        })
+    }
+
+    if (values.length > 0) {
+        await db
+            .insert(testRequirement)
+            .values(values)
+            .onConflictDoUpdate({
+                target: testRequirement.id,
+                set: {
+                    name: sql.raw('excluded.name'),
+                    description: sql.raw('excluded.description'),
+                    order: sql.raw('excluded."order"'),
+                    specId: sql.raw('excluded.spec_id')
+                }
+            })
+    }
+
+    const keepIds: string[] = []
+    for (const value of values) {
+        keepIds.push(value.id)
+    }
+
+    if (keepIds.length === 0) {
+        await db.delete(testRequirement).where(eq(testRequirement.specId, input.specId))
+    } else {
+        await db
+            .delete(testRequirement)
+            .where(and(eq(testRequirement.specId, input.specId), notInArray(testRequirement.id, keepIds)))
+    }
+
+    const specTests = await db
+        .select({ status: test.status })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(and(eq(testSpec.organizationId, organizationId), eq(testSpec.id, input.specId)))
+
+    const counts = {} as Record<SpecStatus, number>
+    for (const status of Object.values(SPEC_STATUSES)) {
+        counts[status as SpecStatus] = 0
+    }
+
+    for (const row of specTests) {
+        if (row.status in counts) {
+            counts[row.status as SpecStatus] += 1
+        }
+    }
+
+    await db
+        .update(testSpec)
+        .set({ statuses: counts, numberOfTests: specTests.length })
+        .where(and(eq(testSpec.id, input.specId), eq(testSpec.organizationId, organizationId)))
+
+    return await db
+        .select()
+        .from(testRequirement)
+        .where(eq(testRequirement.specId, input.specId))
+        .orderBy(asc(testRequirement.order))
 })
 
 const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input, context }) => {
@@ -503,22 +696,27 @@ export const testsRouter = {
         getChildren: getFolderChildren,
         findByName: findTestFolderByName,
         upsert: upsertTestFolder,
+        edit: editTestFolder,
         delete: deleteTestFolder
     },
     testSpecs: {
         get: getTestSpec,
         list: listTestSpecs,
         upsert: upsertTestSpec,
+        edit: editTestSpec,
         delete: deleteTestSpec
     },
     testRequirements: {
         list: listTestRequirements,
         upsert: upsertTestRequirement,
+        edit: editTestRequirement,
+        replaceForSpec: replaceTestRequirementsForSpec,
         delete: deleteTestRequirement
     },
     tests: {
         list: listTests,
         upsert: upsertTest,
+        edit: editTest,
         delete: deleteTest,
         syncReport: syncReport,
         getReport: getReport

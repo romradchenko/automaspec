@@ -21,12 +21,24 @@ const exportDataOutput = z.object({
 })
 
 const exportAccountContract = oc
-    .route({ method: 'GET', path: '/account/{userId}', tags: ['account'], description: 'Export account data' })
+    .route({
+        method: 'GET',
+        path: '/account/{userId}',
+        tags: ['account'],
+        summary: 'Export account data',
+        description: 'Export the current user account data (profile + memberships)'
+    })
     .input(memberSelectSchema.pick({ userId: true }))
     .output(exportDataOutput)
 
 const deleteAccountContract = oc
-    .route({ method: 'DELETE', path: '/account/{userId}', tags: ['account'], description: 'Delete account' })
+    .route({
+        method: 'DELETE',
+        path: '/account/{userId}',
+        tags: ['account'],
+        summary: 'Delete account',
+        description: 'Delete the current user account'
+    })
     .input(memberSelectSchema.pick({ userId: true }))
     .output(z.object({ success: z.boolean() }))
 

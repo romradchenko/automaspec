@@ -7,6 +7,7 @@ const getMetricsContract = oc
         method: 'GET',
         path: '/analytics/metrics',
         tags: ['analytics'],
+        summary: 'Get analytics metrics',
         description: 'Get analytics metrics for the organization'
     })
     .input(analyticsMetricsInputSchema)
