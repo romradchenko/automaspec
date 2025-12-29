@@ -50,7 +50,7 @@ export default defineConfig({
     webServer: {
         command: `pnpm exec next dev --webpack --hostname ${hostname} --port ${port}`,
         url: baseURL,
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         timeout: 120 * 1000,
         env: {
             E2E_DATABASE_URL: e2eDbUrl,
