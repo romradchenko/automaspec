@@ -51,6 +51,7 @@ export function CreateSpecDialog({ open, onOpenChange, onCreateSpec, isCreating 
                     <Label htmlFor="spec-name">Spec Name</Label>
                     <Input
                         id="spec-name"
+                        autoFocus
                         placeholder="e.g., User Authentication Tests, API Endpoints Tests"
                         value={specName}
                         onChange={(e) => setSpecName(e.target.value)}

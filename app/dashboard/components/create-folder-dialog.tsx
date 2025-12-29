@@ -51,6 +51,7 @@ export function CreateFolderDialog({ open, onOpenChange, onCreateFolder, isCreat
                     <Label htmlFor="folder-name">Folder Name</Label>
                     <Input
                         id="folder-name"
+                        autoFocus
                         placeholder="e.g., Unit Tests, Integration Tests"
                         value={folderName}
                         onChange={(e) => setFolderName(e.target.value)}

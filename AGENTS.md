@@ -4,7 +4,23 @@ Scope: Entire repository
 
 These rules guide coding changes and reviews in this repo.
 
+## Commands
+
+- **Build**: `pnpm build`
+- **Lint**: `pnpm lint` (Fix: `pnpm lint:fix`)
+- **Format**: `pnpm format`
+- **Test**: `pnpm test`
+- **Test Single File**: `pnpm test __tests__/path/to/file.test.tsx`
+- **Typecheck**: `pnpm typecheck`
+
 ## Core Code Style
+
+### Formatting
+
+- **Indentation**: 4 spaces
+- **Semicolons**: None (`semi: false`)
+- **Quotes**: Single (`singleQuote: true`)
+- **Print Width**: 120 characters
 
 ### Imports at top, static only
 
@@ -213,11 +229,12 @@ export function validateSize(size: number) {
 
 ### Hooks + formatting
 
-- Pre‑commit runs Prettier and Oxlint; write code that passes both without needing exceptions.
+- Pre‑commit runs `oxfmt` and `oxlint`; write code that passes both without needing exceptions.
 
 ## Testing
 
 - Use Vitest and React Testing Library patterns for unit/component tests.
+- Tests are located in `__tests__` directory.
 - Integration tests are optional and require `NEXT_PUBLIC_DATABASE_URL`.
 
 ## Commit Messages
