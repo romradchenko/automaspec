@@ -1,7 +1,7 @@
 'use client'
 
 import { Plus, Trash2, GripVertical } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { TestRequirement } from '@/lib/types'
@@ -20,6 +20,16 @@ export function RequirementsEditor({
     onCancel
 }: RequirementsEditorProps) {
     const [requirements, setRequirements] = useState<TestRequirement[]>(initialRequirements)
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([])
+    const previousRequirementsLength = useRef(initialRequirements.length)
+
+    useEffect(() => {
+        if (requirements.length > previousRequirementsLength.current) {
+            const lastIndex = requirements.length - 1
+            inputRefs.current[lastIndex]?.focus()
+        }
+        previousRequirementsLength.current = requirements.length
+    }, [requirements.length])
 
     const handleRequirementChange = (index: number, name: string) => {
         const updated = [...requirements]
@@ -66,6 +76,9 @@ export function RequirementsEditor({
                     >
                         <GripVertical className="text-muted-foreground size-4 shrink-0" />
                         <input
+                            ref={(el) => {
+                                inputRefs.current[index] = el
+                            }}
                             className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                             onChange={(e) => handleRequirementChange(index, e.target.value)}
                             placeholder="Enter requirement name..."
