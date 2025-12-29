@@ -9,7 +9,7 @@ import {
 } from '@headless-tree/core'
 import { useTree } from '@headless-tree/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { ChevronDown, ChevronRight, FileText, Folder, Plus, Trash2 } from 'lucide-react'
+import { ChevronDown, ChevronRight, FileText, Folder, FolderOpen, Plus, Trash2 } from 'lucide-react'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -345,6 +345,7 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
                 const parentId = item.getItemMeta().parentId
                 const isFolder = item.isFolder()
                 const isExpanded = item.isExpanded()
+                const hasChildren = item.getChildren().length > 0
                 const isSelected =
                     payload.type === 'spec'
                         ? selectedSpecId === payload.id
@@ -393,7 +394,13 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
                             </div>
 
                             {isFolder ? (
-                                <Folder className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                !hasChildren ? (
+                                    <FolderOpen className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                ) : isExpanded ? (
+                                    <FolderOpen className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                ) : (
+                                    <Folder className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                )
                             ) : (
                                 <FileText className="size-6 shrink-0 text-muted-foreground sm:size-4" />
                             )}
