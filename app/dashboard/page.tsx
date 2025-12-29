@@ -17,7 +17,7 @@ import type {
 
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { AI_MODELS, AI_PROVIDERS } from '@/lib/constants'
-import { orpc, safeClient } from '@/lib/orpc/orpc'
+import { safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
 
 import { AiChatWidget } from './components/ai-chat-widget'
@@ -83,16 +83,20 @@ export default function Dashboard() {
         }
     }, [aiOpen])
 
-    const { data: requirements = [] } = useQuery(
-        orpc.testRequirements.list.queryOptions({
-            input: {}
-        })
-    )
-    const { data: tests = [] } = useQuery(
-        orpc.tests.list.queryOptions({
-            input: {}
-        })
-    )
+    const { data: requirements = [] } = useQuery({
+        queryKey: ['test-requirements'],
+        queryFn: async () => {
+            const res = await safeClient.testRequirements.list({})
+            return res.data || []
+        }
+    })
+    const { data: tests = [] } = useQuery({
+        queryKey: ['tests'],
+        queryFn: async () => {
+            const res = await safeClient.tests.list({})
+            return res.data || []
+        }
+    })
 
     const handleSpecSelect = (spec: TestSpec) => {
         const specRequirements = []
