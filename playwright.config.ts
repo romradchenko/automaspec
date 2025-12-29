@@ -48,9 +48,8 @@ export default defineConfig({
     },
     outputDir: path.join(os.tmpdir(), 'automaspec-playwright'),
     webServer: {
-        command: `pnpm exec next dev --webpack --hostname ${hostname} --port ${port}`,
+        command: `pnpm run dev --webpack --hostname ${hostname} --port ${port}`,
         url: baseURL,
-        reuseExistingServer: false,
         timeout: 120 * 1000,
         env: {
             E2E_DATABASE_URL: e2eDbUrl,
