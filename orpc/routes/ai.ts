@@ -1,14 +1,12 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
-import { implement, ORPCError } from '@orpc/server'
+import { call, implement, ORPCError } from '@orpc/server'
 import { stepCountIs, streamText, tool, type ModelMessage } from 'ai'
-import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
 
-import type { AiChatMessage, AiProvider } from '@/lib/types'
+import type { AiChatMessage, AiProvider, Session } from '@/lib/types'
 
-import { db } from '@/db'
-import { DEFAULT_SPEC_STATUSES, testFolder, testRequirement, testSpec } from '@/db/schema'
+import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import {
     AI_BLOCKED_PATTERNS,
     AI_ENV_KEYS,
@@ -21,6 +19,7 @@ import {
 } from '@/lib/constants'
 import { aiContract } from '@/orpc/contracts/ai'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
+import { testsRouter } from '@/orpc/routes/tests'
 
 const ACTION_SYSTEM_PROMPT =
     'You are the Automaspec copilot. Stay within test management. ' +
@@ -125,119 +124,76 @@ function enforceRateLimit(organizationId: string) {
 type ToolMessageSetter = (message: string) => void
 type ToolRefreshSetter = (itemId: string) => void
 type ToolDeps = {
-    createFolder: typeof createFolderRecord
-    findFolderByName: typeof findFolderByNameRecord
-    createSpec: typeof createSpecRecord
-    createRequirements: typeof createRequirementsRecords
+    createFolder: (input: {
+        id: string
+        name: string
+        description: string | null
+        parentFolderId: string | null
+        organizationId: string
+        session: Session
+    }) => Promise<{ id: string }>
+    findFolderByName: (input: { name: string; session: Session }) => Promise<{ id: string } | null>
+    createSpec: (input: {
+        id: string
+        name: string
+        description: string | null
+        fileName: string | null
+        folderId: string | null
+        organizationId: string
+        session: Session
+    }) => Promise<{ id: string }>
+    replaceRequirementsForSpec: (input: {
+        specId: string
+        requirements: Array<{ name: string; description: string | null; order: number }>
+        session: Session
+    }) => Promise<void>
 }
 
 const defaultToolDeps: ToolDeps = {
-    createFolder: createFolderRecord,
-    findFolderByName: findFolderByNameRecord,
-    createSpec: createSpecRecord,
-    createRequirements: createRequirementsRecords
-}
-
-export async function createFolderRecord(input: {
-    id: string
-    name: string
-    description: string | null
-    parentFolderId: string | null
-    organizationId: string
-}) {
-    const [created] = await db
-        .insert(testFolder)
-        .values({
-            id: input.id,
-            name: input.name,
-            description: input.description,
-            parentFolderId: input.parentFolderId,
-            organizationId: input.organizationId
-        })
-        .onConflictDoUpdate({
-            target: testFolder.id,
-            set: {
-                name: input.name,
-                description: input.description,
-                parentFolderId: input.parentFolderId
-            }
-        })
-        .returning({ id: testFolder.id })
-
-    return created
-}
-
-export async function findFolderByNameRecord(input: { name: string; organizationId: string }) {
-    const rows = await db
-        .select({ id: testFolder.id })
-        .from(testFolder)
-        .where(and(eq(testFolder.organizationId, input.organizationId), eq(testFolder.name, input.name)))
-
-    if (rows.length === 0) {
-        return null
+    createFolder: async ({ session, ...input }) => {
+        const folder = await call(
+            testsRouter.testFolders.upsert,
+            {
+                ...input,
+                order: 0
+            },
+            { context: { session } }
+        )
+        return { id: folder.id }
+    },
+    findFolderByName: async ({ session, name }) => {
+        const found = await call(testsRouter.testFolders.findByName, { name }, { context: { session } })
+        if (!found) {
+            return null
+        }
+        return { id: found.id }
+    },
+    createSpec: async ({ session, ...input }) => {
+        const spec = await call(
+            testsRouter.testSpecs.upsert,
+            {
+                ...input,
+                statuses: DEFAULT_SPEC_STATUSES,
+                numberOfTests: 0
+            },
+            { context: { session } }
+        )
+        return { id: spec.id }
+    },
+    replaceRequirementsForSpec: async ({ session, specId, requirements }) => {
+        await call(
+            testsRouter.testRequirements.replaceForSpec,
+            {
+                specId,
+                requirements
+            },
+            { context: { session } }
+        )
     }
-
-    return rows[0]
-}
-
-export async function createSpecRecord(input: {
-    id: string
-    name: string
-    description: string | null
-    fileName: string | null
-    folderId: string | null
-    organizationId: string
-}) {
-    const [created] = await db
-        .insert(testSpec)
-        .values({
-            id: input.id,
-            name: input.name,
-            description: input.description,
-            fileName: input.fileName,
-            folderId: input.folderId,
-            statuses: DEFAULT_SPEC_STATUSES,
-            numberOfTests: 0,
-            organizationId: input.organizationId
-        })
-        .onConflictDoUpdate({
-            target: testSpec.id,
-            set: {
-                name: input.name,
-                description: input.description,
-                fileName: input.fileName,
-                folderId: input.folderId
-            }
-        })
-        .returning({ id: testSpec.id })
-
-    return created
-}
-
-export async function createRequirementsRecords(input: {
-    specId: string
-    requirements: Array<{ name: string; description: string | null; order: number }>
-}) {
-    if (input.requirements.length === 0) {
-        return []
-    }
-
-    const requirementValues = []
-    for (const requirement of input.requirements) {
-        requirementValues.push({
-            id: crypto.randomUUID(),
-            name: requirement.name,
-            description: requirement.description,
-            order: requirement.order,
-            specId: input.specId
-        })
-    }
-
-    return await db.insert(testRequirement).values(requirementValues).returning({ id: testRequirement.id })
 }
 
 export function createAiTools(
-    context: { organizationId: string },
+    context: { organizationId: string; session: Session },
     setToolMessage: ToolMessageSetter,
     setRefreshItem: ToolRefreshSetter,
     deps: ToolDeps = defaultToolDeps
@@ -258,7 +214,8 @@ export function createAiTools(
                         name,
                         description: description ?? null,
                         parentFolderId: parentFolderId ?? null,
-                        organizationId: context.organizationId
+                        organizationId: context.organizationId,
+                        session: context.session
                     })
                     setToolMessage(`Created folder "${name}".`)
                     setRefreshItem(parentFolderId ?? 'root')
@@ -281,7 +238,7 @@ export function createAiTools(
             }),
             execute: async ({ name }) => {
                 try {
-                    const found = await deps.findFolderByName({ name, organizationId: context.organizationId })
+                    const found = await deps.findFolderByName({ name, session: context.session })
                     if (!found) {
                         return { success: false, error: 'Folder not found' }
                     }
@@ -323,7 +280,8 @@ export function createAiTools(
                         description: description ?? null,
                         fileName: fileName ?? null,
                         folderId: folderId ?? null,
-                        organizationId: context.organizationId
+                        organizationId: context.organizationId,
+                        session: context.session
                     })
                     if (requirements && requirements.length > 0) {
                         const normalizedRequirements: Array<{
@@ -340,9 +298,10 @@ export function createAiTools(
                             })
                             order += 1
                         }
-                        await deps.createRequirements({
+                        await deps.replaceRequirementsForSpec({
                             specId: created.id,
-                            requirements: normalizedRequirements
+                            requirements: normalizedRequirements,
+                            session: context.session
                         })
                         setToolMessage(`Created spec "${name}" with ${normalizedRequirements.length} requirements.`)
                     } else {
@@ -377,7 +336,7 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
     const toolMessages: string[] = []
     const refreshItemIds: Set<string> = new Set()
     const tools = createAiTools(
-        context,
+        { organizationId: context.organizationId, session: context.session },
         (message: string) => {
             lastToolMessage = message
             toolMessages.push(message)

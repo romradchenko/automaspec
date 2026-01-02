@@ -135,12 +135,24 @@ const findTestFolderByName = os.testFolders.findByName.handler(async ({ input, c
 const upsertTestFolder = os.testFolders.upsert.handler(async ({ input, context }) => {
     const { id = crypto.randomUUID(), ...updates } = input
 
+    if (input.id) {
+        const existing = await db
+            .select({ id: testFolder.id, organizationId: testFolder.organizationId })
+            .from(testFolder)
+            .where(eq(testFolder.id, input.id))
+            .limit(1)
+
+        if (existing.length > 0 && existing[0].organizationId !== context.organizationId) {
+            throw new ORPCError('Folder not found or access denied')
+        }
+    }
+
     const result = await db
         .insert(testFolder)
         .values({ id, ...updates, organizationId: context.organizationId })
         .onConflictDoUpdate({
             target: testFolder.id,
-            set: { ...updates }
+            set: { ...updates, organizationId: context.organizationId }
         })
         .returning()
 
@@ -215,19 +227,33 @@ const listTestSpecs = os.testSpecs.list.handler(async ({ context, input }) => {
         .where(and(...conditions))
 })
 
-const upsertTestSpec = os.testSpecs.upsert.handler(async ({ input }) => {
+const upsertTestSpec = os.testSpecs.upsert.handler(async ({ input, context }) => {
     const { id = crypto.randomUUID(), ...updates } = input
+
+    if (input.id) {
+        const existing = await db
+            .select({ id: testSpec.id, organizationId: testSpec.organizationId })
+            .from(testSpec)
+            .where(eq(testSpec.id, input.id))
+            .limit(1)
+
+        if (existing.length > 0 && existing[0].organizationId !== context.organizationId) {
+            throw new ORPCError('Spec not found or access denied')
+        }
+    }
 
     const result = await db
         .insert(testSpec)
         .values({
             id,
-            ...updates
+            ...updates,
+            organizationId: context.organizationId
         })
         .onConflictDoUpdate({
             target: testSpec.id,
             set: {
-                ...updates
+                ...updates,
+                organizationId: context.organizationId
             }
         })
         .returning()
