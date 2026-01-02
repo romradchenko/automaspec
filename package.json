@@ -17,7 +17,7 @@
         "dbc": "drizzle-kit check --config=drizzle.config.ts",
         "dbup": "pnpm dbg && pnpm dbm",
         "upd": "taze --write && next upgrade",
-        "upd:interactive": "taze --write --interactive && next upgrade",
+        "upd:interactive": "taze --write --interactive",
         "lint": "oxlint --type-aware --deny-warnings --fix",
         "lint:fix": "pnpm lint --fix-dangerously --fix-suggestions",
         "format": "oxfmt",
@@ -32,7 +32,7 @@
         "docker:prod:build": "docker compose -f docker-compose.prod.yml build"
     },
     "dependencies": {
-        "@ai-sdk/google": "^2.0.52",
+        "@ai-sdk/google": "^3.0.2",
         "@headless-tree/core": "^1.6.1",
         "@headless-tree/react": "^1.6.1",
         "@libsql/client": "^0.15.15",
@@ -49,7 +49,7 @@
         "@space-man/react-theme-animation": "^2.0.0",
         "@tanstack/react-form": "^1.27.7",
         "@tanstack/react-query": "^5.90.16",
-        "ai": "^5.0.117",
+        "ai": "^6.0.5",
         "better-auth": "^1.4.10",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
