@@ -1,4 +1,5 @@
 pre-commit:
+    parallel: true
     jobs:
         - name: check database schema
           glob: 'db/schema/*.ts'
@@ -18,7 +19,7 @@ pre-commit:
           fail_text: '❌ oxlint failed'
 
 pre-push:
-    parallel: false
+    parallel: true
     jobs:
         - name: typecheck
           glob: '*.{ts,tsx,mts}'

@@ -10,12 +10,11 @@ loadEnvConfig(projectDir)
 const hostname = process.env.E2E_HOSTNAME
 const port = process.env.E2E_PORT
 const baseURL = `http://${hostname}:${port}`
+const localDbUrl = process.env.NEXT_PUBLIC_DATABASE_LOCAL_URL
 
 if (!hostname || !port) {
     throw new Error('E2E_HOSTNAME and E2E_PORT must be set')
 }
-
-const localDbUrl = process.env.NEXT_PUBLIC_DATABASE_LOCAL_URL
 if (!localDbUrl) {
     throw new Error('NEXT_PUBLIC_DATABASE_LOCAL_URL must be set')
 }
