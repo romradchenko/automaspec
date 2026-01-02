@@ -417,6 +417,8 @@ export default function Dashboard() {
         setAiProgress(nextProgress)
 
         if (refreshItemIds.length > 0) {
+            await queryClient.invalidateQueries({ queryKey: ['test-requirements'] })
+            await queryClient.invalidateQueries({ queryKey: ['tests'] })
             for (const itemId of refreshItemIds) {
                 await treeRef.current?.refreshItemChildren(itemId)
             }
