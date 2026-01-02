@@ -148,6 +148,57 @@ export const aiChatResponseSchema = z.object({
     refreshItemIds: z.array(z.string()).optional()
 })
 
+export type AiToolContext = {
+    organizationId: string
+    session: Session
+}
+
+export type AiToolMessageSetter = (message: string) => void
+export type AiToolRefreshSetter = (itemId: string) => void
+
+export type AiToolFolderUpsertInput = {
+    id: string
+    name: string
+    description: string | null
+    parentFolderId: string | null
+    organizationId: string
+    session: Session
+}
+
+export type AiToolFolderFindByNameInput = {
+    name: string
+    session: Session
+}
+
+export type AiToolSpecUpsertInput = {
+    id: string
+    name: string
+    description: string | null
+    fileName: string | null
+    folderId: string | null
+    organizationId: string
+    session: Session
+}
+
+export type AiToolRequirementUpsertValue = {
+    name: string
+    description: string | null
+    order: number
+}
+
+export type AiToolSpecReplaceRequirementsInput = {
+    specId: string
+    requirements: AiToolRequirementUpsertValue[]
+    session: Session
+}
+
+export type AiToolDeps = {
+    createFolder: (input: AiToolFolderUpsertInput) => Promise<{ id: string }>
+    findFolderByName: (input: AiToolFolderFindByNameInput) => Promise<{ id: string } | null>
+    createSpec: (input: AiToolSpecUpsertInput) => Promise<{ id: string }>
+    replaceRequirementsForSpec: (input: AiToolSpecReplaceRequirementsInput) => Promise<void>
+}
+
 // Update input types
 export type UpdateTestFolderInput = { id: string } & Partial<CreateTestFolderInput>
 export type UpdateTestSpecInput = { id: string } & Partial<CreateTestSpecInput>

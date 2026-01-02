@@ -4,7 +4,15 @@ import { call, implement, ORPCError } from '@orpc/server'
 import { stepCountIs, streamText, tool, type ModelMessage } from 'ai'
 import { z } from 'zod'
 
-import type { AiChatMessage, AiProvider, Session } from '@/lib/types'
+import type {
+    AiChatMessage,
+    AiProvider,
+    AiToolContext,
+    AiToolDeps,
+    AiToolMessageSetter,
+    AiToolRefreshSetter,
+    AiToolRequirementUpsertValue
+} from '@/lib/types'
 
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import {
@@ -121,35 +129,7 @@ function enforceRateLimit(organizationId: string) {
     rateLimitBuckets.set(organizationId, bucket)
 }
 
-type ToolMessageSetter = (message: string) => void
-type ToolRefreshSetter = (itemId: string) => void
-type ToolDeps = {
-    createFolder: (input: {
-        id: string
-        name: string
-        description: string | null
-        parentFolderId: string | null
-        organizationId: string
-        session: Session
-    }) => Promise<{ id: string }>
-    findFolderByName: (input: { name: string; session: Session }) => Promise<{ id: string } | null>
-    createSpec: (input: {
-        id: string
-        name: string
-        description: string | null
-        fileName: string | null
-        folderId: string | null
-        organizationId: string
-        session: Session
-    }) => Promise<{ id: string }>
-    replaceRequirementsForSpec: (input: {
-        specId: string
-        requirements: Array<{ name: string; description: string | null; order: number }>
-        session: Session
-    }) => Promise<void>
-}
-
-const defaultToolDeps: ToolDeps = {
+const defaultToolDeps: AiToolDeps = {
     createFolder: async ({ session, ...input }) => {
         const folder = await call(
             testsRouter.testFolders.upsert,
@@ -193,10 +173,10 @@ const defaultToolDeps: ToolDeps = {
 }
 
 export function createAiTools(
-    context: { organizationId: string; session: Session },
-    setToolMessage: ToolMessageSetter,
-    setRefreshItem: ToolRefreshSetter,
-    deps: ToolDeps = defaultToolDeps
+    context: AiToolContext,
+    setToolMessage: AiToolMessageSetter,
+    setRefreshItem: AiToolRefreshSetter,
+    deps: AiToolDeps = defaultToolDeps
 ) {
     return {
         createFolder: tool({
@@ -284,11 +264,7 @@ export function createAiTools(
                         session: context.session
                     })
                     if (requirements && requirements.length > 0) {
-                        const normalizedRequirements: Array<{
-                            name: string
-                            description: string | null
-                            order: number
-                        }> = []
+                        const normalizedRequirements: AiToolRequirementUpsertValue[] = []
                         let order = 0
                         for (const requirement of requirements) {
                             normalizedRequirements.push({
