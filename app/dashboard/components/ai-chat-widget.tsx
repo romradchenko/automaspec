@@ -69,8 +69,14 @@ export function AiChatWidget({
                             <Textarea
                                 value={aiInput}
                                 onChange={(event) => onInputChange(event.target.value)}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' && event.ctrlKey) {
+                                        event.preventDefault()
+                                        onSubmit(event as unknown as React.FormEvent<HTMLFormElement>)
+                                    }
+                                }}
                                 rows={3}
-                                placeholder="Ask about your tests or requirements"
+                                placeholder="Ask about your tests or requirements (Ctrl+Enter to send)"
                             />
                             {aiError ? <p className="text-xs text-red-600">{aiError}</p> : null}
                             <Button type="submit" size="sm" disabled={aiIsLoading} className="w-full">
