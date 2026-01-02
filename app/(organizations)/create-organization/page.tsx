@@ -1,5 +1,6 @@
 'use client'
 
+import { useForm } from '@tanstack/react-form'
 import { Loader2, Building2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -11,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/shared/better-auth-client'
-import { useForm } from '@tanstack/react-form'
 
 export default function CreateOrganizationPage() {
     const router = useRouter()
@@ -93,7 +93,7 @@ export default function CreateOrganizationPage() {
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
-                                form.handleSubmit()
+                                void form.handleSubmit()
                             }}
                             className="space-y-4"
                         >
@@ -155,7 +155,7 @@ export default function CreateOrganizationPage() {
                                                 return 'This slug is already taken'
                                             }
                                         } catch (err) {
-                                            console.error(err)
+                                            console.log(err)
                                         }
                                     }
                                 }}

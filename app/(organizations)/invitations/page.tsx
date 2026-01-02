@@ -162,7 +162,7 @@ export default function InvitationsPage() {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => handleRejectInvitation(invitation.id)}
+                                            onClick={async () => handleRejectInvitation(invitation.id)}
                                             disabled={processingId === invitation.id}
                                         >
                                             {processingId === invitation.id ? (
@@ -174,7 +174,7 @@ export default function InvitationsPage() {
                                         </Button>
                                         <Button
                                             size="sm"
-                                            onClick={() => handleAcceptInvitation(invitation.id)}
+                                            onClick={async () => handleAcceptInvitation(invitation.id)}
                                             disabled={processingId === invitation.id}
                                         >
                                             {processingId === invitation.id ? (

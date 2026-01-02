@@ -1,11 +1,11 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, screen } from '@testing-library/react'
 import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 
 import type { TestSpec, TestRequirement } from '@/lib/types'
 
 import { TestDetailsPanel } from '@/app/dashboard/components/test-details-panel'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
 
 vi.mock('@/lib/shared/better-auth-client', () => ({
     authClient: {
@@ -65,6 +65,7 @@ describe('Test Details Panel', () => {
                 selectedSpec={mockSpec}
                 selectedRequirements={[]}
                 selectedTests={[]}
+                onRenameSpec={vi.fn()}
                 onDeleteSpec={vi.fn()}
             />
         )
@@ -114,24 +115,28 @@ describe('Test Details Panel', () => {
                 selectedSpec={mockSpec}
                 selectedRequirements={mockRequirements}
                 selectedTests={[]}
+                onRenameSpec={vi.fn()}
                 onDeleteSpec={vi.fn()}
             />
         )
 
-        // Should display spec name and description
         expect(screen.getByText('API Tests')).toBeDefined()
         expect(screen.getByText('Backend API tests')).toBeDefined()
 
-        // Should display requirements
         expect(screen.getByText('Test requirement 1')).toBeDefined()
     })
 
     it('should handle no spec selected', () => {
         renderWithProviders(
-            <TestDetailsPanel selectedSpec={null} selectedRequirements={[]} selectedTests={[]} onDeleteSpec={vi.fn()} />
+            <TestDetailsPanel
+                selectedSpec={null}
+                selectedRequirements={[]}
+                selectedTests={[]}
+                onRenameSpec={vi.fn()}
+                onDeleteSpec={vi.fn()}
+            />
         )
 
-        // Should show empty state with the actual text from the component
         expect(screen.getByText('Select a spec to view details and requirements')).toBeDefined()
         expect(screen.getByText('New Folder')).toBeDefined()
         expect(screen.getByText('New Spec')).toBeDefined()

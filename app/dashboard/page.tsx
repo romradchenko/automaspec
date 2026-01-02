@@ -1,5 +1,6 @@
 'use client'
 
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
@@ -16,11 +17,11 @@ import type {
 
 import { DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { AI_MODELS, AI_PROVIDERS } from '@/lib/constants'
-import { orpc, safeClient } from '@/lib/orpc/orpc'
+import { safeClient } from '@/lib/orpc/orpc'
 import { authClient } from '@/lib/shared/better-auth-client'
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 
 import { AiChatWidget } from './components/ai-chat-widget'
+import { CreateSpecDialog } from './components/create-spec-dialog'
 import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
 import { FolderDetailsPanel } from './components/folder-details-panel'
 import { DashboardHeader } from './components/header'
@@ -82,39 +83,18 @@ export default function Dashboard() {
         }
     }, [aiOpen])
 
-    const { data: requirements = [] } = useQuery(
-        orpc.testRequirements.list.queryOptions({
-            input: {}
-        })
-    )
-    const { data: tests = [] } = useQuery(
-        orpc.tests.list.queryOptions({
-            input: {}
-        })
-    )
-    const createTestSpecMutation = useMutation({
-        mutationFn: async (folderId: string) => {
-            if (!activeOrganization?.id) {
-                throw new Error('No active organization')
-            }
-            const { data, error } = await safeClient.testSpecs.upsert({
-                id: crypto.randomUUID(),
-                name: 'New Test',
-                folderId,
-                organizationId: activeOrganization.id,
-                statuses: DEFAULT_SPEC_STATUSES,
-                numberOfTests: 0
-            })
-            if (error) throw error
-            return data
-        },
-        onSuccess: async (_, folderId) => {
-            await invalidateAndRefetchQueries(queryClient, '/test-specs')
-            await treeRef.current?.refreshItemChildren(folderId)
-            toast.success('Test created successfully')
-        },
-        onError: (error) => {
-            toast.error(error.message || 'Failed to create test')
+    const { data: requirements = [] } = useQuery({
+        queryKey: ['test-requirements'],
+        queryFn: async () => {
+            const res = await safeClient.testRequirements.list({})
+            return res.data || []
+        }
+    })
+    const { data: tests = [] } = useQuery({
+        queryKey: ['tests'],
+        queryFn: async () => {
+            const res = await safeClient.tests.list({})
+            return res.data || []
         }
     })
 
@@ -177,6 +157,65 @@ export default function Dashboard() {
         }
     })
 
+    const renameFolderMutation = useMutation({
+        mutationFn: async (variables: { folderId: string; name: string }) => {
+            const { data: folder, error } = await safeClient.testFolders.get({ id: variables.folderId })
+            if (error) throw error
+            const { data, error: upsertError } = await safeClient.testFolders.upsert({
+                id: folder.id,
+                name: variables.name,
+                description: folder.description,
+                parentFolderId: folder.parentFolderId,
+                organizationId: folder.organizationId,
+                order: folder.order
+            })
+            if (upsertError) throw upsertError
+            return { data, parentFolderId: folder.parentFolderId }
+        },
+        onSuccess: async (result, variables) => {
+            if (selectedFolder?.id === variables.folderId) {
+                setSelectedFolder({ ...selectedFolder, name: variables.name })
+            }
+            await invalidateAndRefetchQueries(queryClient, '/test-folders')
+            await treeRef.current?.refreshItemChildren(result.parentFolderId ?? 'root')
+            toast.success('Folder renamed successfully')
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to rename folder')
+        }
+    })
+
+    const renameSpecMutation = useMutation({
+        mutationFn: async (variables: { specId: string; name: string }) => {
+            const { data: spec, error } = await safeClient.testSpecs.get({ id: variables.specId })
+            if (error) throw error
+            if (!spec) throw new Error('Spec not found')
+            const { data, error: upsertError } = await safeClient.testSpecs.upsert({
+                id: spec.id,
+                name: variables.name,
+                fileName: spec.fileName,
+                description: spec.description,
+                folderId: spec.folderId,
+                organizationId: spec.organizationId,
+                statuses: spec.statuses,
+                numberOfTests: spec.numberOfTests
+            })
+            if (upsertError) throw upsertError
+            return { data, parentFolderId: spec.folderId }
+        },
+        onSuccess: async (result, variables) => {
+            if (selectedSpec?.id === variables.specId) {
+                setSelectedSpec({ ...selectedSpec, name: variables.name })
+            }
+            await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            await treeRef.current?.refreshItemChildren(result.parentFolderId ?? 'root')
+            toast.success('Spec renamed successfully')
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to rename spec')
+        }
+    })
+
     const deleteSpecMutation = useMutation({
         mutationFn: async (variables: { specId: string; parentFolderId: string | null }) => {
             const { data, error } = await safeClient.testSpecs.delete({ id: variables.specId })
@@ -191,10 +230,10 @@ export default function Dashboard() {
             }
             await invalidateAndRefetchQueries(queryClient, '/test-specs')
             await treeRef.current?.refreshItemChildren(result.parentFolderId ?? 'root')
-            toast.success('Test deleted successfully')
+            toast.success('Spec deleted successfully')
         },
         onError: (error) => {
-            toast.error(error.message || 'Failed to delete test')
+            toast.error(error.message || 'Failed to delete spec')
         }
     })
 
@@ -228,6 +267,67 @@ export default function Dashboard() {
 
     const handleDeleteSpecFromTree = (specId: string, parentFolderId: string | null) => {
         setDeleteDialog({ type: 'spec', id: specId, parentFolderId })
+    }
+
+    const [createSpecDialogOpen, setCreateSpecDialogOpen] = useState(false)
+    const [createSpecFolderId, setCreateSpecFolderId] = useState<string | null>(null)
+
+    const handleCreateTest = (folderId: string) => {
+        setCreateSpecFolderId(folderId)
+        setCreateSpecDialogOpen(true)
+    }
+
+    const createTestFromTreeMutation = useMutation({
+        mutationFn: async (variables: { name: string; folderId: string }) => {
+            if (!activeOrganization?.id) {
+                throw new Error('No active organization')
+            }
+            const { data, error } = await safeClient.testSpecs.upsert({
+                id: crypto.randomUUID(),
+                name: variables.name,
+                folderId: variables.folderId === 'root' ? null : variables.folderId,
+                organizationId: activeOrganization.id,
+                statuses: DEFAULT_SPEC_STATUSES,
+                numberOfTests: 0
+            })
+            if (error) throw error
+            return data
+        },
+        onSuccess: async (_, variables) => {
+            await invalidateAndRefetchQueries(queryClient, '/test-specs')
+            await treeRef.current?.refreshItemChildren(variables.folderId ?? 'root')
+            toast.success('Spec created successfully')
+        },
+        onError: (error) => {
+            toast.error(error.message || 'Failed to create spec')
+        }
+    })
+
+    const handleRenameFolder = (folderId: string, name: string) => {
+        renameFolderMutation.mutate({ folderId, name })
+    }
+
+    const handleRenameSpec = (specId: string, name: string) => {
+        renameSpecMutation.mutate({ specId, name })
+    }
+
+    const handleDeleteFolderFromPanel = (folderId: string) => {
+        handleDeleteFolder(folderId)
+    }
+
+    const handleDeleteSpecFromPanel = (specId: string) => {
+        handleDeleteSpec(specId)
+    }
+
+    const handleEmptySpaceClick = () => {
+        setSelectedFolder(null)
+        setSelectedSpec(null)
+        setSelectedRequirements([])
+        setSelectedTests([])
+    }
+
+    const handleRequirementsUpdated = (updatedRequirements: TestRequirement[]) => {
+        setSelectedRequirements(updatedRequirements)
     }
 
     const handleConfirmDelete = () => {
@@ -317,6 +417,8 @@ export default function Dashboard() {
         setAiProgress(nextProgress)
 
         if (refreshItemIds.length > 0) {
+            await queryClient.invalidateQueries({ queryKey: ['test-requirements'] })
+            await queryClient.invalidateQueries({ queryKey: ['tests'] })
             for (const itemId of refreshItemIds) {
                 await treeRef.current?.refreshItemChildren(itemId)
             }
@@ -340,9 +442,10 @@ export default function Dashboard() {
                             selectedFolderId={selectedFolder?.id || null}
                             onSelectSpec={handleSpecSelect}
                             onSelectFolder={handleFolderSelect}
-                            onCreateTest={createTestSpecMutation.mutate}
+                            onCreateTest={handleCreateTest}
                             onDeleteFolder={handleDeleteFolderFromTree}
                             onDeleteSpec={handleDeleteSpecFromTree}
+                            onEmptySpaceClick={handleEmptySpaceClick}
                         />
                     </div>
                 </div>
@@ -351,8 +454,11 @@ export default function Dashboard() {
                     {selectedFolder ? (
                         <FolderDetailsPanel
                             selectedFolder={selectedFolder}
-                            onDeleteFolder={handleDeleteFolder}
-                            onRefreshTreeChildren={(parentFolderId: string | null) =>
+                            onRenameFolder={handleRenameFolder}
+                            onDeleteFolder={handleDeleteFolderFromPanel}
+                            onSpecSelect={handleSpecSelect}
+                            onFolderSelect={handleFolderSelect}
+                            onRefreshTreeChildren={async (parentFolderId: string | null) =>
                                 treeRef.current?.refreshItemChildren(parentFolderId ?? 'root')
                             }
                         />
@@ -361,8 +467,10 @@ export default function Dashboard() {
                             selectedSpec={selectedSpec}
                             selectedRequirements={selectedRequirements}
                             selectedTests={selectedTests}
-                            onDeleteSpec={handleDeleteSpec}
-                            onRefreshTreeChildren={(parentFolderId: string | null) =>
+                            onRenameSpec={handleRenameSpec}
+                            onDeleteSpec={handleDeleteSpecFromPanel}
+                            onRequirementsUpdated={handleRequirementsUpdated}
+                            onRefreshTreeChildren={async (parentFolderId: string | null) =>
                                 treeRef.current?.refreshItemChildren(parentFolderId ?? 'root')
                             }
                         />
@@ -387,6 +495,14 @@ export default function Dashboard() {
                     onConfirm={handleConfirmDelete}
                 />
             )}
+            <CreateSpecDialog
+                open={createSpecDialogOpen}
+                onOpenChange={setCreateSpecDialogOpen}
+                onCreateSpec={(name) =>
+                    createTestFromTreeMutation.mutate({ name, folderId: createSpecFolderId ?? 'root' })
+                }
+                isCreating={createTestFromTreeMutation.isPending}
+            />
             <AiChatWidget
                 aiOpen={aiOpen}
                 aiProvider={aiProvider}

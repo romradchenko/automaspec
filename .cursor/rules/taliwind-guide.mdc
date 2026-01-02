@@ -1,5 +1,0 @@
----
-description: When working with tailwind
-alwaysApply: false
----
-IMPORTANT: instead of `w-4 h-4` and similar styles use `size-4`

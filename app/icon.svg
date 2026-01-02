@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <style>
+    .icon-stroke { stroke: #1a1a1a; }
+    @media (prefers-color-scheme: dark) {
+      .icon-stroke { stroke: #e5e5e5; }
+    }
+  </style>
+  <polyline points="16 18 22 12 16 6" class="icon-stroke"></polyline>
+  <polyline points="8 6 2 12 8 18" class="icon-stroke"></polyline>
+</svg>
+

@@ -1,13 +1,4 @@
 'use client'
-import { ChevronDown, ChevronRight, FileText, Folder, Plus, Trash2 } from 'lucide-react'
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { toast } from 'sonner'
-
-import type { TestSpec } from '@/lib/types'
-
-import { Button } from '@/components/ui/button'
-import { safeClient } from '@/lib/orpc/orpc'
-import { cn } from '@/lib/utils'
 import {
     asyncDataLoaderFeature,
     selectionFeature,
@@ -18,6 +9,15 @@ import {
 } from '@headless-tree/core'
 import { useTree } from '@headless-tree/react'
 import { useQueryClient } from '@tanstack/react-query'
+import { ChevronDown, ChevronRight, FileText, Folder, FolderOpen, Plus, Trash2 } from 'lucide-react'
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { toast } from 'sonner'
+
+import type { TestSpec } from '@/lib/types'
+
+import { Button } from '@/components/ui/button'
+import { safeClient } from '@/lib/orpc/orpc'
+import { cn } from '@/lib/utils'
 
 import { invalidateAndRefetchQueries } from './hooks'
 
@@ -29,6 +29,7 @@ interface TreeProps {
     onCreateTest?: (folderId: string) => void
     onDeleteFolder?: (folderId: string, parentFolderId: string | null) => void
     onDeleteSpec?: (specId: string, parentFolderId: string | null) => void
+    onEmptySpaceClick?: () => void
 }
 
 export type TreeHandle = {
@@ -81,7 +82,16 @@ async function getFolderItemData(itemId: string): Promise<{ name: string; type: 
 }
 
 export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
-    { selectedSpecId, selectedFolderId, onSelectSpec, onSelectFolder, onCreateTest, onDeleteFolder, onDeleteSpec },
+    {
+        selectedSpecId,
+        selectedFolderId,
+        onSelectSpec,
+        onSelectFolder,
+        onCreateTest,
+        onDeleteFolder,
+        onDeleteSpec,
+        onEmptySpaceClick
+    },
     ref
 ) {
     const queryClient = useQueryClient()
@@ -115,7 +125,7 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
         canReorder: true,
         createLoadingItemData: () => ({ type: 'folder', id: 'loading', name: 'Loading...' }),
         dataLoader: {
-            getItem: (itemId) => getFolderItemData(itemId),
+            getItem: async (itemId) => getFolderItemData(itemId),
             getChildrenWithData: async (itemId) => {
                 if (preloadedChildrenCache.current[itemId]) {
                     const cached = preloadedChildrenCache.current[itemId]
@@ -313,13 +323,29 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
     }))
 
     return (
-        <div {...tree.getContainerProps()} className="flex flex-col">
+        <div
+            {...tree.getContainerProps()}
+            className="flex flex-col"
+            onClick={(e) => {
+                if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('h-0.5')) {
+                    onEmptySpaceClick?.()
+                }
+            }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    onEmptySpaceClick?.()
+                }
+            }}
+            role="button"
+            tabIndex={0}
+        >
             {tree.getItems().map((item) => {
                 const payload = item.getItemData()
                 const level = item.getItemMeta().level
                 const parentId = item.getItemMeta().parentId
                 const isFolder = item.isFolder()
                 const isExpanded = item.isExpanded()
+                const hasChildren = item.getChildren().length > 0
                 const isSelected =
                     payload.type === 'spec'
                         ? selectedSpecId === payload.id
@@ -368,7 +394,13 @@ export const Tree = forwardRef<TreeHandle, TreeProps>(function Tree(
                             </div>
 
                             {isFolder ? (
-                                <Folder className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                !hasChildren ? (
+                                    <FolderOpen className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                ) : isExpanded ? (
+                                    <FolderOpen className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                ) : (
+                                    <Folder className="size-6 shrink-0 text-muted-foreground sm:size-4" />
+                                )
                             ) : (
                                 <FileText className="size-6 shrink-0 text-muted-foreground sm:size-4" />
                             )}

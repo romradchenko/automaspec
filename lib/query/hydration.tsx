@@ -1,6 +1,5 @@
-import { cache } from 'react'
-
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { cache } from 'react'
 
 import { createQueryClient } from './client'
 

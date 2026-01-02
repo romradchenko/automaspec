@@ -1,11 +1,18 @@
 import type { NextConfig } from 'next'
 
+import path from 'node:path'
+
 const nextConfig: NextConfig = {
     output: 'standalone',
+    outputFileTracingRoot: path.join(__dirname),
+    typescript: {
+        // We already run typecheck as a part of ci and pre-push hooks
+        // This speeds up build time considerably
+        ignoreBuildErrors: true
+    },
     experimental: {
         browserDebugInfoInTerminal: true,
         typedEnv: true,
-        // useLightningcss: true,
         turbopackFileSystemCacheForDev: true
     },
     logging: {
@@ -15,13 +22,7 @@ const nextConfig: NextConfig = {
     },
     reactCompiler: false, // Broke react-headless-tree
     reactStrictMode: false,
-    typedRoutes: true,
-    images: {
-        unoptimized: true // FIXME
-    },
-    typescript: {
-        ignoreBuildErrors: true
-    }
+    typedRoutes: true
 }
 
 // oxlint-disable-next-line no-commonjs

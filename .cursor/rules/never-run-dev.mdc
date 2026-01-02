@@ -1,6 +1,0 @@
----
-description:
-globs:
-alwaysApply: true
----
-NEVER run dev server start if it is already running

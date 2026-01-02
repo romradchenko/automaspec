@@ -2,9 +2,8 @@
 
 import type { ComponentProps } from 'react'
 
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
-
 import { SpacemanThemeProvider } from '@space-man/react-theme-animation'
+import { ThemeProvider as NextThemesProvider } from 'next-themes'
 
 export function ThemeProvider({ children, ...props }: ComponentProps<typeof NextThemesProvider>) {
     return (

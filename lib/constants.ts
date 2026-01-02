@@ -80,67 +80,117 @@ export type StatusConfig = {
 export const STATUS_CONFIGS = {
     [TEST_STATUSES.missing]: {
         icon: MinusCircle,
-        color: 'text-slate-600',
+        color: 'text-muted-foreground',
         label: 'Missing',
-        badgeClassName: 'border-slate-200 bg-slate-100 text-slate-800',
-        requirementClassName: 'text-slate-700 bg-slate-50'
+        badgeClassName: 'border-border bg-muted/50 text-muted-foreground hover:bg-muted',
+        requirementClassName: ''
     },
     [TEST_STATUSES.passed]: {
         icon: CheckCircle,
-        color: 'text-emerald-600',
+        color: 'text-green-600',
         label: 'Passed',
-        badgeClassName: 'border-emerald-200 bg-emerald-100 text-emerald-800',
-        requirementClassName: 'text-emerald-800 bg-emerald-50'
+        badgeClassName: 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100',
+        requirementClassName: ''
     },
     [TEST_STATUSES.failed]: {
         icon: XCircle,
         color: 'text-red-600',
         label: 'Failed',
-        badgeClassName: 'border-red-200 bg-red-100 text-red-800',
-        requirementClassName: 'text-red-800 bg-red-50'
+        badgeClassName: 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100',
+        requirementClassName: ''
     },
     [TEST_STATUSES.pending]: {
         icon: Clock,
-        color: 'text-amber-600',
+        color: 'text-yellow-600',
         label: 'Pending',
-        badgeClassName: 'border-amber-200 bg-amber-100 text-amber-800',
-        requirementClassName: 'text-amber-800 bg-amber-50'
+        badgeClassName: 'border-yellow-200 bg-yellow-50 text-yellow-700 hover:bg-yellow-100',
+        requirementClassName: ''
     },
     [TEST_STATUSES.skipped]: {
         icon: MinusCircle,
-        color: 'text-slate-600',
+        color: 'text-muted-foreground',
         label: 'Skipped',
-        badgeClassName: 'border-slate-200 bg-slate-100 text-slate-800',
-        requirementClassName: 'text-slate-700 bg-slate-50'
+        badgeClassName: 'border-border bg-muted/50 text-muted-foreground hover:bg-muted',
+        requirementClassName: ''
     },
     [TEST_STATUSES.todo]: {
         icon: MinusCircle,
         color: 'text-orange-600',
         label: 'Todo',
-        badgeClassName: 'border-orange-200 bg-orange-100 text-orange-800',
-        requirementClassName: 'text-orange-800 bg-orange-50'
+        badgeClassName: 'border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100',
+        requirementClassName: ''
     },
     [SPEC_STATUSES.partial]: {
         icon: MinusCircle,
         color: 'text-orange-600',
         label: 'Partial',
-        badgeClassName: 'border-orange-200 bg-orange-100 text-orange-800',
-        requirementClassName: 'text-orange-800 bg-orange-50'
+        badgeClassName: 'border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100',
+        requirementClassName: ''
     },
     [SPEC_STATUSES.deactivated]: {
         icon: MinusCircle,
-        color: 'text-slate-600',
+        color: 'text-muted-foreground',
         label: 'Deactivated',
-        badgeClassName: 'border-slate-200 bg-slate-100 text-slate-800',
-        requirementClassName: 'text-slate-700 bg-slate-50'
+        badgeClassName: 'border-border bg-muted/50 text-muted-foreground hover:bg-muted',
+        requirementClassName: ''
     },
     [TEST_STATUSES.disabled]: {
         icon: MinusCircle,
-        color: 'text-slate-600',
+        color: 'text-muted-foreground',
         label: 'Disabled',
-        badgeClassName: 'border-slate-200 bg-slate-100 text-slate-800',
-        requirementClassName: 'text-slate-700 bg-slate-50'
+        badgeClassName: 'border-border bg-muted/50 text-muted-foreground hover:bg-muted',
+        requirementClassName: ''
     }
 } as const satisfies { [K in SpecStatus]: StatusConfig }
 
-export const TEST_RESULTS_FILE = 'test-results.json'
+export const ANALYTICS_PERIODS = {
+    '7d': 7,
+    '30d': 30,
+    '90d': 90
+} as const
+
+export const ERROR_PAGE_CONTENT = {
+    notFound: {
+        code: '404',
+        title: 'Page not found',
+        description: 'The page you are looking for does not exist or has been moved.',
+        primaryActionLabel: 'Return home',
+        primaryActionHref: '/',
+        secondaryActionLabel: 'Open dashboard',
+        secondaryActionHref: '/dashboard'
+    },
+    serverError: {
+        code: '500',
+        title: 'Something went wrong',
+        description: 'An unexpected error occurred. Please try again or head back to the main page.',
+        primaryActionLabel: 'Try again',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    },
+    badRequest: {
+        code: '400',
+        title: 'Bad request',
+        description: 'The request was invalid or cannot be processed.',
+        primaryActionLabel: 'Try again',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    },
+    unauthorized: {
+        code: '401',
+        title: 'Unauthorized',
+        description: 'You need to be logged in to access this page.',
+        primaryActionLabel: 'Log in',
+        primaryActionHref: '/login',
+        secondaryActionLabel: 'Back home',
+        secondaryActionHref: '/'
+    },
+    forbidden: {
+        code: '403',
+        title: 'Forbidden',
+        description: 'You do not have permission to access this page.',
+        primaryActionLabel: 'Back home',
+        primaryActionHref: '/',
+        secondaryActionLabel: 'Open dashboard',
+        secondaryActionHref: '/dashboard'
+    }
+} as const

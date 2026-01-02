@@ -1,10 +1,10 @@
+import { implement, ORPCError } from '@orpc/server'
 import { eq } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { user, member, organization } from '@/db/schema/auth'
 import { accountContract } from '@/orpc/contracts/account'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
-import { implement, ORPCError } from '@orpc/server'
 
 const os = implement(accountContract).use(authMiddleware).use(organizationMiddleware)
 

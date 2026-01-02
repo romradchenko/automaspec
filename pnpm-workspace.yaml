@@ -1,0 +1,7 @@
+neverBuiltDependencies:
+    - esbuild
+    - lefthook
+    - sharp
+minimumReleaseAge: 700
+blockExoticSubdeps: true
+trustPolicy: no-downgrade

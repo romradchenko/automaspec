@@ -2,7 +2,6 @@
 
 import type { QueryClient, Query } from '@tanstack/react-query'
 
-// TODO: Delete this file
 function createQueryPredicate(path: string) {
     return (query: Query<unknown, Error, unknown, readonly unknown[]>) => {
         const queryKey = query.queryKey
@@ -15,6 +14,6 @@ function createQueryPredicate(path: string) {
 
 export async function invalidateAndRefetchQueries(queryClient: QueryClient, path: string) {
     const predicate = createQueryPredicate(path)
-    queryClient.invalidateQueries({ predicate })
+    await queryClient.invalidateQueries({ predicate })
     await queryClient.refetchQueries({ predicate })
 }

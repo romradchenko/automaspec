@@ -1,18 +1,31 @@
-import { NextResponse } from 'next/server'
-import pino from 'pino'
-import pretty from 'pino-pretty'
-
-import { createContext } from '@/lib/orpc/context'
-import { router } from '@/orpc/routes'
 import { LoggingHandlerPlugin } from '@orpc/experimental-pino'
-import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from '@orpc/json-schema'
+import { SmartCoercionPlugin } from '@orpc/json-schema'
 import { OpenAPIHandler } from '@orpc/openapi/fetch'
 import { OpenAPIReferencePlugin } from '@orpc/openapi/plugins'
 import { onError } from '@orpc/server'
 import { CORSPlugin } from '@orpc/server/plugins'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
+import { NextResponse } from 'next/server'
+import pino from 'pino'
+import pretty from 'pino-pretty'
+
+import type { RpcError } from '@/lib/types'
+
+import { createContext } from '@/lib/orpc/context'
+import { router } from '@/orpc/routes'
 
 const logger = pino(pretty({ colorize: true, singleLine: true }))
+
+function getErrorCause(error: unknown): RpcError['cause'] | undefined {
+    if (typeof error !== 'object' || error === null) {
+        return undefined
+    }
+    const withCause = error as Partial<RpcError>
+    if (!withCause.cause || typeof withCause.cause !== 'object') {
+        return undefined
+    }
+    return withCause.cause
+}
 
 const handler = new OpenAPIHandler(router, {
     plugins: [
@@ -41,14 +54,14 @@ const handler = new OpenAPIHandler(router, {
         })
     ],
     interceptors: [
-        // oxlint-disable-next-line no-explicit-any
-        onError((error: any) => {
-            console.error('RPC Error:', error)
-            if (error.cause && error.cause.issues) {
-                console.error('Validation Issues:', JSON.stringify(error.cause.issues, null, 2))
+        onError((error) => {
+            console.log('RPC Error:', error)
+            const cause = getErrorCause(error)
+            if (cause?.issues) {
+                console.log('Validation Issues:', JSON.stringify(cause.issues, null, 2))
             }
-            if (error.cause && error.cause.data) {
-                console.error('Data that failed validation:', JSON.stringify(error.cause.data, null, 2))
+            if (cause?.data) {
+                console.log('Data that failed validation:', JSON.stringify(cause.data, null, 2))
             }
         })
     ]
