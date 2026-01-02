@@ -6,7 +6,8 @@
     padding: 24px;
     background-color: oklch(0.99 0.01 264);
     font-family: Arial, Helvetica, sans-serif;
-    background-image: radial-gradient(at 0% 0%, oklch(0.5 0.28 264 / 0.03) 0px, transparent 50%),
+    background-image:
+        radial-gradient(at 0% 0%, oklch(0.5 0.28 264 / 0.03) 0px, transparent 50%),
         radial-gradient(at 100% 100%, oklch(0.55 0.3 280 / 0.03) 0px, transparent 50%);
 }
 
