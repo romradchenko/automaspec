@@ -1,3 +1,2 @@
 - Split signin / signup flow
 - Use orpc routes inside ai tools
-- Add more error codes to orpc routes, like NOT_FOUND, BAD_REQUEST, etc. Use ORPCError class
