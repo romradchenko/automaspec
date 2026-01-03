@@ -11,7 +11,7 @@ export default defineConfig({
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
-            include: ['lib/constants.ts', 'lib/get-database-url.ts', 'lib/utils.ts', 'orpc/middleware.ts'],
+            include: ['lib/*.ts', 'orpc/middleware.ts', 'orpc/routes/**/*.ts'],
             exclude: [
                 'node_modules/',
                 '__tests__/',
@@ -19,7 +19,8 @@ export default defineConfig({
                 'app/**',
                 'components/**',
                 'db/**',
-                'orpc/routes/**',
+                'lib/orpc/**',
+                'lib/query/**',
                 '**/*.test.ts',
                 '**/*.test.tsx',
                 '**/*.config.*',
@@ -33,8 +34,10 @@ export default defineConfig({
                 '**/test-results.json'
             ],
             thresholds: {
-                lines: 60,
-                statements: 60
+                lines: 70,
+                statements: 70,
+                branches: 70,
+                functions: 70
             }
         }
     }
