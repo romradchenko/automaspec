@@ -1,67 +1,58 @@
-МИНИМАЛЬНЫЕ ТРЕБОВАНИЯ (на 5 баллов)
+# Automaspec — Containerization Requirements (Checklist)
 
-1. Docker Images
+This document summarizes the required containerization artifacts and how they are satisfied in the current repository.
 
-Обязательные требования к сборке:
+## 1. Required Artifacts
 
-· Отдельный Dockerfile для каждого сервиса
+- `Dockerfile` (multi-stage build, production runner)
+- `.dockerignore` (excludes heavy/unneeded files from build context)
+- `docker-compose.dev.yml` (development container run configuration)
+- `docker-compose.prod.yml` (production-like container run configuration)
+- `.env.example` (documented runtime configuration variables)
 
-· Правильное разделение на слои (неизменяемое в начале, часто меняемое в конце)
+## 2. Dockerfile Requirements
 
-· Использование .dockerignore для исключения ненужных файлов
+- Multi-stage build (`base` → `deps` → `builder` → `runner`)
+- Uses `pnpm` via Corepack for deterministic installs
+- Produces a minimal runtime image (Next.js standalone output)
+- Runs as non-root user in the `runner` stage
+- Exposes and health-checks the configured `PORT` (default `3000`)
 
-· ENV переменные для всех настроек (никаких хардкодов)
+## 3. Compose Requirements
 
-· Volumes для персистентных данных
+- Single service (`app`) with port mapping `${PORT:-3000}:${PORT:-3000}`
+- Loads runtime configuration from `.env` via `env_file`
+- Includes a simple HTTP healthcheck
+- Uses a bridge network (`automaspec-network`)
 
-· Правильная настройка портов (EXPOSE)
+Notes:
 
-Оптимизация размера:
+- The database is an external libSQL/Turso endpoint (no DB container is required).
 
-· Размер образа должен быть разумным (<1GB backend, <500MB frontend)
+## 4. Environment Configuration
 
-· Удаление временных файлов, кэша пакетных менеджеров после установки
+Minimum required:
 
-· Не включать ненужные утилиты (компиляторы, debug-tools, IDE)
+- `NEXT_PUBLIC_DATABASE_URL`
+- `DATABASE_AUTH_TOKEN`
 
-· Multi-stage build где применимо
+Optional (feature-dependent):
 
-Безопасность:
+- `OPENROUTER_API_KEY` (AI provider)
+- `GEMINI_API_KEY` (AI provider)
+- `VERCEL_URL` (Better Auth trusted origins in some deployments)
 
-· Никакой sensitive информации в образах (пароли, токены, ключи)
+## 5. Local Validation Steps
 
-· Запуск от non-root пользователя (USER directive)
+From repository root:
 
-· Версионирование образов (не использовать latest в production)
+- Development-style run: `pnpm docker:dev:up`
+- Production-style run: `pnpm docker:prod:up`
+- Stop containers: `pnpm docker:dev:down` / `pnpm docker:prod:down`
 
-2. Docker Compose
+Then verify:
 
-Обязательные элементы:
+- App responds on `http://localhost:3000`
+- Healthcheck passes
+- App can connect to the configured libSQL endpoint via the provided env vars
 
-· docker-compose.yml для локального развертывания
-
-· Все сервисы запускаются командой docker-compose up
-
-· Правильные зависимости между сервисами (depends_on)
-
-· Изолированные сети для компонентов
-
-· Volumes для БД и загруженных файлов
-
-· Переменные окружения через .env файл
-
-· .env.example с примерами значений
-
-3. Документация
-
-Обязательно задокументировать:
-
-· README с инструкцией запуска
-
-· Описание каждого образа и его назначения
-
-· Список всех ENV переменных с описанием
-
-· Схема/диаграмма архитектуры контейнеров
-
-· Требования к ресурсам (минимальные RAM/CPU)

@@ -10,14 +10,14 @@ This report provides a comprehensive analysis of the Automaspec backend architec
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| **Framework** | Next.js (App Router) | 16.0.6 |
+| **Framework** | Next.js (App Router) | 16.1.1 |
 | **Language** | TypeScript | 5.9.3 |
-| **ORM** | Drizzle ORM | 0.44.7 |
+| **ORM** | Drizzle ORM | 0.45.1 |
 | **Database** | Turso (SQLite) | libsql 0.15.15 |
-| **RPC Framework** | oRPC | 1.12.2 |
-| **Authentication** | Better Auth | 1.4.4 |
-| **Validation** | Zod | 4.1.13 |
-| **Testing** | Vitest | 4.0.14 |
+| **RPC Framework** | oRPC | 1.13.2 |
+| **Authentication** | Better Auth | 1.4.10 |
+| **Validation** | Zod | 4.3.4 |
+| **Testing** | Vitest | 4.0.16 |
 | **Logging** | Pino | 10.1.0 |
 | **API Documentation** | Scalar (OpenAPI) | via oRPC plugins |
 
@@ -59,17 +59,23 @@ Turso (SQLite)                         <- Database Layer
 | GET | `/test-folders/{id}` | Get folder by ID |
 | GET | `/test-folders` | List folders |
 | GET | `/test-folders/{folderId}/children` | Get folder children (recursive) |
+| GET | `/test-folders/find` | Find folder by exact name |
 | POST | `/test-folders/{id}` | Create/update folder |
+| PATCH | `/test-folders/{id}` | Edit folder fields |
 | DELETE | `/test-folders/{id}` | Delete folder |
 | GET | `/test-specs/{id}` | Get spec by ID |
 | GET | `/test-specs` | List specs |
 | PUT | `/test-specs/{id}` | Create/update spec |
+| PATCH | `/test-specs/{id}` | Edit spec fields |
 | DELETE | `/test-specs/{id}` | Delete spec |
 | GET | `/test-requirements` | List requirements |
 | PUT | `/test-requirements/{id}` | Create/update requirement |
+| PATCH | `/test-requirements/{id}` | Edit requirement fields |
+| PUT | `/test-specs/{specId}/requirements` | Replace requirements for a spec |
 | DELETE | `/test-requirements/{id}` | Delete requirement |
 | GET | `/tests` | List tests |
 | PUT | `/tests/{id}` | Create/update test |
+| PATCH | `/tests/{id}` | Edit test fields |
 | DELETE | `/tests/{id}` | Delete test |
 | POST | `/tests/sync-report` | Sync Vitest report |
 | GET | `/tests/report` | Get test report |
@@ -84,6 +90,18 @@ Turso (SQLite)                         <- Database Layer
 ### 3.3 Authentication (`/api/auth/*`)
 
 Handled by Better Auth with organization plugin support.
+
+### 3.4 AI Assistant (`/rpc/ai/*`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/ai/chat` | Chat with the AI assistant (tool-enabled) |
+
+### 3.5 Analytics (`/rpc/analytics/*`)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/analytics/metrics` | Organization analytics metrics |
 
 ---
 
@@ -212,20 +230,20 @@ Dockerfile included with multi-stage build:
 ### 10.1 Test Structure
 
 ```
-tests/
-?? components/          - UI component tests
-?? db/                  - Schema validation tests
-?? integration/         - Workflow tests
-?? lib/                 - Utility tests
-?? orpc/routes/         - API route tests
+__tests__/
+  components/          - UI component tests (React Testing Library)
+  db/                  - Schema validation tests
+  integration/         - Workflow-style tests
+  lib/                 - Utility and schema tests
+  orpc/                - Middleware and route tests
+e2e/                   - Playwright end-to-end tests
 ```
 
 ### 10.2 Coverage
 
-- 11 test files
-- 49 tests passing
+- 16 test files under `__tests__` (unit/component/workflow tests)
 - Unit tests for business logic
-- Integration tests for workflows
+- Workflow-style tests for core flows
 
 ---
 

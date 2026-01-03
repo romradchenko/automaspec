@@ -40,9 +40,9 @@
 
 | Component | Technology | Description |
 |-----------|------------|-------------|
-| **RPC Framework** | oRPC v1.12.2 | Type-safe RPC with OpenAPI generation |
-| **Validation** | Zod v4.1.13 | Schema validation and TypeScript inference |
-| **Authentication** | Better Auth v1.4.4 | Session-based auth with organization support |
+| **RPC Framework** | oRPC v1.13.2 | Type-safe RPC with OpenAPI generation |
+| **Validation** | Zod v4.3.4 | Schema validation and TypeScript inference |
+| **Authentication** | Better Auth v1.4.10 | Session-based auth with organization support |
 | **Database** | Drizzle ORM + Turso | SQLite-compatible serverless database |
 | **Documentation** | Scalar (OpenAPI) | Interactive API reference UI |
 
@@ -309,6 +309,24 @@ Creates or updates a test folder (upsert).
 
 ---
 
+#### PATCH `/test-folders/{id}`
+
+Partially updates a folder (edit). At least one editable field must be provided.
+
+**Request Body (example):**
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Authentication Tests",
+  "description": "Tests for authentication flows",
+  "parentFolderId": null,
+  "order": 0
+}
+```
+
+---
+
 #### DELETE `/test-folders/{id}`
 
 Deletes a test folder (cascades to child specs).
@@ -393,6 +411,24 @@ Creates or updates a test specification.
 
 ---
 
+#### PATCH `/test-specs/{id}`
+
+Partially updates a spec (edit). At least one editable field must be provided.
+
+**Request Body (example):**
+
+```json
+{
+  "id": "spec-uuid",
+  "name": "Login Flow Tests",
+  "description": "End-to-end login testing",
+  "fileName": "login.spec.ts",
+  "folderId": "folder-uuid"
+}
+```
+
+---
+
 #### DELETE `/test-specs/{id}`
 
 Deletes a test specification.
@@ -451,6 +487,41 @@ Creates or updates a test requirement.
   "description": "Password must be at least 8 characters",
   "order": 1,
   "specId": "spec-uuid"
+}
+```
+
+---
+
+#### PATCH `/test-requirements/{id}`
+
+Partially updates a requirement (edit). At least one editable field must be provided.
+
+**Request Body (example):**
+
+```json
+{
+  "id": "req-uuid",
+  "name": "should reject invalid password",
+  "description": "Password must be at least 8 characters",
+  "order": 1
+}
+```
+
+---
+
+#### PUT `/test-specs/{specId}/requirements`
+
+Replaces requirements for a spec: upserts the provided requirements and deletes any requirements for the spec that are missing from the request.
+
+**Request Body (example):**
+
+```json
+{
+  "specId": "spec-uuid",
+  "requirements": [
+    { "id": "req-1", "name": "should reject invalid password", "description": null, "order": 0 },
+    { "id": "req-2", "name": "should accept valid password", "description": null, "order": 1 }
+  ]
 }
 ```
 
@@ -518,6 +589,22 @@ Creates or updates a test case.
   "framework": "vitest",
   "code": "it('validates input', () => { expect(true).toBe(true) })",
   "requirementId": "req-uuid"
+}
+```
+
+---
+
+#### PATCH `/tests/{id}`
+
+Partially updates a test (edit). At least one editable field must be provided.
+
+**Request Body (example):**
+
+```json
+{
+  "id": "test-uuid",
+  "status": "passed",
+  "code": "expect(true).toBe(true)"
 }
 ```
 
@@ -1177,7 +1264,7 @@ orpc/
 
 1. **No pagination**: List endpoints return all records
 2. **No filtering**: Limited query parameter support
-3. **No webhooks**: No event-based notifications yet
+3. **No generic event webhooks**: only the dedicated test-sync webhook exists (`/api/webhook/sync-tests`)
 4. **Single framework**: Only Vitest supported currently
 
 ---
@@ -1188,27 +1275,27 @@ orpc/
 
 | # | Requirement | Status | Implementation |
 |---|-------------|--------|----------------|
-| 1 | Structured API documentation | ✅ | This document with endpoint reference |
-| 2 | OpenAPI/Swagger specification | ✅ | Auto-generated at `/rpc/spec` |
-| 3 | Sample requests/responses | ✅ | JSON examples for all endpoints |
-| 4 | HTTP status codes | ✅ | Documented in API Reference |
-| 5 | Error messages | ✅ | Error Taxonomy section |
-| 6 | Data model descriptions | ✅ | Data Models section |
-| 7 | Getting Started guide | ✅ | Dedicated section |
-| 8 | Integration tutorial | ✅ | Step-by-step workflow |
-| 9 | Architecture overview | ✅ | Mermaid diagrams |
-| 10 | Developer-accessible format | ✅ | Markdown + Scalar UI |
-| 11 | Documentation strategy | ✅ | Tools and conventions |
-| 12 | Consistent formatting | ✅ | Standardized structure |
+| 1 | Structured API documentation | YES | This document with endpoint reference |
+| 2 | OpenAPI/Swagger specification | YES | Auto-generated at `/rpc/spec` |
+| 3 | Sample requests/responses | YES | JSON examples for all endpoints |
+| 4 | HTTP status codes | YES | Documented in API Reference |
+| 5 | Error messages | YES | Error Taxonomy section |
+| 6 | Data model descriptions | YES | Data Models section |
+| 7 | Getting Started guide | YES | Dedicated section |
+| 8 | Integration tutorial | YES | Step-by-step workflow |
+| 9 | Architecture overview | YES | Mermaid diagrams |
+| 10 | Developer-accessible format | YES | Markdown + Scalar UI |
+| 11 | Documentation strategy | YES | Tools and conventions |
+| 12 | Consistent formatting | YES | Standardized structure |
 
 ### Maximum Requirements
 
 | # | Requirement | Status | Implementation |
 |---|-------------|--------|----------------|
-| 1 | Comprehensive documentation | ✅ | Full reference + guides |
-| 2 | Advanced topics | ✅ | Rate limits, auth deep-dive |
-| 3 | Detailed diagrams | ✅ | Sequence + component diagrams |
-| 4 | Schema validation | ✅ | Zod + oRPC |
+| 1 | Comprehensive documentation | YES | Full reference + guides |
+| 2 | Advanced topics | YES | Rate limits, auth deep-dive |
+| 3 | Detailed diagrams | YES | Sequence + component diagrams |
+| 4 | Schema validation | YES | Zod + oRPC |
 
 ---
 
@@ -1239,4 +1326,4 @@ orpc/
 ---
 
 *Documentation generated for Automaspec API v1.0.0*
-*Last updated: December 2024*
+*Last updated: January 2026*

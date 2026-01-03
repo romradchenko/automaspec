@@ -4,7 +4,7 @@
 This project focuses on the comprehensive testing of **Automaspec**, a web application designed to manage test specifications and requirements.
 The testing approach is **Mixed (Qualitative and Quantitative)**, aiming to ensure both the functional reliability of the system and a high-quality user experience.
 
-- **System Under Test (SUT)**: Automaspec (Next.js 15, React 19, Drizzle ORM, Better Auth).
+- **System Under Test (SUT)**: Automaspec (Next.js 16, React 19, Drizzle ORM, Better Auth).
 - **Testing Type**: Structured Functional Testing (Quantitative) and Usability/UX Testing (Qualitative).
 
 ## 2. Scope and Goals
@@ -23,7 +23,7 @@ The following components are within the scope of testing:
     - Verify data integrity for all CRUD operations on Organizations.
     - Identify and document at least 3 usability improvements for the Dashboard.
     - Ensure zero critical defects in the Authentication flow.
-- **Entry Criteria**: App builds successfully via `pnpm build`; Local DB is reachable.
+- **Entry Criteria**: App builds successfully via `pnpm build`; database is reachable via `NEXT_PUBLIC_DATABASE_URL` and `DATABASE_AUTH_TOKEN`.
 - **Exit Criteria**: All localized Critical and High priority defects are resolved.
 
 ## 3. Requirements Analysis
@@ -61,7 +61,7 @@ Focus areas for qualitative testing:
 ## 7. Test Execution & Reporting
 - **Defect Tracking**: All defects are logged with steps to reproduce and severity.
 - **Execution Report**: A final report summarizes the test run, including:
-    - Environment: Local Dev (Next.js Turbo), LibSQL (Local).
+    - Environment: Local Dev (Next.js), libSQL/Turso endpoint (or other libSQL-compatible URL).
     - Status: Passed/Failed count.
     - References: Links to Github Issues/Commit IDs.
 
@@ -75,8 +75,8 @@ The following professional tools are integrated into the workflow:
 ## 9. Version Control & Reproducibility
 - **Git Repository**: The project is hosted in a Git repository with a meaningful commit history.
 - **Reproducibility**:
-    - `README.md` details setup instructions (`pnpm install`, `pnpm db:local`).
-    - Environment variables documented in `.env.example`.
+    - `README.md` details setup instructions (`pnpm install`, `pnpm dbup` / `pnpm dbm`).
+    - Environment variables are documented in `.env.example`.
 
 ## 10. Final Technical Report Summary
 The final diploma report will consolidate:

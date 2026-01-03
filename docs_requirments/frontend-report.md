@@ -1,274 +1,114 @@
 # Automaspec — Front-End Architecture & Development Report
 
-Date: 2025-12-18
+**Project:** Automaspec  
+**Version:** 0.1.0  
+**Date:** 2026-01-03  
 
-## 0) Project Summary
+## 1. Summary
 
-Automaspec is a web application for managing test specifications, requirements, and tests with a tree-based navigation UI, status tracking, and Vitest report synchronization. The product includes authentication, organizations (workspaces), and a dashboard UI.
+Automaspec is a web application for managing test specifications, requirements, and tests in a foldered hierarchy. The UI supports authentication and organizations (workspaces), a dashboard for managing specs, an analytics page, and an AI assistant page.
 
-Front-end stack (based on `README.md` and `package.json`):
+## 2. Technology Stack
 
 - Next.js (App Router) + React 19 + TypeScript
-- Tailwind CSS v4 + UI components (shadcn-style in `components/ui/*`)
-- TanStack Query (global server-state) + TanStack React Form (forms)
-- oRPC (type-safe contracts) + OpenAPI handler (single entry point `/rpc`)
-- Vitest + React Testing Library
-- Oxlint + Oxfmt + Lefthook (engineering culture)
+- Tailwind CSS v4 + reusable UI primitives in `components/ui/*`
+- TanStack Query (server-state) for oRPC calls
+- oRPC (OpenAPI handler) exposed under `/rpc`
+- Recharts for analytics visualizations
+- Better Auth for auth + organizations
 
-## 1) SPA Requirement and Routing
+## 3. Routes and Navigation (SPA-like UX)
 
-The project uses the Next.js App Router (`app/*`) and provides an SPA-like user experience:
+The app uses Next.js App Router (`app/*`). Navigation is client-side (`next/link`, `next/navigation`) and behaves like an SPA for most flows.
 
-- client-side navigation via `next/link` / `next/navigation` without full page reloads
-- key interactive areas are client components (`'use client'`) with local state and async API calls
+Key routes:
 
-Key routes (3-4+ routes requirement is met):
+- `/` landing (`app/page.tsx`)
+- `/login` authentication (`app/login/page.tsx`)
+- `/dashboard` main UI (`app/dashboard/page.tsx`)
+- `/analytics` analytics dashboard (`app/analytics/page.tsx`)
+- `/ai` AI assistant (`app/ai/page.tsx`)
+- `/profile` profile + export + API keys (`app/profile/page.tsx`)
+- Organization flows under `app/(organizations)/*`
 
-- `/` — landing (`app/page.tsx`)
-- `/login` — authentication (`app/login/page.tsx`)
-- `/dashboard` — main application (tree + details) (`app/dashboard/page.tsx`)
-- `/profile` — profile/export/delete account (`app/profile/page.tsx`)
-- `/ai` — AI assistant page (`app/ai/page.tsx`)
-- `/create-organization`, `/choose-organization`, `/invitations` — organization flows (`app/(organizations)/*`)
+## 4. UI Architecture
 
-## 2) Architecture Diagram (Modules, Components, Routes, State)
+High-level layering:
 
-### 2.1 Logical diagram
+1. **Pages** (`app/**/page.tsx`) assemble features and wire data fetching.
+2. **Feature components** (e.g. `app/dashboard/components/*`, `app/analytics/components/*`) implement screens and interactions.
+3. **UI primitives** (`components/ui/*`) provide reusable building blocks (buttons, dialogs, tabs, tables, etc.).
 
-```
-[UI: app/* + components/*]
-  |
-  |  (TanStack Query / TanStack Form)
-  v
-[API client: lib/orpc/orpc.ts]
-  |
-  |  fetch + cookies, OpenAPI link
-  v
-[/rpc handler: app/(backend)/rpc/[...all]/route.ts]
-  |
-  |  oRPC router + middleware (auth/org)
-  v
-[Server routes: orpc/routes/*]
-  |
-  v
-[DB: drizzle + libsql]   (not FE, but defines contracts)
-```
+## 5. State Management
 
-### 2.2 Physical project structure (front-end relevant)
+- Local UI state: React `useState` for selection, dialogs, inputs, loading flags.
+- Server state: TanStack Query caches RPC responses and handles invalidation.
+- Auth/org context: Better Auth client hooks (session + active organization) are used for gating and scoping UI behavior.
 
-```
-app/
-  layout.tsx              - root layout + Providers
-  providers.tsx           - Theme + TanStack Query + Toaster
-  page.tsx                - landing
-  login/page.tsx          - forms + validation
-  dashboard/*             - feature (page + components + hooks)
-  profile/page.tsx        - profile actions
-  (organizations)/*       - org flows
-components/
-  ui/*                    - reusable UI elements
-  theme-provider.tsx      - theming
-  theme-toggler.tsx       - theme switcher
-lib/
-  orpc/*                  - oRPC context/client
-  query/*                 - QueryClient (+ optional hydration)
-  shared/*                - auth client, form helpers
-  constants.ts            - centralized constants
-  types.ts                - Zod schemas + TS types
-tests/
-  components/*            - unit/component tests (RTL)
-  integration/*           - integration flows
-```
+## 6. API Integration
 
-## 3) Architectural Approach
+### 6.1 RPC entry point
 
-### 3.1 Component-based architecture
+- The server exposes the OpenAPI handler at `/rpc` (`app/(backend)/rpc/[...all]/route.ts`).
+- OpenAPI spec and docs:
+  - `/rpc/spec`
+  - `/rpc/docs`
 
-- Pages/containers: `app/**/page.tsx` assemble features and connect UI to data.
-- UI components: `components/ui/*` provide primitives (buttons, dialogs, tabs, skeleton, toast, etc.).
-- Feature components: `app/dashboard/components/*` implement dashboard-specific functionality.
+### 6.2 Client calls
 
-### 3.2 State management
+- The front-end calls RPC methods via `safeClient` / `orpc` from `lib/orpc/orpc.ts`.
+- Cookies are included so the session is available on the server.
 
-- Local state: `useState`, `useEffect` for selection, dialogs, forms, UI toggles, AI progress, etc.
-- Global/cross-cutting state:
-  - server-state: TanStack Query (`@tanstack/react-query`) provided via `app/providers.tsx`
-  - session/organization: `authClient` (Better Auth hooks): `useSession`, `useActiveOrganization`, `useListOrganizations`
-- Theming: `next-themes` via `ThemeProvider` (`app/providers.tsx`)
+## 7. Key User Flows
 
-### 3.3 Services / hooks
+1. Sign in:
+   - User goes to `/login`
+   - On success, user lands in `/dashboard`
 
-- Centralized API layer: `lib/orpc/orpc.ts`
-  - `safeClient` for calls returning `{ data, error }`
-  - `orpc` TanStack Query utilities (`queryOptions`, `key(...)`)
-- Server context for middleware: `lib/orpc/context.ts`
-- Query client configuration + serialization: `lib/query/client.ts`, `lib/query/serializer.ts`
+2. Organization onboarding:
+   - If no active organization is selected, the user is redirected into the organization selection/creation flow.
 
-## 4) API Documentation (Contracts, Methods, Examples)
+3. Dashboard work:
+   - Navigate a folder/spec tree
+   - Create folders/specs, rename and delete
+   - Manage requirements in the “Functional Requirements” tab
+   - Manage/update generated code in the “Code” tab
+   - Sync test status via report sync endpoints (RPC and/or webhook)
 
-### 4.1 How the client calls the API
+4. Analytics:
+   - View aggregated organization metrics and charts
+   - Switch between 7/30/90-day windows
 
-Single API entry point: `/rpc` (Next.js route handler)
+5. AI assistant:
+   - Send prompts to the assistant
+   - Use provider/model selection
+   - Reset session chat with “New chat”
 
-- `app/(backend)/rpc/[...all]/route.ts` runs the OpenAPI handler with logging and CORS.
-- The client uses `fetch(..., { credentials: 'include' })` so session cookies are included automatically (`lib/orpc/orpc.ts`).
+## 8. Loading, Errors, and UX
 
-OpenAPI endpoints:
+- Loading states use a shared loader (`components/loader.tsx`) and per-feature placeholders.
+- Error states show user-facing messages and avoid blank screens.
+- Toast notifications (`sonner`) are used for user feedback in core mutations.
 
-- `/rpc/spec` — OpenAPI spec
-- `/rpc/docs` — reference UI (via `OpenAPIReferencePlugin`)
-
-### 4.2 Authentication and organization
-
-- oRPC middleware:
-  - `orpc/middleware.ts`: `authMiddleware` (requires `session`) and `organizationMiddleware` (requires `activeOrganizationId`)
-- If there is no session, the `/rpc` handler redirects to `/login`.
-
-### 4.3 Core API methods (tests domain)
-
-Contract file: `orpc/contracts/tests.ts`
-
-- Folders:
-  - `GET /test-folders/{id}`
-  - `GET /test-folders` (optional `parentFolderId`)
-  - `GET /test-folders/{folderId}/children?depth=0..5`
-  - `GET /test-folders/find?name=...`
-  - `POST /test-folders/{id}` (upsert)
-  - `DELETE /test-folders/{id}`
-- Specs:
-  - `GET /test-specs/{id}`
-  - `GET /test-specs` (optional `folderId`)
-  - `PUT /test-specs/{id}` (upsert)
-  - `DELETE /test-specs/{id}`
-- Requirements:
-  - `GET /test-requirements` (optional `specId`)
-  - `PUT /test-requirements/{id}` (upsert)
-  - `DELETE /test-requirements/{id}`
-- Tests:
-  - `GET /tests` (optional `requirementId`)
-  - `PUT /tests/{id}` (upsert)
-  - `DELETE /tests/{id}`
-  - `POST /tests/sync-report` — sync Vitest report into DB state
-  - `GET /tests/report` — read Vitest report
-
-Types and schemas:
-
-- Zod schemas: `lib/types.ts` (`test*SelectSchema`, `test*InsertSchema`, `vitestReportSchema`, etc.)
-- Status constants: `lib/constants.ts` (`TEST_STATUSES`, `SPEC_STATUSES`, `STATUS_CONFIGS`)
-
-Example: fetch folder children (tree)
-
-```
-GET /rpc/test-folders/root/children?depth=2
-```
-
-Response example (shortened):
-
-```json
-[
-  {
-    "id": "folder-1",
-    "name": "Auth",
-    "type": "folder",
-    "children": [{ "id": "spec-1", "name": "Login", "type": "spec" }]
-  },
-  { "id": "spec-2", "name": "Smoke", "type": "spec" }
-]
-```
-
-## 5) User Flows / Navigation
-
-### 5.1 Main flows
-
-1) Sign in:
-- `/` → `/login`
-- `Sign in` (email/password validation) → `/dashboard`
-
-2) Organization onboarding:
-- if there is no active organization:
-  - organizations exist → `/choose-organization` → set active → `/dashboard`
-  - no organizations → `/create-organization` → create + set active → `/dashboard`
-
-3) Dashboard work:
-- `/dashboard`
-  - folder/spec tree navigation
-  - create folders/specs, delete
-  - view requirements and tests for the selected spec
-  - report sync via `Sync Tests` button
-
-4) Profile:
-- `/profile` → export data / sign out / delete account
-
-## 6) UI and Reusability
-
-- Layout: `app/layout.tsx` + `app/providers.tsx`
-- Reusable UI: `components/ui/*` (button, dialog, dropdown, tabs, skeleton, toast, etc.)
-- Dashboard feature UI: `app/dashboard/components/*`
-
-## 7) Forms and Validation
-
-- `/login`: TanStack React Form + Zod schemas (`SignInSchema`, `SignUpSchema`), user-facing validation messages, submitting states.
-- `/create-organization`: TanStack React Form + sync/async validators (including slug check via `authClient.organization.checkSlug`).
-
-## 8) Async Operations, Error Handling, Loading States
-
-### 8.1 Error handling
-
-- UI layer: toast notifications via `sonner` (`toast.success`, `toast.error`) in core flows (login, org, dashboard, profile).
-- API layer: oRPC handler `onError(...)` logs errors and validation issues (`app/(backend)/rpc/[...all]/route.ts`).
-- Auth handling: no session → redirect to `/login` at `/rpc`.
-
-### 8.2 Loading states
-
-- Shared loader component: `components/loader.tsx`
-- Per-flow states: `isPending` (session/org hooks), `isLoading` (AI), `isSyncing` (sync report)
-- Tree UI shows per-item loading indicators.
-
-## 9) Testing
+## 9. Testing
 
 Tooling:
 
-- Vitest (`pnpm test`)
-- React Testing Library (jsdom, setup in `__tests__/setup.ts`)
+- Unit/component/workflow tests: Vitest + React Testing Library in `__tests__`
+- E2E: Playwright under `e2e`
 
-Coverage in repo:
+Common commands:
 
-- Unit/component tests: `tests/components/*`, `tests/lib/*`, `tests/db/*`, `tests/orpc/*`
-- Integration tests: `tests/integration/*` (README notes they require a reachable `NEXT_PUBLIC_DATABASE_URL`)
+- `pnpm test`
+- `pnpm test:coverage`
+- `pnpm test:e2e`
 
-## 10) Stack Rationale
-
-- Next.js + React: strong DX, routing, code splitting, mature ecosystem.
-- TypeScript + Zod: strong typing and boundary validation.
-- oRPC + OpenAPI: contract-first approach with shared types and OpenAPI spec generation; integrates well with TanStack Query.
-- TanStack Query: caching, invalidation, refetching, predictable server-state management.
-- Tailwind + shadcn-style UI: fast development and consistent design system patterns.
-- Vitest + RTL: fast component tests and integration-style flows.
-
-## 11) Checklist Self-Assessment (What is covered / what to improve)
-
-Already covered:
-
-- SPA-like navigation and routing (many routes).
-- Separation into pages/feature components/UI components/services.
-- Strong typing (TypeScript + Zod).
-- Centralized API layer (`lib/orpc/orpc.ts`).
-- Error handling + user-friendly messages (toasts).
-- Forms + validation.
-- Data lists (tree UI, requirements/tests lists).
-- Unit + integration tests.
-- Linting/formatting/hooks (Oxlint/Oxfmt/Lefthook).
-
-Potential gaps for strict checklists:
-
-- A dedicated user-facing “search/filter/sort” control in the dashboard is not clearly present (there is status grouping and list rendering, but not an explicit search/filter UI).
-- No explicit `app/error.tsx`, `app/not-found.tsx`, `app/*/loading.tsx` pages (if the reviewer expects Next.js error boundaries / 404 page / route-level loading UI).
-
-## 12) Build PDF on Windows (pandoc + xelatex)
+## 10. Build PDF (Pandoc)
 
 Run from repository root:
 
 ```powershell
-cd docs
+cd docs_requirments
 pandoc --pdf-engine=xelatex -V lang=en-US -V mainfont="Times New Roman" -V monofont="Consolas" --variable=geometry:margin=1cm -o frontend-report.pdf frontend-report.md
 ```
+
