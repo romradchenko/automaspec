@@ -85,6 +85,11 @@ export interface FolderWithChildren extends TestFolder {
     specs: TestSpec[]
 }
 
+export type GlobalErrorProps = {
+    error: Error & { digest?: string }
+    reset: () => void
+}
+
 // I check correct types up to here
 
 // Form input types
