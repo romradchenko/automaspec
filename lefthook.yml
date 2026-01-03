@@ -28,7 +28,7 @@ pre-push:
 
         - name: tests
           glob: '*.{ts,tsx,mts}'
-          run: pnpm test run
+          run: pnpm test:coverage
           fail_text: '❌ Tests failed'
 
         - name: lint all files
