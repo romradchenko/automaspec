@@ -305,7 +305,7 @@ Automaspec is a **web-based SaaS platform** built on modern technologies that ad
    - Simplified local development environment setup
 
 **Technical Foundation:**
-- **Frontend**: React with Next.js 15 (App Router), TailwindCSS for styling
+- **Frontend**: React with Next.js 16 (App Router), TailwindCSS for styling
 - **Backend**: Next.js API routes with oRPC for type-safe RPC
 - **Database**: Turso (distributed SQLite) with Drizzle ORM
 - **AI**: AI SDK for LLM integration
@@ -333,7 +333,7 @@ graph TB
     end
     
     subgraph "Application Layer"
-        C[Next.js 15 App Router]
+        C[Next.js 16 App Router]
         C1[oRPC API]
         C2[Server Components]
         C3[API Routes]
@@ -392,7 +392,7 @@ graph TB
 **Architecture Description:**
 
 **Client Layer:**
-- Modern React-based UI with Next.js 15 framework
+- Modern React-based UI with Next.js 16 framework
 - TailwindCSS for responsive, utility-first styling
 - Type-safe communication with backend via oRPC
 
@@ -402,7 +402,7 @@ graph TB
 - SSL/TLS termination and DDoS protection
 
 **Application Layer:**
-- Next.js 15 with App Router for server-side rendering and routing
+- Next.js 16 with App Router for server-side rendering and routing
 - oRPC for type-safe, validated API endpoints
 - Server Components for optimal performance
 - API Routes for external integrations and webhooks
