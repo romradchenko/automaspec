@@ -194,3 +194,9 @@ export const ERROR_PAGE_CONTENT = {
         secondaryActionHref: '/dashboard'
     }
 } as const
+
+export const NODE_ENVS = {
+    production: 'production',
+    development: 'development',
+    test: 'test'
+} as const

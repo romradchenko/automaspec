@@ -6,15 +6,14 @@ import { onError } from '@orpc/server'
 import { CORSPlugin } from '@orpc/server/plugins'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
 import { NextResponse } from 'next/server'
-import pino from 'pino'
-import pretty from 'pino-pretty'
 
 import type { RpcError } from '@/lib/types'
 
 import { createContext } from '@/lib/orpc/context'
+import { createServerLogger } from '@/lib/server-logger'
 import { router } from '@/orpc/routes'
 
-const logger = pino(pretty({ colorize: true, singleLine: true }))
+const logger = createServerLogger()
 
 function getErrorCause(error: unknown): RpcError['cause'] | undefined {
     if (typeof error !== 'object' || error === null) {
@@ -37,7 +36,7 @@ const handler = new OpenAPIHandler(router, {
         }),
         new LoggingHandlerPlugin({
             logger,
-            generateId: () => crypto.randomUUID(), // Custom ID generator
+            generateId: () => crypto.randomUUID(),
             logRequestResponse: true,
             logRequestAbort: true
         }),
@@ -55,14 +54,15 @@ const handler = new OpenAPIHandler(router, {
     ],
     interceptors: [
         onError((error) => {
-            console.log('RPC Error:', error)
             const cause = getErrorCause(error)
-            if (cause?.issues) {
-                console.log('Validation Issues:', JSON.stringify(cause.issues, null, 2))
-            }
-            if (cause?.data) {
-                console.log('Data that failed validation:', JSON.stringify(cause.data, null, 2))
-            }
+            logger.error(
+                {
+                    err: error,
+                    validationIssues: cause?.issues,
+                    validationData: cause?.data
+                },
+                'RPC Error'
+            )
         })
     ]
 })

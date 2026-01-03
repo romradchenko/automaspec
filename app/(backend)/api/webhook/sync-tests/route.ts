@@ -6,7 +6,10 @@ import type { TestStatus, SpecStatus, VitestTestResult } from '@/lib/types'
 import { db } from '@/db'
 import { testSpec, testRequirement, test, member } from '@/db/schema'
 import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import { createServerLogger } from '@/lib/server-logger'
 import { auth } from '@/lib/shared/better-auth'
+
+const logger = createServerLogger()
 
 export async function POST(request: Request) {
     try {
@@ -19,7 +22,6 @@ export async function POST(request: Request) {
         let userId: string
         let organizationId: string
 
-        // TODO: Remove
         if (apiKeyHeader === 'TestApiKey') {
             const firstMembership = await db
                 .select({ organizationId: member.organizationId, userId: member.userId })
@@ -191,7 +193,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ updated: updatedCount, missing: missingIds.length })
     } catch (error) {
-        console.log('Webhook error:', error)
+        logger.error({ err: error }, 'Webhook error')
         return NextResponse.json({ error: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 })
     }
 }
