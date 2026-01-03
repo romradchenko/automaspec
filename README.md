@@ -165,6 +165,12 @@ Common scripts (see `package.json`):
 - `db:local`, `dbg` (generate), `dbm` (migrate), `dbs` (studio), `dbup` (generate+migrate)
 - `lint`, `format`, `typecheck` (lefthook-driven jobs)
 
+## Releases
+
+- Changelog: `CHANGELOG.md`
+- Versioning policy: `VERSIONING.md`
+- Release process + release notes template: `RELEASING.md`
+
 ## Notes
 
 - The app reads database credentials from `NEXT_PUBLIC_DATABASE_URL` and `DATABASE_AUTH_TOKEN` (see `db/index.ts` and `drizzle.config.ts`).
