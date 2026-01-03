@@ -24,7 +24,7 @@ jobs:
                   cache: 'pnpm'
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: pnpm run ci
 
             - name: Run tests with JSON reporter
               run: pnpm test run -- --reporter=json --outputFile=test-results.json

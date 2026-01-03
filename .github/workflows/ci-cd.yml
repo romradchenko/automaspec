@@ -31,7 +31,7 @@ jobs:
                   cache: 'pnpm'
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: pnpm run ci
 
             - name: Run pre-push hooks (typecheck, tests, lint, format)
               run: pnpm prepush
@@ -50,10 +50,10 @@ jobs:
                   cache: 'pnpm'
 
             - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+              run: pnpm run ci
 
             - name: Install playwright
-              run: pnpm exec playwright install
+              run: pnpm test:setup-playwright
 
             - name: Run E2E tests
               run: pnpm test:e2e
@@ -63,8 +63,8 @@ jobs:
         runs-on: ubuntu-latest
         name: Deploy Preview
         if: |
-            (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
-            (github.event_name == 'pull_request' && github.base_ref == 'dev')
+            (github.event_name == 'pull_request' && github.base_ref == 'dev') ||
+            (github.event_name == 'pull_request' && github.base_ref == 'main')
         steps:
             - uses: actions/checkout@v6.0.1
             - name: Install Vercel CLI
@@ -81,8 +81,7 @@ jobs:
         runs-on: ubuntu-latest
         name: Deploy Production
         if: |
-            (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-            (github.event_name == 'pull_request' && github.base_ref == 'main')
+            (github.event_name == 'push' && github.ref == 'refs/heads/main')
         steps:
             - uses: actions/checkout@v6.0.1
             - name: Install Vercel CLI
