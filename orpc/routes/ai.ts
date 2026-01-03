@@ -366,7 +366,9 @@ const chat = os.ai.chat.handler(async ({ input, context }) => {
 
     const apiKey = process.env[AI_ENV_KEYS.google]
     if (!apiKey) {
-        throw new ORPCError(`Missing ${AI_ENV_KEYS.google}`)
+        throw new ORPCError(
+            `Missing ${AI_ENV_KEYS.google}. Set ${AI_ENV_KEYS.openrouter} or ${AI_ENV_KEYS.google} to use AI.`
+        )
     }
 
     const googleProvider = createGoogleGenerativeAI({
