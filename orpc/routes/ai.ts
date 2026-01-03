@@ -37,7 +37,7 @@ const ACTION_SYSTEM_PROMPT =
 
 const rateLimitBuckets = new Map<string, number[]>()
 
-function toCoreMessages(messages: AiChatMessage[]): ModelMessage[] {
+export function toCoreMessages(messages: AiChatMessage[]): ModelMessage[] {
     const coreMessages: ModelMessage[] = []
     for (const message of messages) {
         if (message.role === 'assistant') {
@@ -53,21 +53,21 @@ function toCoreMessages(messages: AiChatMessage[]): ModelMessage[] {
     return coreMessages
 }
 
-function resolveProvider(provider: AiProvider | undefined): AiProvider {
+export function resolveProvider(provider: AiProvider | undefined): AiProvider {
     if (provider === AI_PROVIDERS.google) {
         return AI_PROVIDERS.google
     }
     return AI_PROVIDERS.openrouter
 }
 
-function resolveModel(provider: AiProvider, model: string | undefined): string {
+export function resolveModel(provider: AiProvider, model: string | undefined): string {
     if (model && model.trim() !== '') {
         return model
     }
     return AI_MODELS[provider]
 }
 
-function getLastUserContent(messages: AiChatMessage[]): string | null {
+export function getLastUserContent(messages: AiChatMessage[]): string | null {
     let content: string | null = null
     for (const message of messages) {
         if (message.role === 'user') {
@@ -77,7 +77,7 @@ function getLastUserContent(messages: AiChatMessage[]): string | null {
     return content
 }
 
-function containsBlockedPattern(value: string): boolean {
+export function containsBlockedPattern(value: string): boolean {
     const lowered = value.toLowerCase()
     for (const pattern of AI_BLOCKED_PATTERNS) {
         if (lowered.includes(pattern)) {
@@ -87,7 +87,7 @@ function containsBlockedPattern(value: string): boolean {
     return false
 }
 
-function enforceLengthLimits(messages: AiChatMessage[]) {
+export function enforceLengthLimits(messages: AiChatMessage[]) {
     for (const message of messages) {
         if (message.content.length > AI_MAX_PROMPT_LENGTH) {
             throw new ORPCError(`Input exceeds ${AI_MAX_PROMPT_LENGTH} characters.`)
@@ -95,7 +95,7 @@ function enforceLengthLimits(messages: AiChatMessage[]) {
     }
 }
 
-function enforcePromptGuard(messages: AiChatMessage[]) {
+export function enforcePromptGuard(messages: AiChatMessage[]) {
     const last = getLastUserContent(messages)
     if (!last) {
         return
@@ -105,7 +105,7 @@ function enforcePromptGuard(messages: AiChatMessage[]) {
     }
 }
 
-function enforceRateLimit(organizationId: string) {
+export function enforceRateLimit(organizationId: string) {
     const now = Date.now()
     const windowStart = now - AI_RATE_LIMIT_WINDOW_MS
     const bucket = rateLimitBuckets.get(organizationId) ?? []
@@ -127,6 +127,10 @@ function enforceRateLimit(organizationId: string) {
     }
     bucket.push(now)
     rateLimitBuckets.set(organizationId, bucket)
+}
+
+export function clearRateLimitBuckets() {
+    rateLimitBuckets.clear()
 }
 
 const defaultToolDeps: AiToolDeps = {
