@@ -5,6 +5,15 @@ import type { auth } from './better-auth'
 
 export const authClient = createAuthClient({
     baseURL: typeof window !== 'undefined' ? window.location.origin : undefined,
+    fetchOptions: {
+        onError: async (context) => {
+            const { response } = context
+            if (response.status === 429) {
+                const retryAfter = response.headers.get('X-Retry-After')
+                console.log(`Rate limit exceeded. Retry after ${retryAfter} seconds`)
+            }
+        }
+    },
     plugins: [
         apiKeyClient(),
         organizationClient({
