@@ -12,7 +12,13 @@ export const auth = betterAuth({
         provider: 'sqlite',
         schema
     }),
-    trustedOrigins: process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : ['http://localhost:3000'],
+    ratelimit: {
+        enabled: process.env.NODE_ENV !== 'test',
+        storage: 'database'
+    },
+    trustedOrigins: process.env.VERCEL_URL
+        ? [`https://${process.env.VERCEL_URL}`, `http://${process.env.E2E_HOSTNAME}:${process.env.E2E_PORT}`]
+        : ['http://localhost:3000', `http://${process.env.E2E_HOSTNAME}:${process.env.E2E_PORT}`],
     emailAndPassword: {
         enabled: true
     },
