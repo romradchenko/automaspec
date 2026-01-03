@@ -119,3 +119,10 @@ export const apiKey = sqliteTable('apiKey', {
     permissions: text(),
     metadata: text()
 })
+
+export const rateLimit = sqliteTable('rateLimit', {
+    id: text().primaryKey(),
+    key: text(),
+    count: integer(),
+    lastRequest: integer({ mode: 'timestamp_ms' })
+})
