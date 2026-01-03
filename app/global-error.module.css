@@ -1,0 +1,98 @@
+.page {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: oklch(0.99 0.01 264);
+    padding: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image:
+        radial-gradient(at 0% 0%, oklch(0.5 0.28 264 / 0.03) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, oklch(0.55 0.3 280 / 0.03) 0px, transparent 50%);
+}
+
+.card {
+    width: 100%;
+    max-width: 512px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+}
+
+.iconWrapper {
+    display: flex;
+    width: 64px;
+    height: 64px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: oklch(0.5 0.28 264 / 0.1);
+    color: oklch(0.5 0.28 264);
+    margin: 0 auto;
+}
+
+.textGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.code {
+    color: oklch(0.45 0.05 264);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    margin: 0;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0;
+    color: oklch(0.15 0.03 264);
+}
+
+.description {
+    color: oklch(0.45 0.05 264);
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.primaryButton {
+    width: 100%;
+    padding: 12px 24px;
+    background-color: oklch(0.5 0.28 264);
+    color: oklch(0.98 0.005 264);
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.secondaryButton {
+    width: 100%;
+    padding: 12px 24px;
+    background-color: transparent;
+    color: oklch(0.15 0.03 264);
+    border: 1px solid oklch(0.88 0.02 264);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
