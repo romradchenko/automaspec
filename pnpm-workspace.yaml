@@ -3,5 +3,7 @@ neverBuiltDependencies:
     - lefthook
     - sharp
 minimumReleaseAge: 700
+minimumReleaseAgeExclude:
+    - '@playwright-kit/auth'
 blockExoticSubdeps: true
 trustPolicy: no-downgrade

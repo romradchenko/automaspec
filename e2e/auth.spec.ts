@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-
+import { expect, test } from './fixtures'
 import { attachPageLogs, ensureDashboard } from './helpers'
 import { seedE2eDatabase } from './seed-db'
 

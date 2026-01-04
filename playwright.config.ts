@@ -27,7 +27,9 @@ const resolvedLocalDbPath = path.isAbsolute(localDbPath) ? localDbPath : path.re
 
 const e2eDbPath = path.join(os.tmpdir(), 'automaspec-playwright-db', 'e2e.db')
 fs.mkdirSync(path.dirname(e2eDbPath), { recursive: true })
-fs.copyFileSync(resolvedLocalDbPath, e2eDbPath)
+if (!fs.existsSync(e2eDbPath)) {
+    fs.copyFileSync(resolvedLocalDbPath, e2eDbPath)
+}
 
 const e2eDbUrl = `file:${e2eDbPath.replaceAll('\\', '/')}`
 process.env.E2E_DATABASE_URL = e2eDbUrl
@@ -47,7 +49,7 @@ export default defineConfig({
     },
     outputDir: path.join(os.tmpdir(), 'automaspec-playwright'),
     webServer: {
-        command: `pnpm run dev --webpack --hostname ${hostname} --port ${port}`,
+        command: `node ${path.join(projectDir, 'node_modules', 'next', 'dist', 'bin', 'next')} dev --webpack --hostname ${hostname} --port ${port}`,
         url: baseURL,
         reuseExistingServer: true,
         timeout: 120 * 1000,
