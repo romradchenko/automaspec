@@ -55,24 +55,9 @@ export async function ensureDashboard(page: Page) {
         return
     }
 
-    await page.goto('/login', { waitUntil: 'domcontentloaded' })
-    const dashboardLink = page.getByRole('link', { name: 'Go to dashboard' })
-    if (await dashboardLink.isVisible()) {
-        await dashboardLink.click()
-    } else {
-        await page.fill('input[name="email"]', 'demo@automaspec.com')
-        await page.fill('input[name="password"]', 'demo1234')
-        await page.getByRole('button', { name: 'Sign in' }).click()
+    if (page.url().includes('/login')) {
+        throw new Error('E2E auth state missing/invalid. Run `pnpm auth:ensure` and rerun tests.')
     }
 
-    await page.waitForURL(/(choose-organization|dashboard)/, { waitUntil: 'commit' })
-
-    if (page.url().includes('choose-organization')) {
-        const activateButtons = page.getByRole('button', { name: 'Set as active' })
-        await expect(activateButtons.first()).toBeVisible()
-        await activateButtons.first().click()
-        await page.waitForURL('**/dashboard', { waitUntil: 'commit' })
-    }
-
-    await waitForAppReady(page)
+    throw new Error(`Unexpected redirect while opening /dashboard: ${page.url()}`)
 }

@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-
+import { expect, test } from './fixtures'
 import { attachPageLogs, ensureDashboard, waitForAppReady } from './helpers'
 import { seedE2eDatabase } from './seed-db'
 
@@ -16,10 +15,21 @@ test('dashboard tree loads and shows spec details', async ({ page }) => {
     await expect(page.getByRole('treeitem', { name: 'Dashboard Tests' })).toBeVisible()
 
     const dashboardFolder = page.getByRole('treeitem', { name: 'Dashboard Tests' })
-    await dashboardFolder.click()
-    await page.keyboard.press('ArrowRight')
+    const dashboardFolderHeading = page.getByRole('heading', { name: 'Dashboard Tests' })
 
-    const dashboardSpec = page.getByRole('treeitem', { name: 'Dashboard Tree View' })
+    for (let i = 0; i < 3; i++) {
+        await dashboardFolder.click()
+        try {
+            await dashboardFolderHeading.waitFor({ state: 'visible', timeout: 10_000 })
+            break
+        } catch {
+            continue
+        }
+    }
+
+    await expect(dashboardFolderHeading).toBeVisible({ timeout: 30_000 })
+
+    const dashboardSpec = page.getByRole('button', { name: /Dashboard Tree View.*dashboard-tree\.spec\.ts/ })
     await expect(dashboardSpec).toBeVisible({ timeout: 30_000 })
     await dashboardSpec.click()
 

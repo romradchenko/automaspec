@@ -32,6 +32,8 @@ coverage/
 diploma_requirments/
 test-results/
 .last-run.json
+.auth/
+.playwright/auth/
 
 # Devenv
 .devenv*
