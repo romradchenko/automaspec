@@ -1,7 +1,6 @@
+import { chromium } from '@playwright/test'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-
-import { chromium } from '@playwright/test'
 
 const BASE_URL = 'https://automaspec.vercel.app'
 const OUTPUT_DIR = path.join(process.cwd(), 'docs_requirments', 'screenshots-prod')

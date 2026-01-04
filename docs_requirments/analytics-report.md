@@ -1,208 +1,97 @@
-# Отчёт по реализации модуля аналитики
+# Automaspec Analytics Report
 
-## Automaspec - Analytics Dashboard
+**Project:** Automaspec  
+**Document version:** 1.1  
 
-**Дата:** Декабрь 2025  
-**Версия:** 1.0
+## 1. Overview
 
----
+Automaspec includes an Analytics Dashboard that summarizes test/spec health for the currently active organization. The dashboard is implemented as a Next.js App Router page and is powered by a single oRPC endpoint that returns aggregated metrics.
 
-## 1. Введение
+Primary goals:
 
-В рамках дипломной работы был реализован модуль аналитики для системы управления тестовыми спецификациями Automaspec. Данный модуль обеспечивает сбор, обработку и визуализацию пользовательских метрик, что полностью соответствует критерию «Сбор, обработка и визуализация пользовательских метрик, отчёты и графики».
+- Provide a quick “health snapshot” (counts + status distribution)
+- Show growth over time (new tests created)
+- Highlight stale specs (not updated recently)
 
----
+## 2. UI (Analytics Dashboard)
 
-## 2. Реализованный функционал
+**Route:** `/analytics` (`app/analytics/page.tsx`)
 
-### 2.1 Расчёт ключевых метрик
+The page renders:
 
-На основе данных в базе формируются следующие метрики:
+- **Metrics cards**: total tests, total requirements, total specs, active members
+- **Tests Growth chart**: line chart of tests created per day for selected period
+- **Test Status Distribution chart**: bar chart grouped by current test/spec status
+- **Stale Tests table**: specs with `updatedAt` older than the selected period threshold
 
-| Метрика | Описание |
-|---------|----------|
-| **Количество тестов** | Общее число тестов в организации |
-| **Количество требований** | Общее число тестовых требований |
-| **Количество спецификаций** | Общее число тестовых спецификаций |
-| **Активные пользователи** | Количество членов команды в организации |
-| **Распределение по статусам** | Тесты сгруппированные по статусам (passed, failed, pending и др.) |
-| **Устаревшие тесты** | Спецификации, не обновлявшиеся за выбранный период |
+**Period selector:** `7d`, `30d`, `90d` (tabs at the top of the page)
 
-### 2.2 Визуализация в виде Dashboard
+## 3. Backend (oRPC)
 
-Dashboard включает следующие компоненты:
+**Endpoint:** `GET /rpc/analytics/metrics` (`orpc/routes/analytics.ts`)
 
-1. **Карточки ключевых показателей (Metrics Cards)**
-   - Total Tests - общее количество тестов
-   - Requirements - количество требований
-   - Specifications - количество спецификаций
-   - Team Members - активные члены организации
+Input:
 
-2. **График роста числа тестов (Tests Growth Chart)**
-   - Линейный график с точками данных
-   - Отображает динамику создания тестов во времени
-   - Интерактивный tooltip при наведении
-
-3. **Диаграмма распределения по статусам (Status Distribution Chart)**
-   - Визуализация тестов по статусам
-   - Показывает passed, failed, pending, skipped, todo и другие статусы
-
-4. **Таблица устаревших тестов (Stale Tests Table)**
-   - Список спецификаций, не обновлявшихся за выбранный период
-   - Отображает название спецификации и время последнего обновления
-
----
-
-## 3. Архитектура решения
-
-### 3.1 Backend (oRPC)
-
-Серверная часть реализована с использованием oRPC framework:
-
-```
-orpc/routes/analytics.ts
+```json
+{ "period": "30d" }
 ```
 
-**Эндпоинт:** `analytics.getMetrics`
+Output (shape):
 
-**Входные параметры:**
-- `period` - период для анализа (7d, 30d, 90d)
-
-**Возвращаемые данные:**
-- `totalTests` - общее количество тестов
-- `totalRequirements` - количество требований
-- `totalSpecs` - количество спецификаций
-- `activeMembers` - активные пользователи
-- `testsByStatus` - распределение по статусам
-- `testsGrowth` - данные для графика роста
-- `staleTests` - список устаревших спецификаций
-
-### 3.2 Frontend (React + Next.js)
-
-Клиентская часть построена на компонентной архитектуре:
-
-```
-app/analytics/
-├── page.tsx                    # Главная страница
-└── components/
-    ├── analytics-header.tsx    # Заголовок
-    ├── metrics-cards.tsx       # Карточки метрик
-    ├── tests-growth-chart.tsx  # График роста
-    ├── status-distribution-chart.tsx  # Диаграмма статусов
-    └── stale-tests-table.tsx   # Таблица устаревших тестов
+```json
+{
+  "totalTests": 0,
+  "totalRequirements": 0,
+  "totalSpecs": 0,
+  "activeMembers": 0,
+  "testsByStatus": { "passed": 0 },
+  "testsGrowth": [{ "date": "2026-01-01", "count": 0 }],
+  "staleTests": [{ "id": "spec-id", "name": "Spec name", "updatedAt": "2026-01-01 00:00:00" }]
+}
 ```
 
-### 3.3 Визуализация (Recharts)
+Auth behavior:
 
-Для построения графиков используется библиотека Recharts:
-- `LineChart` - для графика роста тестов
-- `PieChart` / `BarChart` - для распределения по статусам
+- Requires an authenticated session and an active organization (oRPC middleware).
 
----
+## 4. Data Sources and Aggregations
 
-## 4. Скриншоты интерфейса
+Tables used (Drizzle ORM):
 
-### 4.1 Dashboard с метриками (30 дней)
+- `test_spec` (spec list, `statuses`, `updatedAt`)
+- `test_requirement` (total requirement count, scoped via spec org)
+- `test` (total test count, created-at timeline)
+- `member` (active member count)
 
-![Analytics Dashboard - 30 Days](screenshots/analytics-dashboard-30days.png)
+Computed metrics:
 
-*Рисунок 1: Главная страница аналитики с карточками ключевых метрик*
+- `testsByStatus`: aggregated by summing `test_spec.statuses` across specs in the organization
+- `testsGrowth`: counts tests created on each date within the selected time window
+- `staleTests`: specs whose `updatedAt` is older than `now - periodDays`
 
-### 4.2 Dashboard с выбором периода 7 дней
+Period constants:
 
-![Analytics Dashboard - 7 Days](screenshots/analytics-dashboard-7days.png)
+- `ANALYTICS_PERIODS` in `lib/constants.ts` maps `7d|30d|90d` to day counts.
 
-*Рисунок 2: Dashboard с выбранным периодом 7 дней*
+## 5. Charts and Components
 
-### 4.3 Таблица устаревших тестов
+UI visualization stack:
 
-![Stale Tests Table](screenshots/analytics-stale-tests.png)
+- Charts: Recharts (`LineChart`, `BarChart`)
+- Wrapper components: `components/ui/chart`
+- Status labels and colors: `STATUS_CONFIGS` and a local status-to-color mapping in the chart component
 
-*Рисунок 3: Таблица устаревших спецификаций с динамическим периодом*
+## 6. Error Handling and UX
 
----
+- Loading state: centered loader while the analytics query is in-flight
+- Error state: “Failed to load analytics” + error message when query fails
+- Empty states: charts and tables show friendly “no data” placeholders
 
-## 5. Функциональные возможности
+## 7. Verification Checklist
 
-### 5.1 Выбор периода анализа
-
-Пользователь может выбрать один из трёх периодов:
-- **7 дней** - краткосрочный анализ
-- **30 дней** - стандартный период (по умолчанию)
-- **90 дней** - долгосрочный анализ
-
-При смене периода автоматически пересчитываются:
-- Данные графика роста тестов
-- Список устаревших спецификаций
-- Текст описания в таблице устаревших тестов
-
-### 5.2 Интерактивные элементы
-
-- **Графики** - при наведении отображается tooltip с точными значениями
-- **Точки данных** - на графике роста отображаются точки для каждой даты
-- **Tabs** - переключение между периодами без перезагрузки страницы
-
----
-
-## 6. Технические детали
-
-### 6.1 Используемые технологии
-
-| Технология | Назначение |
-|------------|------------|
-| Next.js 16 | Framework для React |
-| React 19 | UI библиотека |
-| TypeScript | Типизация |
-| Recharts | Визуализация данных |
-| TanStack Query | Управление серверным состоянием |
-| oRPC | API layer |
-| Drizzle ORM | Работа с базой данных |
-| Tailwind CSS | Стилизация |
-
-### 6.2 Структура базы данных
-
-Метрики собираются из следующих таблиц:
-- `test_spec` - спецификации (statuses, updatedAt)
-- `test_requirement` - требования
-- `test` - тесты (status, createdAt)
-- `member` - члены организации
-
-### 6.3 Константы
-
-```typescript
-// lib/constants.ts
-export const ANALYTICS_PERIODS = {
-    '7d': 7,
-    '30d': 30,
-    '90d': 90
-} as const
-```
-
----
-
-## 7. Соответствие требованиям
-
-| Требование | Реализация | Статус |
-|------------|------------|--------|
-| Количество активных пользователей за период | Team Members карточка | ✅ |
-| Количество созданных тестов и требований | Total Tests, Requirements карточки | ✅ |
-| Распределение тестов по статусам | Status Distribution Chart | ✅ |
-| «Возраст» тестов | Stale Tests Table | ✅ |
-| График роста числа тестов | Tests Growth Chart | ✅ |
-| Диаграмма распределения по статусам | Status Distribution Chart | ✅ |
-| Карточки ключевых показателей | Metrics Cards | ✅ |
-| Список устаревших тестов | Stale Tests Table с динамическим периодом | ✅ |
-
----
-
-## 8. Заключение
-
-Реализованный модуль аналитики полностью закрывает процесс сбора, обработки и визуализации пользовательских метрик. Dashboard обеспечивает прозрачное понимание активности пользователей и «здоровья» тестовых спецификаций.
-
-Функционал соответствует заявленному критерию analytics и был реализован в рамках дипломной работы с использованием современных технологий и лучших практик разработки.
-
----
-
-**Автор:** Студент  
-**Проект:** Automaspec - Система управления тестовыми спецификациями
+- Open `/analytics` while logged in with an active organization
+- Switch between `7d`, `30d`, `90d` tabs and confirm query updates
+- Confirm totals match the dashboard data model for the organization
+- Create a new test and confirm it appears in growth chart over time
+- Ensure stale specs appear when `updatedAt` is older than the selected period window
 

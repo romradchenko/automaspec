@@ -141,7 +141,7 @@ The CD pipeline includes automated deployment to multiple environments:
 
 ### Pipeline Flow Diagram
 
-See `docs/ci-cd-infrastructure-diagram.svg` for a detailed visual representation of the pipeline architecture, workflow dependencies, and execution flow.
+See `docs_requirments/ci-cd-infrastructure-diagram.svg` for a detailed visual representation of the pipeline architecture, workflow dependencies, and execution flow.
 
 ---
 
@@ -672,11 +672,11 @@ The CI/CD pipeline is designed to fail fast and provide clear feedback:
 ### Quality Gates
 
 **Pre-Deployment Checks:**
-1. ✅ All linting checks pass
-2. ✅ Code formatting is correct
-3. ✅ TypeScript compilation succeeds
-4. ✅ All tests pass
-5. ✅ Database schema is valid
+1. All linting checks pass
+2. Code formatting is correct
+3. TypeScript compilation succeeds
+4. All tests pass
+5. Database schema is valid
 
 **Deployment Requirements:**
 - Quality checks must pass before deployment
@@ -708,11 +708,11 @@ All sensitive information is stored securely in GitHub Secrets, never in code or
 - `AUTOMASPEC_WEBHOOK_URL`: Webhook endpoint URL
 
 **Security Practices:**
-- ✅ No secrets in repository files
-- ✅ No secrets in workflow YAML files (only references)
-- ✅ Secrets are encrypted at rest
-- ✅ Access controlled via GitHub permissions
-- ✅ Secrets are masked in logs
+- No secrets in repository files
+- No secrets in workflow YAML files (only references)
+- Secrets are encrypted at rest
+- Access controlled via GitHub permissions
+- Secrets are masked in logs
 
 #### Vercel Environment Variables
 
@@ -728,10 +728,10 @@ All sensitive information is stored securely in GitHub Secrets, never in code or
 - Preview-specific configuration
 
 **Security Practices:**
-- ✅ Environment variables encrypted in Vercel
-- ✅ Separate variables for each environment
-- ✅ No secrets exposed in build logs
-- ✅ Access controlled via Vercel team permissions
+- Environment variables encrypted in Vercel
+- Separate variables for each environment
+- No secrets exposed in build logs
+- Access controlled via Vercel team permissions
 
 ### Static Security Analysis
 
@@ -757,11 +757,11 @@ All sensitive information is stored securely in GitHub Secrets, never in code or
 #### Code Security Practices
 
 **Current Practices:**
-- ✅ No hardcoded secrets in code
-- ✅ Environment variables for configuration
-- ✅ TypeScript for type safety
-- ✅ Input validation via Zod schemas
-- ✅ SQL injection prevention via Drizzle ORM
+- No hardcoded secrets in code
+- Environment variables for configuration
+- TypeScript for type safety
+- Input validation via Zod schemas
+- SQL injection prevention via Drizzle ORM
 
 **Security Considerations:**
 - Database queries use parameterized statements (Drizzle ORM)
@@ -1029,22 +1029,22 @@ The CI/CD pipeline follows a dependency-based execution model:
 **Quality Checks** → **Deploy Production** (for main branch only)  
 **Test Sync** → Runs independently (parallel to deployment)
 
-See `docs/ci-cd-infrastructure-diagram.svg` for a detailed visual representation of workflow dependencies and execution flow.
+See `docs_requirments/ci-cd-infrastructure-diagram.svg` for a detailed visual representation of workflow dependencies and execution flow.
 
 ---
 
 ## Best Practices Implemented
 
-1. ✅ **Frozen Lockfile**: Ensures consistent dependency versions in CI
-2. ✅ **Parallel Execution**: Pre-push hooks run in parallel for faster feedback
-3. ✅ **Auto-fix**: Pre-commit hooks auto-stage fixed files
-4. ✅ **Fail-fast**: Quality checks must pass before deployment
-5. ✅ **Environment Separation**: Preview and production deployments are isolated
-6. ✅ **Test Continuity**: Test results sync even if tests fail
-7. ✅ **Local Development**: Manual workflow supports local testing
-8. ✅ **Type Safety**: TypeScript checking enforced before push
-9. ✅ **Database Validation**: Schema changes validated before commit
-10. ✅ **Code Formatting**: Consistent code style enforced automatically
+1. **Frozen Lockfile**: Ensures consistent dependency versions in CI
+2. **Parallel Execution**: Pre-push hooks run in parallel for faster feedback
+3. **Auto-fix**: Pre-commit hooks auto-stage fixed files
+4. **Fail-fast**: Quality checks must pass before deployment
+5. **Environment Separation**: Preview and production deployments are isolated
+6. **Test Continuity**: Test results sync even if tests fail
+7. **Local Development**: Manual workflow supports local testing
+8. **Type Safety**: TypeScript checking enforced before push
+9. **Database Validation**: Schema changes validated before commit
+10. **Code Formatting**: Consistent code style enforced automatically
 
 ---
 

@@ -11,10 +11,10 @@ This report provides comprehensive documentation of the Automaspec database arch
 | Component | Technology | Version |
 |-----------|------------|---------|
 | **DBMS** | Turso (Distributed SQLite) | libsql 0.15.15 |
-| **ORM** | Drizzle ORM | 0.44.7 |
-| **Migration Tool** | Drizzle Kit | 0.44.7 |
+| **ORM** | Drizzle ORM | 0.45.1 |
+| **Migration Tool** | Drizzle Kit | 0.31.8 |
 | **Schema Definition** | TypeScript | 5.9.3 |
-| **Validation** | Zod (via drizzle-zod) | 4.1.13 |
+| **Validation** | Zod (via drizzle-zod) | 4.3.4 |
 
 ### 1.1 DBMS Selection Justification
 
@@ -51,7 +51,7 @@ erDiagram
     
     test_spec ||--o{ test_requirement : has
     
-    test_requirement ||--|| test : has
+    test_requirement ||--o{ test : has
 
     user {
         text id PK
@@ -280,6 +280,25 @@ See [diagram.pdf](../diagram.pdf) for the original database diagram.
 | expiresAt | INTEGER | NOT NULL | Token expiration |
 | createdAt | INTEGER | - | Creation timestamp |
 | updatedAt | INTEGER | - | Update timestamp |
+
+#### Table: `apiKey`
+
+API keys are used for webhook integration (CI/CD sync) and are scoped to a user.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | TEXT | PK | Unique API key id |
+| name | TEXT | - | Optional display name |
+| start | TEXT | - | Optional start hint |
+| prefix | TEXT | - | Optional prefix |
+| key | TEXT | NOT NULL | Hashed key material |
+| userId | TEXT | FK → user.id, NOT NULL, ON DELETE CASCADE | Owner user |
+| enabled | INTEGER | DEFAULT true | Key enabled flag |
+| rateLimitEnabled | INTEGER | DEFAULT true | Per-key rate limit enabled |
+| rateLimitTimeWindow | INTEGER | DEFAULT 86400000 | Rate limit window (ms) |
+| rateLimitMax | INTEGER | DEFAULT 10 | Max requests per window |
+| createdAt | INTEGER | NOT NULL | Creation timestamp |
+| updatedAt | INTEGER | NOT NULL | Update timestamp |
 
 ### 3.2 Test Management Layer
 
@@ -546,7 +565,7 @@ export const organizationMiddleware = os.middleware(async ({ context, next }) =>
 
 ### 9.1 Sample Data Script
 
-Location: [db/sample_data.sql](../db/sample_data.sql)
+Location: [db/dump.sql](../db/dump.sql)
 
 Includes:
 - 5 test folders (Dashboard Tests, Authentication, Test Management, API Routes, Organization Management)
@@ -589,7 +608,7 @@ Includes:
 | 3.2 | Version control | YES | Git repository |
 | 4 | **Test Data** | | |
 | 4.1 | Sufficient test records | YES | 25+ records per major table |
-| 4.2 | Reference data scripts | YES | db/sample_data.sql |
+| 4.2 | Reference data scripts | YES | db/dump.sql |
 | 5 | **Usage** | | |
 | 5.1 | Roles and permissions | PARTIAL | Application-level via middleware |
 | 5.2 | No superuser in app | YES | App uses auth tokens, not DB admin |

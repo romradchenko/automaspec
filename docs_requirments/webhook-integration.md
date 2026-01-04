@@ -1,15 +1,8 @@
-# Webhook Integration Guide
+# Webhook Integration Guide (Vitest → Automaspec)
 
-Automaspec provides a webhook endpoint to automatically sync your test results from CI/CD pipelines like GitHub Actions.
+Automaspec provides a webhook endpoint to sync Vitest JSON results from CI/CD into the Automaspec database.
 
-## Quick Start
-
-1. **Create an API key** in your Profile → API Keys section
-2. **Add the key to your CI/CD secrets** as `AUTOMASPEC_API_KEY`
-3. **Add the webhook URL** as `AUTOMASPEC_WEBHOOK_URL`
-4. **Configure your workflow** to call the webhook after tests
-
-## Webhook Endpoint
+## 1. Webhook Endpoint
 
 ```
 POST /api/webhook/sync-tests
@@ -19,132 +12,83 @@ x-api-key: ams_xxx...
 
 ### Authentication
 
-All requests must include an API key in the `x-api-key` header. Create API keys in your Profile page.
+- The webhook requires an API key in the `x-api-key` header.
+- Create API keys in the Profile page (API Keys section).
 
-### Request Body
+## 2. Request Body (Vitest JSON Report)
 
-The webhook expects a Vitest-compatible JSON test report:
+The endpoint expects a Vitest JSON reporter output shape containing `testResults[].assertionResults[]`.
+
+Important matching rule:
+
+- Automaspec matches incoming assertions by comparing `assertion.title` to the **requirement name** stored in Automaspec (case-insensitive).
+- For best results, name your `it('...')` titles exactly the same as the requirement names you maintain in the UI.
+
+Example:
 
 ```json
 {
   "testResults": [
     {
       "assertionResults": [
-        {
-          "title": "should validate user input",
-          "status": "passed"
-        },
-        {
-          "title": "should handle errors gracefully",
-          "status": "failed"
-        }
+        { "title": "User can sign in", "status": "passed" },
+        { "title": "Invalid password shows error", "status": "failed" }
       ]
     }
   ]
 }
 ```
 
-### Response
+## 3. Response
 
-**Success (200):**
+Success (200):
+
 ```json
-{
-  "updated": 5,
-  "missing": 2
-}
+{ "updated": 5, "missing": 2 }
 ```
 
-**Unauthorized (401):**
-```json
-{
-  "error": "Missing API key"
-}
-```
+- `updated`: number of tests whose status changed
+- `missing`: number of tests in Automaspec that were not found in the report and were marked as `missing`
 
-- `updated`: Number of tests whose status was updated
-- `missing`: Number of tests in the database that weren't in the report (marked as missing)
+Errors:
 
-## GitHub Actions Setup
+- `401` when the API key is missing or invalid
+- `400` when the API key is valid but the user has no organization
+- `500` on unexpected server errors
 
-### 1. Configure Vitest Reporter
+## 4. GitHub Actions Setup
 
-Add JSON reporter to your `vitest.config.ts`:
+### Required Secrets
 
-```typescript
-export default defineConfig({
-  test: {
-    reporters: ['default', 'json'],
-    outputFile: {
-      json: 'test-results.json'
-    }
-  }
-})
-```
-
-Or use the CLI flag when running tests:
-
-```bash
-vitest run --reporter=json --outputFile=test-results.json
-```
-
-### 2. Add GitHub Secrets
-
-Add these secrets to your repository (Settings → Secrets and variables → Actions):
-
-| Secret Name | Value |
-|-------------|-------|
+| Secret | Example |
+|-------|---------|
 | `AUTOMASPEC_WEBHOOK_URL` | `https://your-automaspec-instance.com/api/webhook/sync-tests` |
-| `AUTOMASPEC_API_KEY` | Your API key from Profile → API Keys |
+| `AUTOMASPEC_API_KEY` | `ams_...` |
 
-### 3. Create Workflow File
+### Workflow Snippet
 
-Create `.github/workflows/automaspec-sync.yml`:
+This is compatible with the repository’s workflows under `.github/workflows/*`.
 
 ```yaml
-name: Sync Test Results to Automaspec
+- name: Run tests with JSON reporter
+  run: pnpm test run -- --reporter=json --outputFile=test-results.json
+  continue-on-error: true
 
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
-
-jobs:
-  test-and-sync:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6.0.1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6.1.0
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Run tests with JSON reporter
-        run: pnpm test -- --reporter=json --outputFile=test-results.json
-        continue-on-error: true
-
-      - name: Sync test results to Automaspec
-        if: always()
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.AUTOMASPEC_API_KEY }}" \
-            -d @test-results.json \
-            ${{ secrets.AUTOMASPEC_WEBHOOK_URL }}
+- name: Sync test results to Automaspec
+  if: always()
+  run: |
+    curl -X POST \
+      -H "Content-Type: application/json" \
+      -H "x-api-key: ${{ secrets.AUTOMASPEC_API_KEY }}" \
+      -d @test-results.json \
+      "${{ secrets.AUTOMASPEC_WEBHOOK_URL }}"
 ```
 
-## Local Testing
-
-Test the webhook locally using curl:
+## 5. Local Testing
 
 ```bash
+pnpm test run -- --reporter=json --outputFile=test-results.json
+
 curl -X POST \
   -H "Content-Type: application/json" \
   -H "x-api-key: ams_your_api_key_here" \
@@ -152,24 +96,11 @@ curl -X POST \
   http://localhost:3000/api/webhook/sync-tests
 ```
 
-## Test Status Mapping
+## 6. Status Mapping
 
-The webhook maps test statuses from your test runner:
+Vitest status values are mapped directly:
 
-| Test Runner Status | Automaspec Status |
-|-------------------|-------------------|
-| passed            | passed            |
-| failed            | failed            |
-| skipped           | skipped           |
-| todo              | todo              |
-| pending           | pending           |
-| disabled          | disabled          |
+- `passed`, `failed`, `skipped`, `todo`, `pending`, `disabled`
 
-Tests that exist in Automaspec but are not included in the report will be marked as `missing`.
+If a test exists in Automaspec but is not present in the report payload, it is marked as `missing`.
 
-## Security Notes
-
-- API keys are hashed before storage
-- Each API key is tied to a specific user and their organization
-- Delete unused API keys promptly
-- Rotate API keys if they may have been compromised
