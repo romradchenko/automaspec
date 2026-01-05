@@ -200,3 +200,8 @@ export const NODE_ENVS = {
     development: 'development',
     test: 'test'
 } as const
+
+export const DEMO_CREDENTIALS = {
+    email: 'demo@automaspec.com',
+    password: 'demo1234'
+} as const

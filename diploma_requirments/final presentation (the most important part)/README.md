@@ -36,7 +36,7 @@ docs/
 ├── 02-technical/               # Section 2: Technical Implementation
 │   ├── index.md               
 │   ├── tech-stack.md          
-│   ├── criteria/               # ← Your 7 criteria
+│   ├── criteria/               # ← Your 10 criteria
 │   │   ├── [criterion-1].md
 │   │   ├── [criterion-2].md
 │   │   └── ...
