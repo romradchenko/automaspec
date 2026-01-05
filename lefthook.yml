@@ -18,21 +18,22 @@ pre-commit:
           stage_fixed: true
           fail_text: '❌ oxlint failed'
 
+# json included for package.json
 pre-push:
     parallel: true
     jobs:
         - name: typecheck
-          glob: '*.{ts,tsx,mts}'
+          glob: '*.{ts,tsx,mts,json}'
           run: pnpm typecheck
           fail_text: '❌ TypeScript type checking failed'
 
         - name: tests
-          glob: '*.{ts,tsx,mts}'
+          glob: '*.{ts,tsx,mts,json}'
           run: pnpm test:coverage
           fail_text: '❌ Tests failed'
 
         - name: lint all files
-          glob: '*.{ts,tsx,mts}'
+          glob: '*.{ts,tsx,mts,json}'
           run: pnpm lint
           fail_text: '❌ Lint failed'
 

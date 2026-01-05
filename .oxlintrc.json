@@ -36,6 +36,7 @@
         "no-optional-chaining": "allow", // this is stupid
         "no-process-env": "allow", // not applicable for nextjs
         "prefer-tag-over-role": "allow", // this is stupid
+        "complexity": "allow", // this is too noisy for now
 
         "jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
         "no-console": ["error", { "allow": ["error", "debug", "log"] }],
