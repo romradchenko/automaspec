@@ -36,22 +36,23 @@ export default defineConfig({
     testDir: path.join(__dirname, 'e2e'),
     fullyParallel: false,
     workers: 1,
-    timeout: 120 * 1000,
+    timeout: 25 * 1000,
     use: {
         baseURL,
         headless: true,
-        viewport: { width: 1280, height: 720 },
+        viewport: { width: 1920, height: 1080 },
         trace: 'retain-on-failure',
         video: 'retain-on-failure',
         screenshot: 'only-on-failure'
     },
     outputDir: path.join(os.tmpdir(), 'automaspec-playwright'),
     webServer: {
-        command: `pnpm run dev --webpack --hostname ${hostname} --port ${port}`,
+        command: `pnpm dev --hostname ${hostname} --port ${port}`,
         url: baseURL,
-        reuseExistingServer: true,
+        reuseExistingServer: false,
         timeout: 120 * 1000,
         env: {
+            NODE_ENV: 'test',
             E2E_DATABASE_URL: e2eDbUrl,
             NEXT_PUBLIC_DATABASE_URL: e2eDbUrl,
             NEXT_PUBLIC_DATABASE_LOCAL_URL: e2eDbUrl

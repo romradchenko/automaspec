@@ -31,18 +31,10 @@ export async function attachPageLogs(page: Page) {
     })
 }
 
-export async function waitForAppReady(page: Page) {
-    const compilingIndicator = page.getByText('Compiling')
-    if (await compilingIndicator.isVisible()) {
-        await compilingIndicator.waitFor({ state: 'hidden', timeout: 60_000 })
-    }
-}
-
 export async function ensureDashboard(page: Page) {
     await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
 
     if (page.url().includes('/dashboard')) {
-        await waitForAppReady(page)
         return
     }
 
@@ -51,7 +43,6 @@ export async function ensureDashboard(page: Page) {
         await expect(activateButtons.first()).toBeVisible()
         await activateButtons.first().click()
         await page.waitForURL('**/dashboard', { waitUntil: 'commit' })
-        await waitForAppReady(page)
         return
     }
 
@@ -73,6 +64,4 @@ export async function ensureDashboard(page: Page) {
         await activateButtons.first().click()
         await page.waitForURL('**/dashboard', { waitUntil: 'commit' })
     }
-
-    await waitForAppReady(page)
 }

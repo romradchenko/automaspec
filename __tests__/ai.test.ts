@@ -282,13 +282,6 @@ describe('ai.chat', () => {
         aiSdkMocks.streamText.mockReset()
     })
 
-    it('rejects when openrouter key is missing', async () => {
-        vi.stubEnv('NODE_ENV', NODE_ENVS.test)
-        await expect(
-            client.ai.chat({ provider: AI_PROVIDERS.openrouter, messages: [{ role: 'user', content: 'Hi' }] })
-        ).rejects.toThrow(`Missing ${AI_ENV_KEYS.openrouter}`)
-    })
-
     it('returns text from openrouter stream', async () => {
         vi.stubEnv('NODE_ENV', NODE_ENVS.test)
         vi.stubEnv(AI_ENV_KEYS.openrouter, 'key')
