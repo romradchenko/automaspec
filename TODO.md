@@ -1,1 +1,2 @@
 - Split signin / signup flow
+- e2e tests only successful in second run in ci
