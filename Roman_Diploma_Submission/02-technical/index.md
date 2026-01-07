@@ -5,8 +5,21 @@ This section covers the technical architecture, design decisions, and implementa
 ## Contents
 
 - [Tech Stack](tech-stack.md)
-- [Criteria Documentation](criteria/) - ADR for each evaluation criterion
 - [Deployment](deployment.md)
+
+## Evaluation Criteria Documentation
+
+| # | Criterion | Documentation |
+|---|-----------|---------------|
+| 1 | Business Analysis | [business-analysis.md](buisiness-analysis/business-analysis.md) |
+| 2 | Backend Development | [backend.md](backend/backend.md) |
+| 3 | Database Design | [databases.md](databases/databases.md) |
+| 4 | Testing | [testing.md](qualiative-quantitive-testing/testing.md) |
+| 5 | AI Assistant | [ai-assistant.md](ai-assistant/ai-assistant.md) |
+| 6 | Adaptive UI | [adaptive-ui.md](adaptive-ui/adaptive-ui.md) |
+| 7 | Frontend | [frontend.md](frontend/frontend.md) |
+| 8 | API Documentation | [api-documentation.md](api-documentation/api-documentation.md) |
+| 9 | CI/CD | [ci-cd.md](ci-cd/ci-cd.md) |
 
 ## Solution Architecture
 

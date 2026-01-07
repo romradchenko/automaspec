@@ -4,66 +4,95 @@
 
 | Epic | Description | Stories | Status |
 |------|-------------|---------|--------|
-| E1: [Epic Name] | [Brief description] | [X] | ✅/⚠️/❌ |
-| E2: [Epic Name] | [Brief description] | [X] | ✅/⚠️/❌ |
-| E3: [Epic Name] | [Brief description] | [X] | ✅/⚠️/❌ |
+| E1: Authentication & Organizations | User auth, org management, invitations | 4 | ✅ |
+| E2: Test Specification Hierarchy | Folders, specs, requirements, tests | 5 | ✅ |
+| E3: AI Test Generation | AI-powered Vitest code generation | 4 | ✅ |
+| E4: Test Status Tracking | Status visualization and aggregation | 3 | ✅ |
+| E5: CI/CD Integration | GitHub Actions sync | 4 | ✅ |
+| E6: Collaboration | Role-based access, real-time updates | 3 | ⚠️ |
+| E7: Reporting & Analytics | Coverage reports, exports | 3 | ⚠️ |
 
 ## User Stories
 
-### Epic 1: [Epic Name]
+### Epic 1: Authentication & Organizations
 
-[Brief description of this epic]
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| US-001 | As a new user, I want to sign up with email/password | Must | ✅ |
+| US-002 | As a registered user, I want to create an organization | Must | ✅ |
+| US-003 | As an org owner, I want to invite team members | Must | ✅ |
+| US-004 | As a registered user, I want to update my profile | Should | ✅ |
 
-| ID | User Story | Acceptance Criteria | Priority | Status |
-|----|------------|---------------------|----------|--------|
-| US-001 | As a [role], I want [goal], so that [benefit] | - [Criterion 1]<br>- [Criterion 2] | Must | ✅ |
-| US-002 | As a [role], I want [goal], so that [benefit] | - [Criterion 1]<br>- [Criterion 2] | Should | ✅ |
-| US-003 | As a [role], I want [goal], so that [benefit] | - [Criterion 1] | Could | ⚠️ |
+### Epic 2: Test Specification Hierarchy
 
-### Epic 2: [Epic Name]
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| US-005 | As a QA engineer, I want to create nested folders | Must | ✅ |
+| US-006 | As a developer, I want to create test specs | Must | ✅ |
+| US-007 | As a QA engineer, I want to add requirements to specs | Must | ✅ |
+| US-008 | As a developer, I want to reorder items via drag-and-drop | Should | ✅ |
+| US-009 | As a QA engineer, I want to bulk move specs | Could | ⚠️ |
 
-[Brief description of this epic]
+### Epic 3: AI Test Generation
 
-| ID | User Story | Acceptance Criteria | Priority | Status |
-|----|------------|---------------------|----------|--------|
-| US-004 | As a [role], I want [goal], so that [benefit] | - [Criterion 1]<br>- [Criterion 2] | Must | ✅ |
-| US-005 | As a [role], I want [goal], so that [benefit] | - [Criterion 1] | Should | ✅ |
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| US-010 | As a developer, I want to generate Vitest code from requirements | Must | ✅ |
+| US-011 | As a QA engineer, I want to review AI-generated code | Must | ✅ |
+| US-012 | As a developer, I want to edit generated test code | Must | ✅ |
+| US-013 | As a developer, I want to export test code to files | Should | ✅ |
 
-### Epic 3: [Epic Name]
+### Epic 4: Test Status Tracking
 
-[Brief description of this epic]
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| US-014 | As a QA engineer, I want to see test status (passed/failed/pending) | Must | ✅ |
+| US-015 | As a developer, I want aggregated status at spec level | Must | ✅ |
+| US-016 | As a QA lead, I want to view status change history | Could | ⚠️ |
 
-| ID | User Story | Acceptance Criteria | Priority | Status |
-|----|------------|---------------------|----------|--------|
-| US-006 | As a [role], I want [goal], so that [benefit] | - [Criterion 1] | Must | ✅ |
-| US-007 | As a [role], I want [goal], so that [benefit] | - [Criterion 1] | Could | ❌ |
+### Epic 5: CI/CD Integration
+
+| ID | User Story | Priority | Status |
+|----|------------|----------|--------|
+| US-017 | As a developer, I want to connect my GitHub repository | Must | ✅ |
+| US-018 | As a developer, I want automatic test result sync | Must | ✅ |
+| US-019 | As a developer, I want CI/CD-compatible export format | Should | ⚠️ |
+| US-020 | As a QA engineer, I want failure notifications | Could | ⚠️ |
 
 ## Use Case Diagram
 
 ```
                     ┌─────────────────────────────────────┐
-                    │           [System Name]             │
+                    │            Automaspec               │
                     │                                     │
     ┌───────┐       │  ┌─────────────────────────────┐   │
     │       │       │  │                             │   │
-    │ User  │───────┼──│  [Use Case 1]               │   │
+    │ QA    │───────┼──│  Create Test Specs          │   │
     │       │       │  │                             │   │
     └───────┘       │  └─────────────────────────────┘   │
         │           │                                     │
         │           │  ┌─────────────────────────────┐   │
-        └───────────┼──│  [Use Case 2]               │   │
+        └───────────┼──│  Add Requirements           │   │
                     │  └─────────────────────────────┘   │
                     │                                     │
     ┌───────┐       │  ┌─────────────────────────────┐   │
     │       │       │  │                             │   │
-    │ Admin │───────┼──│  [Use Case 3]               │   │
+    │ Dev   │───────┼──│  Generate AI Tests          │   │
+    │       │       │  │                             │   │
+    └───────┘       │  └─────────────────────────────┘   │
+        │           │                                     │
+        │           │  ┌─────────────────────────────┐   │
+        └───────────┼──│  View Test Status           │   │
+                    │  └─────────────────────────────┘   │
+                    │                                     │
+    ┌───────┐       │  ┌─────────────────────────────┐   │
+    │       │       │  │                             │   │
+    │ Owner │───────┼──│  Manage Organization        │   │
     │       │       │  │                             │   │
     └───────┘       │  └─────────────────────────────┘   │
                     │                                     │
                     └─────────────────────────────────────┘
 ```
-
-[Or link to diagram in assets/diagrams/]
 
 ## Non-Functional Requirements
 
@@ -71,35 +100,41 @@
 
 | Requirement | Target | Measurement Method |
 |-------------|--------|-------------------|
-| Page load time | [< X seconds] | [Lighthouse/manual testing] |
-| API response time | [< X ms] | [Load testing tool] |
-| Concurrent users | [X users] | [Load testing] |
+| Page load time | < 2 seconds | Lighthouse |
+| API response time | < 500ms (95th percentile) | Monitoring |
+| AI generation time | < 60 seconds | User testing |
+| Concurrent users | 50 per organization | Load testing |
 
 ### Security
 
-- [Authentication method]
-- [Authorization approach]
-- [Data encryption]
-- [Input validation]
+- Email/password authentication via Better Auth
+- Role-based access control (Owner, Admin, Member)
+- HTTPS/TLS 1.3 for all data in transit
+- bcrypt password hashing
+- Rate limiting (100 requests/min per user)
+- SQL injection protection via parameterized queries
 
 ### Accessibility
 
-- [WCAG compliance level]
-- [Specific accessibility features]
+- WCAG 2.1 Level AA compliance
+- Keyboard navigation support
+- Screen reader compatibility
+- Responsive design (mobile, tablet, desktop)
 
 ### Reliability
 
 | Metric | Target |
 |--------|--------|
-| Uptime | [X%] |
-| Recovery time | [X minutes] |
-| Data backup | [Frequency] |
+| Uptime | 99% |
+| Recovery time | < 4 hours |
+| Data backup | Daily |
 
 ### Compatibility
 
 | Platform/Browser | Minimum Version |
 |------------------|-----------------|
-| [Chrome] | [X] |
-| [Firefox] | [X] |
-| [Safari] | [X] |
-| [Mobile] | [iOS X / Android X] |
+| Chrome | Latest 2 versions |
+| Firefox | Latest 2 versions |
+| Safari | Latest 2 versions |
+| Edge | Latest 2 versions |
+| Mobile | iOS 15+ / Android 12+ |
