@@ -2,124 +2,281 @@
 
 ## Overview
 
-Base URL: `[https://api.example.com/v1]`
+| Attribute | Value |
+|-----------|-------|
+| **Base URL** | `https://automaspec.vercel.app/rpc` |
+| **Authentication** | Session-based (cookies) |
+| **Format** | JSON |
+| **Documentation** | [Interactive Docs](https://automaspec.vercel.app/rpc/docs) |
 
-Authentication: `[Bearer Token / API Key / None]`
+The Automaspec API is built using **oRPC** which provides type-safe RPC endpoints. Full interactive documentation is available at `/rpc/docs` powered by Scalar UI.
 
-## Endpoints
+## Authentication
 
-### [Resource 1]
+All API endpoints require authentication via session cookies. Users must be logged in through the web interface or use API keys for programmatic access.
 
-#### GET /[resource]
+### Session-Based Auth
 
-Get all [resources].
-
-**Request:**
 ```http
-GET /[resource]
-Authorization: Bearer [token]
+Cookie: session=<session_token>
 ```
 
+### API Key Auth (for integrations)
+
+```http
+Authorization: Bearer <api_key>
+```
+
+## Core Endpoints
+
+### Folders
+
+#### List Folders
+
+```http
+GET /rpc/folders.list
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| organizationId | string | Yes | Organization UUID |
+
 **Response:**
+
 ```json
 {
   "data": [
     {
-      "id": 1,
-      "[field]": "[value]"
+      "id": "uuid",
+      "name": "Feature Tests",
+      "parentFolderId": null,
+      "order": 0
     }
-  ],
-  "pagination": {
-    "page": 1,
-    "total": 100
-  }
+  ]
 }
 ```
 
-| Status Code | Description |
-|-------------|-------------|
-| 200 | Success |
-| 401 | Unauthorized |
-| 500 | Server Error |
+#### Create Folder
+
+```http
+POST /rpc/folders.create
+```
+
+**Request Body:**
+
+```json
+{
+  "name": "New Folder",
+  "organizationId": "uuid",
+  "parentFolderId": null
+}
+```
 
 ---
 
-#### GET /[resource]/{id}
+### Test Specs
 
-Get a single [resource] by ID.
+#### List Specs
 
-**Parameters:**
+```http
+GET /rpc/specs.list
+```
+
+**Query Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| id | integer | Yes | Resource ID |
+| folderId | string | Yes | Parent folder UUID |
 
-**Response:**
-```json
-{
-  "id": 1,
-  "[field]": "[value]"
-}
+#### Create Spec
+
+```http
+POST /rpc/specs.create
 ```
-
----
-
-#### POST /[resource]
-
-Create a new [resource].
 
 **Request Body:**
+
 ```json
 {
-  "[field]": "[value]",
-  "[field]": "[value]"
+  "name": "Login Tests",
+  "folderId": "uuid",
+  "organizationId": "uuid"
 }
 ```
 
-**Response:**
+#### Get Spec
+
+```http
+GET /rpc/specs.get
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Required |
+|-----------|------|----------|
+| id | string | Yes |
+
+---
+
+### Requirements
+
+#### List Requirements
+
+```http
+GET /rpc/requirements.list
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Required |
+|-----------|------|----------|
+| specId | string | Yes |
+
+#### Create Requirement
+
+```http
+POST /rpc/requirements.create
+```
+
+**Request Body:**
+
 ```json
 {
-  "id": 1,
-  "[field]": "[value]",
-  "created_at": "2024-01-01T00:00:00Z"
+  "name": "User can login with valid credentials",
+  "description": "Verify that...",
+  "specId": "uuid"
 }
 ```
 
 ---
 
-#### PUT /[resource]/{id}
+### Tests
 
-Update a [resource].
+#### List Tests
+
+```http
+GET /rpc/tests.list
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Required |
+|-----------|------|----------|
+| requirementId | string | Yes |
+
+#### Create Test
+
+```http
+POST /rpc/tests.create
+```
+
+**Request Body:**
+
+```json
+{
+  "requirementId": "uuid",
+  "status": "pending",
+  "framework": "vitest",
+  "code": "describe('Login', () => { ... })"
+}
+```
+
+#### Update Test Status
+
+```http
+POST /rpc/tests.updateStatus
+```
+
+**Request Body:**
+
+```json
+{
+  "id": "uuid",
+  "status": "passed"
+}
+```
 
 ---
 
-#### DELETE /[resource]/{id}
+### AI Generation
 
-Delete a [resource].
+#### Generate Test Code
+
+```http
+POST /rpc/ai.generate
+```
+
+**Request Body:**
+
+```json
+{
+  "requirementId": "uuid",
+  "context": "Additional context..."
+}
+```
+
+**Response (Streaming):**
+
+```json
+{
+  "code": "describe('Feature', () => {\n  it('should...', () => {\n    // Generated test\n  })\n})"
+}
+```
 
 ---
 
-### [Resource 2]
+### Analytics
 
-[Repeat endpoint documentation pattern]
+#### Get Metrics
+
+```http
+GET /rpc/analytics.getMetrics
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Required |
+|-----------|------|----------|
+| organizationId | string | Yes |
+| period | string | No (default: "7d") |
+
+---
 
 ## Error Responses
 
-| Error Code | Message | Description |
-|------------|---------|-------------|
-| 400 | Bad Request | [When this occurs] |
-| 401 | Unauthorized | [When this occurs] |
-| 403 | Forbidden | [When this occurs] |
-| 404 | Not Found | [When this occurs] |
-| 500 | Internal Server Error | [When this occurs] |
+| Status Code | Description |
+|-------------|-------------|
+| 400 | Bad Request - Invalid input |
+| 401 | Unauthorized - Not logged in |
+| 403 | Forbidden - No permission |
+| 404 | Not Found - Resource doesn't exist |
+| 429 | Too Many Requests - Rate limited |
+| 500 | Internal Server Error |
+
+**Error Response Format:**
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input",
+    "details": { ... }
+  }
+}
+```
 
 ## Rate Limiting
 
 | Tier | Requests/Minute | Requests/Day |
 |------|-----------------|--------------|
-| Free | [X] | [X] |
-| Premium | [X] | [X] |
+| Free | 60 | 1,000 |
+| Pro | 300 | 10,000 |
 
-## Swagger/OpenAPI
+## OpenAPI Specification
 
-Full API documentation available at: `[Swagger URL or link to OpenAPI spec]`
+Full OpenAPI 3.0 specification available at:
+
+- **Interactive Docs**: [https://automaspec.vercel.app/rpc/docs](https://automaspec.vercel.app/rpc/docs)
+- **JSON Spec**: [https://automaspec.vercel.app/rpc/spec](https://automaspec.vercel.app/rpc/spec)

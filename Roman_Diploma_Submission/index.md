@@ -16,7 +16,6 @@
 | Production | [https://automaspec.vercel.app](https://automaspec.vercel.app) |
 | Repository | [GitHub Repository](https://github.com/automaspec/automaspec) |
 | API Docs | [https://automaspec.vercel.app/rpc/docs](https://automaspec.vercel.app/rpc/docs) |
-| Design | [Adaptive UI Documentation](02-technical/adaptive-ui/adaptive-ui.md) (see also `older_docs/adaptive-ui-documentation.html`) |
 
 ## Elevator Pitch
 
@@ -26,16 +25,11 @@ Automaspec is an AI-powered test specification and automation platform that revo
 
 | # | Criterion | Status | Documentation |
 |---|-----------|--------|---------------|
-| 1 | Business Analysis | ✅ | [BA Documentation](02-technical/buisiness-analysis/business-analysis.md) / [Full BA Report](../older_docs/ba-report.md) |
+| 1 | Business Analysis | ✅ | [BA Documentation](02-technical/buisiness-analysis/business-analysis.md) |
 | 2 | Backend Development | ✅ | [Backend Documentation](02-technical/backend/backend.md) |
 | 3 | Database Design | ✅ | [Database Documentation](02-technical/databases/databases.md) |
 | 4 | Qualitative/Quantitative Testing | ✅ | [Testing Documentation](02-technical/qualiative-quantitive-testing/testing.md) |
 | 5 | AI Assistant / Chatbot | ✅ | [AI Documentation](02-technical/ai-assistant/ai-assistant.md) |
-
-**Legend:**
-- ✅ Fully implemented
-- ⚠️ Partially implemented
-- ❌ Not implemented
 
 ## Documentation Navigation
 
