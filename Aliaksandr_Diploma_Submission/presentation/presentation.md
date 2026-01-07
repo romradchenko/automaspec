@@ -1,18 +1,66 @@
 ---
 marp: true
-theme: default
-class: default
+size: 16:9
 paginate: true
 backgroundColor: #ffffff
 style: |
-  section { font-family: 'Inter', sans-serif; font-size: 24px; }
-  h1 { color: #2d3748; font-size: 1.8em; }
-  h2 { color: #4a5568; font-size: 1.5em; }
-  h3 { color: #4a5568; font-size: 1.2em; }
+  section {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    padding: 40px;
+    color: #2d3748;
+    background-color: #ffffff;
+  }
+  h1 { color: #1a202c; font-size: 1.8em; margin-bottom: 0.5em; }
+  h2 { color: #2d3748; font-size: 1.4em; margin-bottom: 0.5em; }
+  h3 { color: #4a5568; font-size: 1.1em; }
   strong { color: #3182ce; }
-  ul { margin-bottom: 0; }
-  p { margin-bottom: 0.5em; }
-  img { max-width: 100%; height: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; }
+  ul { margin-bottom: 0.5em; padding-left: 1em; }
+  li { margin-bottom: 0.3em; }
+  p { margin-bottom: 0.6em; }
+  img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  
+  /* Pretty Blockquote */
+  blockquote {
+    background: #f7fafc;
+    border-left: 6px solid #3182ce;
+    margin: 1em 0;
+    padding: 0.8em 1.2em;
+    font-style: italic;
+    color: #4a5568;
+    border-radius: 4px;
+  }
+
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    font-size: 0.9em;
+  }
+  th {
+    background: #edf2f7;
+    color: #2d3748;
+    font-weight: bold;
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid #cbd5e0;
+  }
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  tr:nth-child(even) { background-color: #f7fafc; }
+
+  /* Title Slide */
+  section.lead {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%);
+  }
 ---
 <!-- _class: lead -->
 
@@ -59,140 +107,42 @@ Unlike erratic spreadsheets or siloed Jira plugins, AutomaSpec represents the **
 ---
 
 # Demo: Core Workflow
-<!-- 
-_header: Demo Screens
--->
-
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;">
-
-<div>
 
 1.  **Define Requirements:**
-    Users create structured requirements linked to distinct test specs.
+    Users create requirements linked to specs.
     
 2.  **Sync Execution:**
     CI pipeline pushes results; coverage updates instantly.
 
 3.  **Trace & Audit:**
-    Drill down from a business goal to the specific line of code verifying it.
+    Drill down from a business goal to the specific test.
 
-</div>
-
-<div style="display: grid; grid-template-rows: 1fr 1fr; gap: 10px;">
-  <img src="../assets/screenshots/prod-folder-view-desktop.png" style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
-  <img src="../assets/screenshots/prod-dashboard-desktop.png" style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
-</div>
-
-</div>
+![bg right:60% fit](../assets/screenshots/prod-folder-view-desktop.png)
 
 ---
 
 # Demo: AI Assistance
-<!-- 
-_header: Demo Screens
--->
 
 **Interactive Intelligence:**
 Asking the system to generate a test case for a new login requirement.
 
-<div style="display: flex; justify-content: center; margin-top: 20px;">
-  <img src="../assets/screenshots/prod-rpc-spec-desktop.png" style="max-height: 400px; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);" />
-</div>
+- **Context Aware:** AI knows existing schema.
+- **Immediate Feedback:** Apply code direct to specs.
 
-- **Context Aware:** AI knows existing schema and patterns.
-- **Immediate Feedback:** Apply generated code directly to specs.
+![bg right:50% fit](../assets/screenshots/prod-rpc-spec-desktop.png)
 
 ---
 
 # High-Level Architecture
 
-<!--
-_header: Architecture
--->
-
-<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" style="background: transparent; max-width: 100%; height: auto;">
-  <!-- Definitions for markers/shadows -->
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568"/>
-    </marker>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.1"/>
-    </filter>
-  </defs>
-
-  <!-- Zones Backgrounds -->
-  <!-- Client Zone -->
-  <rect x="20" y="50" width="180" height="300" rx="10" fill="#ebf8ff" stroke="#bee3f8" stroke-width="2" stroke-dasharray="5,5"/>
-  <text x="110" y="80" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#2c5282">Client</text>
-
-  <!-- Cloud Zone -->
-  <rect x="260" y="50" width="280" height="300" rx="10" fill="#f0fff4" stroke="#c6f6d5" stroke-width="2" stroke-dasharray="5,5"/>
-  <text x="400" y="80" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#276749">Vercel Cloud</text>
-
-  <!-- Data Zone -->
-  <rect x="600" y="50" width="280" height="300" rx="10" fill="#fff5f5" stroke="#fed7d7" stroke-width="2" stroke-dasharray="5,5"/>
-  <text x="740" y="80" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#9b2c2c">Data & AI</text>
-
-  <!-- Nodes -->
-  <!-- Browser -->
-  <g transform="translate(40, 160)">
-    <rect width="140" height="80" rx="6" fill="#ffffff" stroke="#3182ce" stroke-width="2" filter="url(#shadow)"/>
-    <text x="70" y="35" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#2d3748">Browser</text>
-    <text x="70" y="55" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#718096">PWA / React</text>
-  </g>
-
-  <!-- Next.js -->
-  <g transform="translate(290, 120)">
-    <rect width="220" height="60" rx="6" fill="#ffffff" stroke="#38a169" stroke-width="2" filter="url(#shadow)"/>
-    <text x="110" y="35" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#2d3748">Next.js App Router</text>
-  </g>
-
-  <!-- ORPC -->
-  <g transform="translate(290, 220)">
-    <rect width="220" height="60" rx="6" fill="#ffffff" stroke="#38a169" stroke-width="2" filter="url(#shadow)"/>
-    <text x="110" y="35" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#2d3748">ORPC API Layer</text>
-  </g>
-
-  <!-- Turso -->
-  <g transform="translate(630, 120)">
-    <path d="M0,15 C0,6 30,0 70,0 S140,6 140,15 L140,45 C140,54 110,60 70,60 C30,60 0,54 0,45 Z" fill="#ffffff" stroke="#e53e3e" stroke-width="2" filter="url(#shadow)"/>
-    <ellipse cx="70" cy="15" rx="70" ry="15" fill="none" stroke="#e53e3e" stroke-width="2"/>
-    <text x="70" y="38" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#2d3748">Turso DB</text>
-    <text x="70" y="52" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#718096">libSQL / SQLite</text>
-  </g>
-  
-  <!-- AI Provider -->
-  <g transform="translate(630, 220)">
-    <rect width="220" height="60" rx="6" fill="#ffffff" stroke="#805ad5" stroke-width="2" filter="url(#shadow)"/>
-    <text x="110" y="25" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="bold" fill="#2d3748">AI Provider</text>
-    <text x="110" y="45" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#718096">Google / OpenAI</text>
-  </g>
-
-  <!-- Connections -->
-  <!-- Browser <-> Next -->
-  <path d="M180,200 L280,150" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <path d="M280,150 L180,200" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowhead)" stroke-dasharray="3,3" opacity="0.5"/> 
-
-  <!-- Browser <-> ORPC (Indirect/Conceptual flow or via Next) -->
-  <path d="M180,200 L280,250" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Next <-> ORPC (Internal) -->
-  <line x1="400" y1="180" x2="400" y2="220" stroke="#4a5568" stroke-width="2" stroke-dasharray="4,4"/>
-
-  <!-- ORPC <-> DB -->
-  <path d="M510,250 L620,150" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowhead)"/>
-  
-  <!-- ORPC <-> AI -->
-  <path d="M510,250 L620,250" stroke="#4a5568" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-</svg>
-
 **Key Components:**
+
 - **Frontend:** Next.js 15 (React 19), Tailwind CSS, Framer Motion.
 - **Backend:** Serverless Functions via Vercel, ORPC for type-safe contracts.
 - **Database:** Distributed SQLite (Turso) managed via Drizzle ORM.
-- **AI Integration:** Vercel AI SDK connecting to LLM providers.
+- **AI Integration:** Vercel AI SDK into Google/OpenAI.
+
+![bg right:55% fit](../assets/architecture.png)
 
 ---
 
