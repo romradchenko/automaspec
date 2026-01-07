@@ -33,6 +33,10 @@ jobs:
             - name: Install dependencies
               run: pnpm run ci
 
+            - name: Run Security Audit
+              run: pnpm audit
+              continue-on-error: true
+
             - name: Run pre-push hooks (typecheck, tests, lint, format)
               run: pnpm prepush
 
