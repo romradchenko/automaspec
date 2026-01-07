@@ -2,96 +2,145 @@
 
 ## Overview
 
-| Attribute | Value |
-|-----------|-------|
-| **Database** | [PostgreSQL/MySQL/MongoDB/etc.] |
-| **Version** | [X.X] |
-| **ORM** | [Prisma/TypeORM/Sequelize/etc.] |
+The application uses **SQLite** (via LibSQL/Turso) as its relational database, with **Drizzle ORM** for type-safe schema definition and query building. The schema is modularized into two main domains: **Authentication/Organization** and **Testing Core**.
 
 ## Entity Relationship Diagram
 
+```mermaid
+erDiagram
+    User ||--o{ Account : "has"
+    User ||--o{ Session : "has"
+    User ||--o{ Member : "belongs to"
+    User ||--o{ APIKey : "owns"
+    
+    Organization ||--o{ Member : "has members"
+    Organization ||--o{ Invitation : "sends"
+    Organization ||--o{ TestFolder : "owns"
+    Organization ||--o{ TestSpec : "owns"
+    
+    User ||--o{ Invitation : "invites"
+
+    TestFolder ||--o{ TestSpec : "contains"
+    TestFolder ||--o{ TestFolder : "parent"
+    
+    TestSpec ||--o{ TestRequirement : "defines"
+    TestRequirement ||--o{ Test : "verified by"
+
+    User {
+        string id PK
+        string email
+        string name
+    }
+
+    Organization {
+        string id PK
+        string name
+        string plan
+    }
+
+    TestSpec {
+        string id PK
+        string name
+        json statuses
+    }
 ```
-┌─────────────────┐       ┌─────────────────┐
-│     [Table1]    │       │     [Table2]    │
-├─────────────────┤       ├─────────────────┤
-│ id (PK)         │───┐   │ id (PK)         │
-│ [field]         │   │   │ [field]         │
-│ [field]         │   └──▶│ [table1_id] (FK)│
-│ created_at      │       │ created_at      │
-└─────────────────┘       └─────────────────┘
-         │
-         │ 1:N
-         ▼
-┌─────────────────┐
-│     [Table3]    │
-├─────────────────┤
-│ id (PK)         │
-│ [table1_id] (FK)│
-│ [field]         │
-└─────────────────┘
-```
 
-[Or link to diagram in assets/diagrams/]
+## Tables Reference
 
-## Tables
+### Authentication & Organization (`db/schema/auth.ts`)
 
-### [Table 1]: [table_name]
+#### `user`
+Core user entity.
+- `id` (text, PK): Unique identifier
+- `name` (text): Display name
+- `email` (text, unique): User email
+- `emailVerified` (boolean): Verification status
+- `image` (text): Avatar URL
+- `createdAt`, `updatedAt` (timestamp)
 
-[Description of what this table stores]
+#### `session`
+Active user sessions.
+- `id` (text, PK)
+- `userId` (text, FK -> user.id): Owner
+- `token` (text, unique): Session token
+- `expiresAt` (timestamp): Expiration time
+- `ipAddress`, `userAgent` (text): Audit info
+- `activeOrganizationId` (text): Context for current session
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | INTEGER | PK, AUTO_INCREMENT | Primary key |
-| [column] | [VARCHAR(255)] | NOT NULL | [Description] |
-| [column] | [TEXT] | NULLABLE | [Description] |
-| [column] | [BOOLEAN] | DEFAULT false | [Description] |
-| [foreign_id] | INTEGER | FK → [table.id] | [Description] |
-| created_at | TIMESTAMP | DEFAULT NOW() | Creation timestamp |
-| updated_at | TIMESTAMP | ON UPDATE NOW() | Last update timestamp |
+#### `account`
+OAuth accounts linked to users (Google, GitHub, etc.).
+- `id` (text, PK)
+- `userId` (text, FK -> user.id)
+- `providerId` (text): e.g., "google"
+- `accountId` (text): Provider-specific ID
+- `accessToken`, `refreshToken` (text): OAuth tokens
 
-**Indexes:**
-- `idx_[table]_[column]` on `[column]`
-- `idx_[table]_[column1]_[column2]` on `([column1], [column2])`
+#### `organization`
+Tenancy unit.
+- `id` (text, PK)
+- `name` (text)
+- `slug` (text, unique): URL-friendly identifier
+- `plan` (text): Subscription plan (default: 'free')
+- `metadata` (text): JSON metadata
+
+#### `member`
+Linking table between Users and Organizations.
+- `id` (text, PK)
+- `organizationId` (text, FK -> organization.id)
+- `userId` (text, FK -> user.id)
+- `role` (text): 'owner', 'member', etc.
+
+#### `invitation`
+Pending organization invites.
+- `id` (text, PK)
+- `email` (text): Invitee email
+- `organizationId` (text, FK -> organization.id)
+- `inviterId` (text, FK -> user.id)
+- `status` (text): 'pending', 'accepted'
+- `role` (text): Role to be assigned
+
+#### `apiKey`
+API Access keys for external integrations.
+- `id` (text, PK)
+- `userId` (text, FK -> user.id)
+- `key` (text): Hashed key
+- `permissions` (text): Scopes
+- `rateLimitEnabled` (boolean)
 
 ---
 
-### [Table 2]: [table_name]
+### Testing Core (`db/schema/tests.ts`)
 
-[Description of what this table stores]
+#### `test_folder`
+Hierarchical organization for test specs.
+- `id` (text, PK)
+- `name` (text)
+- `organizationId` (text, FK -> organization.id)
+- `parentFolderId` (text, nullable): For subfolders
+- `order` (integer): Sorting order
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | INTEGER | PK, AUTO_INCREMENT | Primary key |
-| [column] | [TYPE] | [CONSTRAINTS] | [Description] |
-| [column] | [TYPE] | [CONSTRAINTS] | [Description] |
+#### `test_spec`
+A file or module containing requirements.
+- `id` (text, PK)
+- `name` (text)
+- `fileName` (text): Source file link
+- `folderId` (text, FK -> test_folder.id)
+- `organizationId` (text, FK -> organization.id)
+- `statuses` (json): Aggregated stats (passed, failed counts)
+- `numberOfTests` (integer)
 
----
+#### `test_requirement`
+Specific business requirement to be tested.
+- `id` (text, PK)
+- `name` (text): Requirement title
+- `description` (text)
+- `specId` (text, FK -> test_spec.id)
+- `order` (integer)
 
-### [Table 3]: [table_name]
-
-[Repeat pattern for each table]
-
-## Relationships
-
-| Relationship | Type | Description |
-|--------------|------|-------------|
-| [Table1] → [Table2] | One-to-Many | [Description] |
-| [Table2] → [Table3] | Many-to-Many | [Through junction table] |
-| [Table1] → [Table4] | One-to-One | [Description] |
-
-## Migrations
-
-| Version | Description | Date |
-|---------|-------------|------|
-| 001 | Initial schema | [Date] |
-| 002 | [Change description] | [Date] |
-| 003 | [Change description] | [Date] |
-
-## Seeding
-
-Test data available via:
-```bash
-npm run db:seed
-# or
-python manage.py seed
-```
+#### `test`
+Individual test execution implementation.
+- `id` (text, PK)
+- `requirementId` (text, FK -> test_requirement.id)
+- `status` (text): Test result status
+- `framework` (text): 'playwright', 'jest', etc.
+- `code` (text): Test code snippet
