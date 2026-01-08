@@ -28,11 +28,24 @@ style: |
 **Supervisor:** Volha Kuzniatsova
 **Date:** January 7, 2026
 
+> 💡 **One platform to manage all your test specs, track coverage, and generate requirements with AI — instead of juggling Jira, Confluence, and Slack.**
+
 ---
 
-## **1. The Problem**
+## **1. Goal & Scope**
 
-<div style="display: flex; flex-direction: column; justify-content: center; height: 60%; margin-top: 40px;">
+**Goal:** Build a unified platform for QA teams to:
+- Store all test specs in one place
+- Track test status from CI/CD in real-time
+- Use AI to help write specs faster
+
+**Scope:** Web app with auth, multi-org support, GitHub Actions sync
+
+---
+
+## **2. The Problem**
+
+<div style="display: flex; flex-direction: column; justify-content: center; height: 60%; margin-top: 20px;">
 
 - Docs and code get out of sync over time.
 - Too many sources of truth: Jira, Confluence, Slack.
@@ -42,7 +55,7 @@ style: |
 
 ---
 
-## **2. The Problem: Business Impact**
+## **3. The Problem: Business Impact**
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
 <div>
@@ -65,7 +78,7 @@ style: |
 
 ---
 
-## **3. The Solution: Unified QA Engine**
+## **4. The Solution: Unified QA Engine**
 
 - **Single Source of Truth**: Centralized specification management.
 - **Context-Aware AI**: LLM fed with real project requirements.
@@ -74,7 +87,7 @@ style: |
 
 ---
 
-## **4. High-Level Architecture**
+## **5. High-Level Architecture**
 
 <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: center;">
 <div>
@@ -100,7 +113,7 @@ style: |
 
 ---
 
-## **5. Demo: Home & Authentication**
+## **6. Demo: Home & Authentication**
 
 - **Landing Page**: Professional overview of capabilities.
 - **Auth Flow**: Secure login via Better Auth.
@@ -114,7 +127,7 @@ style: |
 
 ---
 
-## **6. Demo: Testing Dashboard**
+## **7. Demo: Testing Dashboard**
 
 - **Hierarchy**: Navigate folders and specs with ease.
 - **AI Side Panel**: Generate test code from requirements.
@@ -128,7 +141,7 @@ style: |
 
 ---
 
-## **7. Business Analysis: Problem**
+## **8. Business Analysis: Problem**
 
 ### **Problem Identified**
 - Docs spread across Jira, Confluence, Slack
@@ -141,7 +154,7 @@ style: |
 
 ---
 
-## **7. Business Analysis: Strategy**
+## **8. Business Analysis: Strategy**
 
 ### **Success KPIs**
 - ↓ 20-30% test creation time
@@ -155,7 +168,7 @@ style: |
 
 ---
 
-## **8. Backend & oRPC**
+## **9. Backend & oRPC**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
 <div>
@@ -190,7 +203,7 @@ export const router = orpc.router({
 
 ---
 
-## **9. Database Engineering**
+## **10. Database Engineering**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
 <div>
@@ -229,7 +242,7 @@ export const specs = table('spec', {
 
 ---
 
-## **10. Testing Strategy**
+## **11. Testing Strategy**
 
 - **Quality Gates**: ≥70% coverage enforced in CI.
 - **Playwright E2E**: Critical flow (Auth, Tree Ops) validation.
@@ -239,7 +252,7 @@ export const specs = table('spec', {
 
 ---
 
-## **11. AI Assistant**
+## **12. AI Assistant**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items: center;">
 <div>
@@ -259,7 +272,7 @@ export const specs = table('spec', {
 
 ---
 
-## **12. Auth & Security**
+## **13. Auth & Security**
 
 - **Better Auth**: Enterprise-grade session management.
 - **Isolation**: Strict data separation at DB level.
@@ -267,7 +280,7 @@ export const specs = table('spec', {
 
 ---
 
-## **13. Technical Challenges**
+## **14. Technical Challenges**
 
 | Challenge | Solution | Impact |
 |-----------|----------|--------|
@@ -277,7 +290,7 @@ export const specs = table('spec', {
 
 ---
 
-## **14. Results & Future Work**
+## **15. Results & Future Work**
 
 - ✅ **90%** faster test creation via AI.
 - ✅ **100%** traceability to Requirements.
@@ -286,7 +299,7 @@ export const specs = table('spec', {
 
 ---
 
-## **15. Q&A**
+## **16. Q&A**
 
 **Roman Radchenko** (JS-22)
 
