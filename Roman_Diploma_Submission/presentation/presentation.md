@@ -7,7 +7,7 @@ backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.jpg')
 style: |
   section {
-    font-size: 26px;
+    font-size: 24px;
   }
   h2 {
     font-size: 1.4em;
@@ -45,8 +45,8 @@ style: |
 
 ### **Operational Gaps**
 - ❌ High maintenance overhead.
-- ❌ No single source of truth for QA.
-- ❌ Fragmented AI workflows.
+- ❌ Too many sources of truth: Jira, Confluence, Slack.
+- ❌ Poor visibility into test coverage.
 
 </div>
 <div>
@@ -138,15 +138,39 @@ style: |
 
 ---
 
-## **8. [Impact] Criterion 1: Business Analysis**
+## **8. Business Analysis**
 
-- **Strategy**: MoSCoW prioritization & stakeholder analysis.
-- **Deliverable**: Full requirements traceability matrix.
-- **Rationale**: Needed to ensure MVP focuses on core bottlenecks.
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.8em;">
+<div>
+
+### **Problem Identified**
+- Docs spread across Jira, Confluence, Slack
+- Manual test writing = slow & repetitive
+- No visibility into test coverage
+
+### **Stakeholders**
+- QA Engineers (Primary Users)
+- Dev Teams, Product & Project Managers
+
+</div>
+<div>
+
+### **Success KPIs**
+- ↓ 20-30% test creation time
+- ↑ 40% coverage visibility
+- 80% user adoption in 2 months
+- NPS ≥ 40
+
+### **Strategy**
+- MoSCoW prioritization
+- Requirements traceability matrix
+
+</div>
+</div>
 
 ---
 
-## **9. [Impact] Criterion 2: Backend & oRPC**
+## **9. Backend & oRPC**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
 <div>
@@ -181,7 +205,7 @@ export const router = orpc.router({
 
 ---
 
-## **10. [Impact] Criterion 3: Database Engineering**
+## **10. Database Engineering**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
 <div>
@@ -220,7 +244,7 @@ export const specs = table('spec', {
 
 ---
 
-## **11. [Impact] Criterion 4: Testing Strategy**
+## **11. Testing Strategy**
 
 - **Quality Gates**: ≥70% coverage enforced in CI.
 - **Playwright E2E**: Critical flow (Auth, Tree Ops) validation.
@@ -230,7 +254,7 @@ export const specs = table('spec', {
 
 ---
 
-## **12. [Impact] Criterion 5: AI Orchestration**
+## **12. AI Orchestration**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items: center;">
 <div>
@@ -250,7 +274,7 @@ export const specs = table('spec', {
 
 ---
 
-## **13. [Impact] Criterion 6: Auth & Security**
+## **13. Auth & Security**
 
 - **Better Auth**: Enterprise-grade session management.
 - **Isolation**: Strict data separation at DB level.
@@ -258,7 +282,7 @@ export const specs = table('spec', {
 
 ---
 
-## **14. [Impact] Criterion 7: DevOps & Scaling**
+## **14. DevOps & Scaling**
 
 - **Docker**: Optimized multi-stage production builds.
 - **CI/CD**: Automated GitHub Actions (Lint/Test/Build).
