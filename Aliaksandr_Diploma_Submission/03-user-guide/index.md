@@ -57,14 +57,16 @@ After setup, you will see the main dashboard with:
 
 ## Quick Start Guide
 
-| Task | How To |
-|------|--------|
-| Create a folder | Click **"+ New Folder"** in the left panel, enter name |
-| Create a test spec | Select a folder, click **"+ New Spec"**, enter details |
-| Add a requirement | Open a spec, click **"+ Add Requirement"** |
-| Generate AI test | Select a requirement, click **"Generate with AI"** |
-| View analytics | Click **"Analytics"** in the navigation menu |
-| Invite team member | Go to Profile → Organization → Invite Members |
+| Task | How To | Expected Result |
+|------|--------|-----------------|
+| **Create a folder** | Click **"+ New Folder"** in the left panel, enter name | New folder appears in the tree hierarchy |
+| **Create a test spec** | Select a folder, click **"+ New Spec"**, enter details | New spec card appears with default status indicators |
+| **Add a requirement** | Open a spec, click **"+ Add Requirement"**, enter title and description | Requirement appears in the spec's requirement list |
+| **Generate AI test** | Select a requirement, click **"Generate with AI"**, review and accept code | Vitest test code attached to the requirement |
+| **View analytics** | Click **"Analytics"** in the navigation menu | Dashboard showing metrics, charts, and trends |
+| **Invite team member** | Go to Profile → Organization → Invite Members, enter email and role | Invitation sent, member appears after acceptance |
+| **Export test code** | Open a requirement with generated test, click copy/export button | Test code ready to paste into your project |
+| **Update test status** | Manually mark tests as passed/failed or connect CI/CD for automatic updates | Status indicators update across the hierarchy |
 
 ## User Roles
 
@@ -90,9 +92,67 @@ After setup, you will see the main dashboard with:
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl/Cmd + N` | New spec/folder (context dependent) |
-| `Ctrl/Cmd + S` | Save current changes |
-| `Escape` | Close modal/panel |
-| `Tab` | Navigate between fields |
+| Shortcut | Action | Context |
+|----------|--------|---------|
+| `Escape` | Close modal/panel | Closes any open dialog or side panel |
+| `Tab` | Navigate between fields | Form navigation |
+
+## Common Workflows
+
+### Workflow 1: Setting Up a New Test Suite
+
+1. **Create Organization Structure**
+   - Create top-level folders for major features or modules
+   - Example: "Authentication", "User Management", "Payment Processing"
+
+2. **Define Test Specifications**
+   - For each folder, create test specs that represent test scenarios
+   - Example: "Login Flow", "Password Reset", "Session Management"
+
+3. **Break Down Requirements**
+   - Add detailed requirements to each spec
+   - Write clear, testable requirements with acceptance criteria
+
+4. **Generate Tests**
+   - Use AI to generate test code for each requirement
+   - Review and refine generated code as needed
+
+5. **Export and Integrate**
+   - Export test code to your project structure
+   - Set up CI/CD integration for automatic status updates
+
+### Workflow 2: Daily Test Management
+
+1. **Review Dashboard**
+   - Check analytics dashboard for overall test health
+   - Identify failing tests or coverage gaps
+
+2. **Investigate Failures**
+   - Drill down from folder → spec → requirement → test
+   - Review test code and execution results
+
+3. **Update Status**
+   - Mark tests as fixed after code changes
+   - Or wait for CI/CD to update automatically
+
+4. **Add New Tests**
+   - Create new requirements for new features
+   - Generate tests using AI assistance
+
+### Workflow 3: Team Collaboration
+
+1. **Invite Team Members**
+   - Add QA engineers, developers, and team leads
+   - Assign appropriate roles (Admin or Member)
+
+2. **Organize Work**
+   - Use folders to organize work by sprint, feature, or team
+   - Assign specs to team members via naming conventions
+
+3. **Review and Approve**
+   - Team members review AI-generated tests
+   - Provide feedback and iterate on test quality
+
+4. **Track Progress**
+   - Use analytics to track team productivity
+   - Monitor test coverage growth over time

@@ -55,9 +55,8 @@ nav:
           - Architecture: 02-technical/index.md
           - Tech Stack: 02-technical/tech-stack.md
           - Deployment: 02-technical/deployment.md
-      # Add criterion files here as you create them:
-      # - Backend: 02-technical/criteria/backend.md
-      # - Frontend: 02-technical/criteria/frontend.md
+      Add criterion files here as you create them:
+          - Frontend: 02-technical/criteria/frontend.md
     - User Guide:
           - Getting Started: 03-user-guide/index.md
           - Features: 03-user-guide/features.md

@@ -21,6 +21,18 @@
 
 Automaspec is an intelligent test management system that serves as the central nervous system for quality assurance. It unifies requirements, code, and test execution into a single source of truth. By syncing Playwright and Vitest results directly with business requirements and leveraging AI for test generation, Automaspec eliminates the fragmentation between what is expected (docs) and what is actually verified (code), enabling teams to ship with confidence and reduced manual overhead.
 
+### Problem It Solves
+
+Modern software teams struggle with test documentation scattered across multiple tools (Jira, Confluence, Excel, code comments), manual test creation that's time-consuming and error-prone, and a disconnect between test documentation and actual execution results. Automaspec addresses these challenges by providing a unified platform that automatically syncs test results from CI/CD pipelines, generates test code using AI, and provides real-time visibility into test coverage and status.
+
+### Key Differentiators
+
+- **AI-Powered Test Generation**: Leverages advanced language models to generate production-ready Vitest test code from natural language requirements
+- **Real-Time CI/CD Sync**: Automatically updates test status from GitHub Actions, keeping documentation and reality in sync
+- **End-to-End Traceability**: Links business requirements directly to test code and execution results, providing complete visibility
+- **Adaptive Design**: Fully responsive interface that works seamlessly across desktop, tablet, and mobile devices
+- **Type-Safe Architecture**: Built with TypeScript and oRPC for end-to-end type safety from database to UI
+
 ## Evaluation Criteria Checklist
 
 | # | Criterion | Status | Documentation |
@@ -56,11 +68,19 @@ Automaspec is an intelligent test management system that serves as the central n
 
 ### Key Features
 
-1.  **Unified Test Lifecycle**: Syncs code, tests, and requirements automatically.
-2.  **Live Traceability**: Links business goals directly to passing/failing tests.
-3.  **AI Assistant**: Context-aware chatbot for test generation and debugging.
-4.  **Adaptive Interface**: Fully responsive design for Desktop, Tablet, and Mobile.
-5.  **Secure Multi-Tenancy**: Organization-based access control.
+1.  **Unified Test Lifecycle**: Syncs code, tests, and requirements automatically. All test-related information lives in one place, eliminating the need to maintain documentation across multiple tools. Changes propagate automatically through the hierarchy, ensuring consistency.
+
+2.  **Live Traceability**: Links business goals directly to passing/failing tests. Drill down from high-level requirements to specific test implementations and execution results. See at a glance which requirements are covered, which tests are failing, and where gaps exist.
+
+3.  **AI Assistant**: Context-aware chatbot for test generation and debugging. The AI understands your existing test structure and generates code that follows your patterns and best practices. Review, edit, and iterate on generated tests with ease.
+
+4.  **Adaptive Interface**: Fully responsive design for Desktop, Tablet, and Mobile. The interface adapts seamlessly to any screen size, providing an optimized experience whether you're at your desk or reviewing tests on your phone.
+
+5.  **Secure Multi-Tenancy**: Organization-based access control with role-based permissions. Teams can collaborate securely with appropriate access levels while maintaining data isolation between organizations.
+
+6.  **Analytics Dashboard**: Comprehensive metrics and visualizations for test coverage, pass/fail rates, and trends over time. Filter by time period, compare across periods, and gain data-driven insights into your testing efforts.
+
+7.  **CI/CD Integration**: Automated synchronization with GitHub Actions ensures test execution results are automatically reflected in the platform. No manual updates required - when tests run in your CI pipeline, their status updates automatically.
 
 ---
 
