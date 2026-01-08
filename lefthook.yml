@@ -23,22 +23,22 @@ pre-push:
     parallel: true
     jobs:
         - name: typecheck
-          glob: '*.{ts,tsx,mts,json}'
+          glob: '**/*'
           run: pnpm typecheck
           fail_text: '❌ TypeScript type checking failed'
 
         - name: tests
-          glob: '*.{ts,tsx,mts,json}'
+          glob: '**/*'
           run: pnpm test:coverage
           fail_text: '❌ Tests failed'
 
         - name: lint all files
-          glob: '*.{ts,tsx,mts,json}'
+          glob: '**/*'
           run: pnpm lint
           fail_text: '❌ Lint failed'
 
         - name: format all files
-          glob: '*.{ts,tsx,mts,json,yaml,yml}'
+          glob: '**/*'
           run: pnpm format
           fail_text: '❌ Format failed'
 

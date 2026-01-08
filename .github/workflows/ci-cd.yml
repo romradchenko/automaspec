@@ -55,7 +55,7 @@ jobs:
               run: pnpm run ci
 
             - name: Run quality checks (typecheck, tests, lint, format)
-              run: pnpm prepush
+              run: pnpm quality-checks
 
     e2e-tests:
         needs: [quality-checks, security-audit]

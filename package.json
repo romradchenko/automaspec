@@ -27,6 +27,7 @@
         "typecheck": "next typegen && tsc --noEmit",
         "precommit": "lefthook run pre-commit",
         "prepush": "lefthook run pre-push",
+        "quality-checks": "pnpm typecheck && pnpm test:coverage && pnpm lint && pnpm format",
         "docker:dev:up": "docker compose -f docker-compose.dev.yml up",
         "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
         "docker:dev:build": "docker compose -f docker-compose.dev.yml build",
