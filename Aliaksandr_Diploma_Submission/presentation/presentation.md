@@ -124,18 +124,6 @@ Unlike erratic spreadsheets or siloed Jira plugins, AutomaSpec represents the **
 
 ---
 
-# Demo: AI Assistance
-
-**Interactive Intelligence:**
-Asking the system to generate a test case for a new login requirement.
-
-- **Context Aware:** AI knows existing schema.
-- **Immediate Feedback:** Apply code direct to specs.
-
-![bg right:50% fit](../assets/screenshots/ai-screenshot.png)
-
----
-
 # Demo: Analytics Dashboard
 
 **Real-Time Insights:**
@@ -158,7 +146,7 @@ Organized view of projects, folders, and test specifications.
 - **Quick Access:** Direct links to requirements and test specs.
 - **Status Overview:** Visual indicators for test execution status.
 
-![w:100% center](../assets/screenshots/prod-dashboard-desktop.png)
+![w:100% center](../assets/screenshots/prod-folder-components-desktop.png)
 
 ---
 
