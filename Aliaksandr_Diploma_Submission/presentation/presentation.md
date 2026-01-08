@@ -1,5 +1,5 @@
 ---
-marp: true
+marp: false
 size: 16:9
 paginate: true
 backgroundColor: #ffffff
@@ -133,6 +133,32 @@ Asking the system to generate a test case for a new login requirement.
 - **Immediate Feedback:** Apply code direct to specs.
 
 ![bg right:50% fit](../assets/screenshots/ai-screenshot.png)
+
+---
+
+# Demo: Analytics Dashboard
+
+**Real-Time Insights:**
+Comprehensive metrics and visualizations for test coverage and execution trends.
+
+- **Coverage Metrics:** Track requirement coverage over time.
+- **Execution Trends:** Visualize test pass/fail rates.
+- **Period Selection:** Analyze performance across different timeframes.
+
+![w:100% center](../assets/screenshots/prod-analytics-desktop.png)
+
+---
+
+# Demo: Main Dashboard
+
+**Centralized Test Management:**
+Organized view of projects, folders, and test specifications.
+
+- **Hierarchical Structure:** Navigate through organizations and projects.
+- **Quick Access:** Direct links to requirements and test specs.
+- **Status Overview:** Visual indicators for test execution status.
+
+![w:100% center](../assets/screenshots/prod-dashboard-desktop.png)
 
 ---
 
