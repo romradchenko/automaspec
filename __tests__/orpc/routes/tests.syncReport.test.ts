@@ -5,6 +5,8 @@ import { testSpec as testSpecTable, test as testTable } from '@/db/schema'
 import { TEST_STATUSES } from '@/lib/constants'
 import { router } from '@/orpc/routes'
 
+let allRequirements: Array<Record<string, unknown>> = []
+let existingTests: Array<Record<string, unknown>> = []
 let orgTests: Array<Record<string, unknown>> = []
 let allSpecTests: Array<Record<string, unknown>> = []
 
@@ -15,29 +17,33 @@ const dbMocks = vi.hoisted(() => {
             where: async () => undefined
         })
     }))
+    const insert = vi.fn(() => ({
+        values: async () => undefined
+    }))
+    const getResult =  async () => {
+        const results = [allRequirements, existingTests, orgTests, allSpecTests]
+        const result = results[selectCall] ?? []
+        selectCall += 1
+        return Promise.resolve(result)
+    }
+    const createJoinChain = (): Record<string, unknown> => ({
+        innerJoin: () => createJoinChain(),
+        where: getResult
+    })
     const select = vi.fn(() => ({
-        from: () => ({
-            innerJoin: () => ({
-                innerJoin: () => ({
-                    where: async () => {
-                        const result = selectCall === 0 ? orgTests : allSpecTests
-                        selectCall += 1
-                        return Promise.resolve(result)
-                    }
-                })
-            })
-        })
+        from: () => createJoinChain()
     }))
     const reset = () => {
         selectCall = 0
         update.mockClear()
         select.mockClear()
+        insert.mockClear()
     }
-    return { update, select, reset }
+    return { update, select, insert, reset }
 })
 
 vi.mock('@/db', () => {
-    return { db: { update: dbMocks.update, select: dbMocks.select }, __esModule: true }
+    return { db: { update: dbMocks.update, select: dbMocks.select, insert: dbMocks.insert }, __esModule: true }
 })
 
 describe('syncReport', () => {
@@ -54,6 +60,12 @@ describe('syncReport', () => {
     const testClient = createRouterClient(router, { context: async () => ctx })
 
     beforeEach(() => {
+        allRequirements = [
+            { requirementId: 'req-A', requirementName: 'Req A', specId: 'spec-1' },
+            { requirementId: 'req-B', requirementName: 'Req B', specId: 'spec-1' },
+            { requirementId: 'req-C', requirementName: 'Req C', specId: 'spec-2' }
+        ]
+        existingTests = [{ requirementId: 'req-A' }, { requirementId: 'req-B' }, { requirementId: 'req-C' }]
         orgTests = [
             { testId: 'A', testStatus: TEST_STATUSES.failed, requirementName: 'Req A', specId: 'spec-1' },
             { testId: 'B', testStatus: TEST_STATUSES.passed, requirementName: 'Req B', specId: 'spec-1' },
@@ -85,7 +97,7 @@ describe('syncReport', () => {
 
         if (error) throw error
 
-        expect(data).toEqual({ updated: 2, missing: 1 })
+        expect(data).toEqual({ created: 0, updated: 2, missing: 1 })
 
         const calls = dbMocks.update.mock.calls
         expect(calls.length).toBeGreaterThanOrEqual(3)

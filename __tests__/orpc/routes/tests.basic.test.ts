@@ -421,6 +421,8 @@ describe('tests routes', () => {
         expect(report).toBeDefined()
 
         dbMocks.setSelectResults([
+            [{ requirementId: 'req-A', requirementName: 'Req A', specId: 'spec-1' }],
+            [{ requirementId: 'req-A' }],
             [
                 {
                     testId: 'A',
@@ -435,6 +437,7 @@ describe('tests routes', () => {
         const synced = await client.tests.syncReport({
             testResults: [{ assertionResults: [{ title: 'Req A', status: TEST_STATUSES.passed }] }]
         })
+        expect(synced.created).toBe(0)
         expect(synced.updated).toBe(1)
     })
 })

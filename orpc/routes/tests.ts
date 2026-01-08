@@ -2,11 +2,18 @@ import { implement } from '@orpc/server'
 import { ORPCError } from '@orpc/server'
 import { asc, eq, and, inArray, isNull, notInArray, sql } from 'drizzle-orm'
 
-import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestRequirementUpsertValue } from '@/lib/types'
+import type {
+    TestStatus,
+    SpecStatus,
+    VitestTestResult,
+    TestFolder,
+    TestRequirementUpsertValue,
+    TestFramework
+} from '@/lib/types'
 
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
-import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import { TEST_STATUSES, SPEC_STATUSES, TEST_FRAMEWORK } from '@/lib/constants'
 import { testsContract } from '@/orpc/contracts/tests'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 import testResultsData from '@/test-results.json'
@@ -594,6 +601,58 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         }
     }
 
+    const allRequirements = await db
+        .select({
+            requirementId: testRequirement.id,
+            requirementName: testRequirement.name,
+            specId: testSpec.id
+        })
+        .from(testRequirement)
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, context.organizationId))
+
+    const existingTests = await db
+        .select({ requirementId: test.requirementId })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, context.organizationId))
+
+    const requirementIdsWithTests = new Set<string>()
+    for (const t of existingTests) {
+        requirementIdsWithTests.add(t.requirementId)
+    }
+
+    const requirementsWithoutTests = allRequirements.filter((r) => !requirementIdsWithTests.has(r.requirementId))
+
+    console.log('[syncReport] Total requirements:', allRequirements.length)
+    console.log('[syncReport] Requirements with existing tests:', existingTests.length)
+    console.log('[syncReport] Requirements without tests:', requirementsWithoutTests.length)
+
+    let createdCount = 0
+    const createdTests: Array<{ name: string; status: TestStatus }> = []
+    if (requirementsWithoutTests.length > 0) {
+        const newTests: Array<{ id: string; status: TestStatus; framework: TestFramework; requirementId: string }> = []
+        for (const req of requirementsWithoutTests) {
+            const reportedStatus = titleToStatus[req.requirementName.toLowerCase()]
+            const status = reportedStatus || (TEST_STATUSES.pending as TestStatus)
+            newTests.push({
+                id: crypto.randomUUID(),
+                status,
+                framework: TEST_FRAMEWORK as TestFramework,
+                requirementId: req.requirementId
+            })
+            createdTests.push({ name: req.requirementName, status })
+        }
+        createdCount = newTests.length
+        await db.insert(test).values(newTests)
+
+        console.log('[syncReport] Created tests:')
+        for (const t of createdTests) {
+            console.log(`  - "${t.name}" → ${t.status}`)
+        }
+    }
+
     const orgTests = await db
         .select({
             testId: test.id,
@@ -712,7 +771,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         await Promise.all(specUpdateTasks)
     }
 
-    return { updated: updatedCount, missing: missingIds.length }
+    return { created: createdCount, updated: updatedCount, missing: missingIds.length }
 })
 
 export const testsRouter = {
