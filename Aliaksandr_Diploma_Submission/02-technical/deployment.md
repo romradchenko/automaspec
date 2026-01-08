@@ -6,17 +6,7 @@
 
 The application adopts a hybrid deployment strategy using **Vercel** for the frontend/backend execution and **Docker** for local development and containerized portability.
 
-```mermaid
-graph TD
-    User[User] --> Edge[Vercel Edge Network]
-    Edge --> Function[Serverless Functions (Next.js)]
-    Function --> DB[(Turso / libSQL)]
-    
-    subgraph "Local Development"
-        LocalUser[Developer] --> Docker[Docker Container / Local Node]
-        Docker --> DB
-    end
-```
+![Deployment Architecture](../../assets/diagrams/architecture.png)
 
 -   **Production (PaaS):** Hosted on **Vercel**, leveraging serverless functions and global edge network.
 -   **Database:** Hosted on **Turso** (libSQL) as a managed service.

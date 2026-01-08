@@ -13,10 +13,9 @@ on:
         branches: [main]
 
 jobs:
-    quality-checks:
+    security-audit:
         runs-on: ubuntu-latest
-        name: Quality Checks
-
+        name: Security Audit
         steps:
             - name: Checkout repository
               uses: actions/checkout@v6.0.1
@@ -35,12 +34,31 @@ jobs:
 
             - name: Run Security Audit
               run: pnpm audit
-              continue-on-error: true
 
-            - name: Run pre-push hooks (typecheck, tests, lint, format)
+    quality-checks:
+        runs-on: ubuntu-latest
+        name: Quality Checks
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6.0.1
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4.2.0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6.1.0
+              with:
+                  node-version: '24'
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: pnpm run ci
+
+            - name: Run quality checks (typecheck, tests, lint, format)
               run: pnpm prepush
 
     e2e-tests:
+        needs: [quality-checks, security-audit]
         runs-on: ubuntu-latest
         name: E2E Tests
         steps:
@@ -63,7 +81,7 @@ jobs:
               run: pnpm test:e2e
 
     deploy-preview:
-        needs: [quality-checks, e2e-tests]
+        needs: [quality-checks, security-audit, e2e-tests]
         runs-on: ubuntu-latest
         name: Deploy Preview
         if: |

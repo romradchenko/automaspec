@@ -6,44 +6,7 @@ The application uses **SQLite** (via LibSQL/Turso) as its relational database, w
 
 ## Entity Relationship Diagram
 
-```mermaid
-erDiagram
-    User ||--o{ Account : "has"
-    User ||--o{ Session : "has"
-    User ||--o{ Member : "belongs to"
-    User ||--o{ APIKey : "owns"
-    
-    Organization ||--o{ Member : "has members"
-    Organization ||--o{ Invitation : "sends"
-    Organization ||--o{ TestFolder : "owns"
-    Organization ||--o{ TestSpec : "owns"
-    
-    User ||--o{ Invitation : "invites"
 
-    TestFolder ||--o{ TestSpec : "contains"
-    TestFolder ||--o{ TestFolder : "parent"
-    
-    TestSpec ||--o{ TestRequirement : "defines"
-    TestRequirement ||--o{ Test : "verified by"
-
-    User {
-        string id PK
-        string email
-        string name
-    }
-
-    Organization {
-        string id PK
-        string name
-        string plan
-    }
-
-    TestSpec {
-        string id PK
-        string name
-        json statuses
-    }
-```
 
 ## Tables Reference
 

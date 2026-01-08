@@ -312,6 +312,8 @@ describe('ai.chat', () => {
 
     it('rejects when google key is missing', async () => {
         vi.stubEnv('NODE_ENV', NODE_ENVS.test)
+        // oxlint-disable-next-line no-dynamic-delete
+        delete process.env[AI_ENV_KEYS.google]
         await expect(
             client.ai.chat({ provider: AI_PROVIDERS.google, messages: [{ role: 'user', content: 'Hi' }] })
         ).rejects.toThrow(`Missing ${AI_ENV_KEYS.google}`)

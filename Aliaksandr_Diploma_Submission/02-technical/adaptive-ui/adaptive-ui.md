@@ -156,7 +156,6 @@ Visual evidence of responsive layouts is documented in the screenshots section o
 ## Known Limitations
 
 | Limitation | Impact | Potential Solution |
-
 |------------|--------|-------------------|
 | **Complex Data Tables** | Hard to read on narrow screens. | Implement horizontal scrolling or card-view switch for mobile. |
 | **Ultrawide Screens** | Content can stretch too wide. | Use max-width containers (max-w-7xl) for main content. |
