@@ -14,7 +14,7 @@ The Automaspec project requires a modern, scalable, and responsive front-end arc
 
 ### Decision
 
-We have chosen **Next.js 15 (App Router)** with **React 19** and **TypeScript** as the foundation. This stack provides a powerful framework for building SPAs with server-side optimization where needed.
+We have chosen **Next.js 16 (App Router)** with **React 19** and **TypeScript** as the foundation. This stack provides a powerful framework for building SPAs with server-side optimization where needed.
 
 Key architectural decisions include:
 1.  **Component-Based UI:** Using **Tailwind CSS v4** for styling and **Radix UI** primitives for accessible, reusable components.

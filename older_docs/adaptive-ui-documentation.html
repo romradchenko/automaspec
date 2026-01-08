@@ -1,261 +1,282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Adaptive UI Documentation</title>
-  <style>
-    /* Default styles provided by pandoc.
+    <head>
+        <meta charset="utf-8" />
+        <meta name="generator" content="pandoc" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+        <title>Adaptive UI Documentation</title>
+        <style>
+            /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
+            code {
+                white-space: pre-wrap;
+            }
+            span.smallcaps {
+                font-variant: small-caps;
+            }
+            div.columns {
+                display: flex;
+                gap: min(4vw, 1.5em);
+            }
+            div.column {
+                flex: auto;
+                overflow-x: auto;
+            }
+            div.hanging-indent {
+                margin-left: 1.5em;
+                text-indent: -1.5em;
+            }
+            /* The extra [class] is a hack that increases specificity enough to
        override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
-</head>
-<body>
-<header id="title-block-header">
-<h1 class="title">Adaptive UI Documentation</h1>
-</header>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#overview" id="toc-overview">Overview</a></li>
-<li><a href="#device-support" id="toc-device-support">Device
-Support</a></li>
-<li><a href="#visual-and-accessibility-criteria"
-id="toc-visual-and-accessibility-criteria">Visual and Accessibility
-Criteria</a></li>
-<li><a href="#layout-and-components"
-id="toc-layout-and-components">Layout and Components</a></li>
-<li><a href="#screenshots-production"
-id="toc-screenshots-production">Screenshots (Production)</a>
-<ul>
-<li><a href="#home" id="toc-home">Home</a></li>
-<li><a href="#login" id="toc-login">Login</a></li>
-<li><a href="#choose-organization" id="toc-choose-organization">Choose
-Organization</a></li>
-<li><a href="#dashboard" id="toc-dashboard">Dashboard</a></li>
-<li><a href="#folder-view" id="toc-folder-view">Folder View</a></li>
-<li><a href="#analytics" id="toc-analytics">Analytics</a></li>
-<li><a href="#rpc-docs" id="toc-rpc-docs">RPC Docs</a></li>
-</ul></li>
-<li><a href="#technical-notes" id="toc-technical-notes">Technical
-Notes</a></li>
-<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
-</ul>
-</nav>
-<p>Adaptive UI Documentation</p>
-<h2 id="overview">Overview</h2>
-<p>AutomaSpec provides a responsive UI that keeps the core product flows
-usable and visually consistent across mobile, tablet, and desktop.</p>
-<h2 id="device-support">Device Support</h2>
-<ul>
-<li>Mobile (~375px-767px): single-column layouts and touch-friendly
-controls</li>
-<li>Tablet (~768px-1023px): increased density, two-column layouts where
-appropriate</li>
-<li>Desktop (1024px+): full layouts with side navigation and multi-panel
-pages</li>
-</ul>
-<p>Tailwind breakpoints used throughout the UI:</p>
-<ul>
-<li>640px (sm), 768px (md), 1024px (lg), 1280px (xl), 1536px (2xl)</li>
-</ul>
-<h2 id="visual-and-accessibility-criteria">Visual and Accessibility
-Criteria</h2>
-<ul>
-<li>Typography scales via relative sizing and responsive utilities</li>
-<li>Icons are SVG-based (Lucide) and scale without distortion</li>
-<li>Interactive controls keep mobile-friendly hit targets</li>
-<li>Light/dark theme support via <code>next-themes</code> with CSS
-variables</li>
-</ul>
-<h2 id="layout-and-components">Layout and Components</h2>
-<ul>
-<li>Layout composition via Tailwind CSS v4 responsive utilities
-(<code>sm:</code>, <code>md:</code>, <code>lg:</code>)</li>
-<li>Sheet/drawer patterns for mobile navigation and actions</li>
-<li>Reusable UI primitives live in <code>components/ui</code></li>
-</ul>
-<h2 id="screenshots-production">Screenshots (Production)</h2>
-<h3 id="home">Home</h3>
-<h4 id="desktop">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-home-desktop.png"
-alt="Home (Desktop)" />
-<figcaption aria-hidden="true">Home (Desktop)</figcaption>
-</figure>
-<h4 id="tablet">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-home-tablet.png"
-alt="Home (Tablet)" />
-<figcaption aria-hidden="true">Home (Tablet)</figcaption>
-</figure>
-<h4 id="mobile">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-home-mobile.png"
-alt="Home (Mobile)" />
-<figcaption aria-hidden="true">Home (Mobile)</figcaption>
-</figure>
-<h3 id="login">Login</h3>
-<h4 id="desktop-1">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-login-desktop.png"
-alt="Login (Desktop)" />
-<figcaption aria-hidden="true">Login (Desktop)</figcaption>
-</figure>
-<h4 id="tablet-1">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-login-tablet.png"
-alt="Login (Tablet)" />
-<figcaption aria-hidden="true">Login (Tablet)</figcaption>
-</figure>
-<h4 id="mobile-1">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-login-mobile.png"
-alt="Login (Mobile)" />
-<figcaption aria-hidden="true">Login (Mobile)</figcaption>
-</figure>
-<h3 id="choose-organization">Choose Organization</h3>
-<h4 id="desktop-2">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-choose-organization-desktop.png"
-alt="Choose Organization (Desktop)" />
-<figcaption aria-hidden="true">Choose Organization
-(Desktop)</figcaption>
-</figure>
-<h4 id="tablet-2">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-choose-organization-tablet.png"
-alt="Choose Organization (Tablet)" />
-<figcaption aria-hidden="true">Choose Organization (Tablet)</figcaption>
-</figure>
-<h4 id="mobile-2">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-choose-organization-mobile.png"
-alt="Choose Organization (Mobile)" />
-<figcaption aria-hidden="true">Choose Organization (Mobile)</figcaption>
-</figure>
-<h3 id="dashboard">Dashboard</h3>
-<h4 id="desktop-3">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-dashboard-desktop.png"
-alt="Dashboard (Desktop)" />
-<figcaption aria-hidden="true">Dashboard (Desktop)</figcaption>
-</figure>
-<h4 id="tablet-3">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-dashboard-tablet.png"
-alt="Dashboard (Tablet)" />
-<figcaption aria-hidden="true">Dashboard (Tablet)</figcaption>
-</figure>
-<h4 id="mobile-3">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-dashboard-mobile.png"
-alt="Dashboard (Mobile)" />
-<figcaption aria-hidden="true">Dashboard (Mobile)</figcaption>
-</figure>
-<h3 id="folder-view">Folder View</h3>
-<h4 id="desktop-4">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-folder-view-desktop.png"
-alt="Folder View (Desktop)" />
-<figcaption aria-hidden="true">Folder View (Desktop)</figcaption>
-</figure>
-<h4 id="tablet-4">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-folder-view-tablet.png"
-alt="Folder View (Tablet)" />
-<figcaption aria-hidden="true">Folder View (Tablet)</figcaption>
-</figure>
-<h4 id="mobile-4">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-folder-view-mobile.png"
-alt="Folder View (Mobile)" />
-<figcaption aria-hidden="true">Folder View (Mobile)</figcaption>
-</figure>
-<h3 id="analytics">Analytics</h3>
-<h4 id="desktop-5">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-analytics-desktop.png"
-alt="Analytics (Desktop)" />
-<figcaption aria-hidden="true">Analytics (Desktop)</figcaption>
-</figure>
-<h4 id="tablet-5">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-analytics-tablet.png"
-alt="Analytics (Tablet)" />
-<figcaption aria-hidden="true">Analytics (Tablet)</figcaption>
-</figure>
-<h4 id="mobile-5">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-analytics-mobile.png"
-alt="Analytics (Mobile)" />
-<figcaption aria-hidden="true">Analytics (Mobile)</figcaption>
-</figure>
-<h3 id="rpc-docs">RPC Docs</h3>
-<h4 id="desktop-6">Desktop</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-rpc-docs-desktop.png"
-alt="RPC Docs (Desktop)" />
-<figcaption aria-hidden="true">RPC Docs (Desktop)</figcaption>
-</figure>
-<h4 id="tablet-6">Tablet</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-rpc-docs-tablet.png"
-alt="RPC Docs (Tablet)" />
-<figcaption aria-hidden="true">RPC Docs (Tablet)</figcaption>
-</figure>
-<h4 id="mobile-6">Mobile</h4>
-<figure>
-<img
-src="../Roman_Diploma_Submission/assets/screenshots/prod-rpc-docs-mobile.png"
-alt="RPC Docs (Mobile)" />
-<figcaption aria-hidden="true">RPC Docs (Mobile)</figcaption>
-</figure>
-<h2 id="technical-notes">Technical Notes</h2>
-<ul>
-<li>Framework: Next.js 16 (App Router) + React 19 + TypeScript</li>
-<li>Styling: Tailwind CSS v4</li>
-<li>Theme: <code>next-themes</code> + CSS variables</li>
-<li>Icons: <code>lucide-react</code></li>
-</ul>
-<h2 id="conclusion">Conclusion</h2>
-<p>The UI adapts to common device breakpoints and maintains functional
-parity across screen sizes for key product flows.</p>
-</body>
+            ul.task-list[class] {
+                list-style: none;
+            }
+            ul.task-list li input[type='checkbox'] {
+                font-size: inherit;
+                width: 0.8em;
+                margin: 0 0.8em 0.2em -1.6em;
+                vertical-align: middle;
+            }
+            .display.math {
+                display: block;
+                text-align: center;
+                margin: 0.5rem auto;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" />
+    </head>
+    <body>
+        <header id="title-block-header">
+            <h1 class="title">Adaptive UI Documentation</h1>
+        </header>
+        <nav id="TOC" role="doc-toc">
+            <ul>
+                <li><a href="#overview" id="toc-overview">Overview</a></li>
+                <li><a href="#device-support" id="toc-device-support">Device Support</a></li>
+                <li>
+                    <a href="#visual-and-accessibility-criteria" id="toc-visual-and-accessibility-criteria"
+                        >Visual and Accessibility Criteria</a
+                    >
+                </li>
+                <li><a href="#layout-and-components" id="toc-layout-and-components">Layout and Components</a></li>
+                <li>
+                    <a href="#screenshots-production" id="toc-screenshots-production">Screenshots (Production)</a>
+                    <ul>
+                        <li><a href="#home" id="toc-home">Home</a></li>
+                        <li><a href="#login" id="toc-login">Login</a></li>
+                        <li><a href="#choose-organization" id="toc-choose-organization">Choose Organization</a></li>
+                        <li><a href="#dashboard" id="toc-dashboard">Dashboard</a></li>
+                        <li><a href="#folder-view" id="toc-folder-view">Folder View</a></li>
+                        <li><a href="#analytics" id="toc-analytics">Analytics</a></li>
+                        <li><a href="#rpc-docs" id="toc-rpc-docs">RPC Docs</a></li>
+                    </ul>
+                </li>
+                <li><a href="#technical-notes" id="toc-technical-notes">Technical Notes</a></li>
+                <li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+            </ul>
+        </nav>
+        <p>Adaptive UI Documentation</p>
+        <h2 id="overview">Overview</h2>
+        <p>
+            AutomaSpec provides a responsive UI that keeps the core product flows usable and visually consistent across
+            mobile, tablet, and desktop.
+        </p>
+        <h2 id="device-support">Device Support</h2>
+        <ul>
+            <li>Mobile (~375px-767px): single-column layouts and touch-friendly controls</li>
+            <li>Tablet (~768px-1023px): increased density, two-column layouts where appropriate</li>
+            <li>Desktop (1024px+): full layouts with side navigation and multi-panel pages</li>
+        </ul>
+        <p>Tailwind breakpoints used throughout the UI:</p>
+        <ul>
+            <li>640px (sm), 768px (md), 1024px (lg), 1280px (xl), 1536px (2xl)</li>
+        </ul>
+        <h2 id="visual-and-accessibility-criteria">Visual and Accessibility Criteria</h2>
+        <ul>
+            <li>Typography scales via relative sizing and responsive utilities</li>
+            <li>Icons are SVG-based (Lucide) and scale without distortion</li>
+            <li>Interactive controls keep mobile-friendly hit targets</li>
+            <li>Light/dark theme support via <code>next-themes</code> with CSS variables</li>
+        </ul>
+        <h2 id="layout-and-components">Layout and Components</h2>
+        <ul>
+            <li>
+                Layout composition via Tailwind CSS v4 responsive utilities (<code>sm:</code>, <code>md:</code>,
+                <code>lg:</code>)
+            </li>
+            <li>Sheet/drawer patterns for mobile navigation and actions</li>
+            <li>Reusable UI primitives live in <code>components/ui</code></li>
+        </ul>
+        <h2 id="screenshots-production">Screenshots (Production)</h2>
+        <h3 id="home">Home</h3>
+        <h4 id="desktop">Desktop</h4>
+        <figure>
+            <img src="../Roman_Diploma_Submission/assets/screenshots/prod-home-desktop.png" alt="Home (Desktop)" />
+            <figcaption aria-hidden="true">Home (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet">Tablet</h4>
+        <figure>
+            <img src="../Roman_Diploma_Submission/assets/screenshots/prod-home-tablet.png" alt="Home (Tablet)" />
+            <figcaption aria-hidden="true">Home (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile">Mobile</h4>
+        <figure>
+            <img src="../Roman_Diploma_Submission/assets/screenshots/prod-home-mobile.png" alt="Home (Mobile)" />
+            <figcaption aria-hidden="true">Home (Mobile)</figcaption>
+        </figure>
+        <h3 id="login">Login</h3>
+        <h4 id="desktop-1">Desktop</h4>
+        <figure>
+            <img src="../Roman_Diploma_Submission/assets/screenshots/prod-login-desktop.png" alt="Login (Desktop)" />
+            <figcaption aria-hidden="true">Login (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet-1">Tablet</h4>
+        <figure>
+            <img src="../Roman_Diploma_Submission/assets/screenshots/prod-login-tablet.png" alt="Login (Tablet)" />
+            <figcaption aria-hidden="true">Login (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile-1">Mobile</h4>
+        <figure>
+            <img src="../Roman_Diploma_Submission/assets/screenshots/prod-login-mobile.png" alt="Login (Mobile)" />
+            <figcaption aria-hidden="true">Login (Mobile)</figcaption>
+        </figure>
+        <h3 id="choose-organization">Choose Organization</h3>
+        <h4 id="desktop-2">Desktop</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-choose-organization-desktop.png"
+                alt="Choose Organization (Desktop)"
+            />
+            <figcaption aria-hidden="true">Choose Organization (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet-2">Tablet</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-choose-organization-tablet.png"
+                alt="Choose Organization (Tablet)"
+            />
+            <figcaption aria-hidden="true">Choose Organization (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile-2">Mobile</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-choose-organization-mobile.png"
+                alt="Choose Organization (Mobile)"
+            />
+            <figcaption aria-hidden="true">Choose Organization (Mobile)</figcaption>
+        </figure>
+        <h3 id="dashboard">Dashboard</h3>
+        <h4 id="desktop-3">Desktop</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-dashboard-desktop.png"
+                alt="Dashboard (Desktop)"
+            />
+            <figcaption aria-hidden="true">Dashboard (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet-3">Tablet</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-dashboard-tablet.png"
+                alt="Dashboard (Tablet)"
+            />
+            <figcaption aria-hidden="true">Dashboard (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile-3">Mobile</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-dashboard-mobile.png"
+                alt="Dashboard (Mobile)"
+            />
+            <figcaption aria-hidden="true">Dashboard (Mobile)</figcaption>
+        </figure>
+        <h3 id="folder-view">Folder View</h3>
+        <h4 id="desktop-4">Desktop</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-folder-view-desktop.png"
+                alt="Folder View (Desktop)"
+            />
+            <figcaption aria-hidden="true">Folder View (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet-4">Tablet</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-folder-view-tablet.png"
+                alt="Folder View (Tablet)"
+            />
+            <figcaption aria-hidden="true">Folder View (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile-4">Mobile</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-folder-view-mobile.png"
+                alt="Folder View (Mobile)"
+            />
+            <figcaption aria-hidden="true">Folder View (Mobile)</figcaption>
+        </figure>
+        <h3 id="analytics">Analytics</h3>
+        <h4 id="desktop-5">Desktop</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-analytics-desktop.png"
+                alt="Analytics (Desktop)"
+            />
+            <figcaption aria-hidden="true">Analytics (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet-5">Tablet</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-analytics-tablet.png"
+                alt="Analytics (Tablet)"
+            />
+            <figcaption aria-hidden="true">Analytics (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile-5">Mobile</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-analytics-mobile.png"
+                alt="Analytics (Mobile)"
+            />
+            <figcaption aria-hidden="true">Analytics (Mobile)</figcaption>
+        </figure>
+        <h3 id="rpc-docs">RPC Docs</h3>
+        <h4 id="desktop-6">Desktop</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-rpc-docs-desktop.png"
+                alt="RPC Docs (Desktop)"
+            />
+            <figcaption aria-hidden="true">RPC Docs (Desktop)</figcaption>
+        </figure>
+        <h4 id="tablet-6">Tablet</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-rpc-docs-tablet.png"
+                alt="RPC Docs (Tablet)"
+            />
+            <figcaption aria-hidden="true">RPC Docs (Tablet)</figcaption>
+        </figure>
+        <h4 id="mobile-6">Mobile</h4>
+        <figure>
+            <img
+                src="../Roman_Diploma_Submission/assets/screenshots/prod-rpc-docs-mobile.png"
+                alt="RPC Docs (Mobile)"
+            />
+            <figcaption aria-hidden="true">RPC Docs (Mobile)</figcaption>
+        </figure>
+        <h2 id="technical-notes">Technical Notes</h2>
+        <ul>
+            <li>Framework: Next.js 16 (App Router) + React 19 + TypeScript</li>
+            <li>Styling: Tailwind CSS v4</li>
+            <li>Theme: <code>next-themes</code> + CSS variables</li>
+            <li>Icons: <code>lucide-react</code></li>
+        </ul>
+        <h2 id="conclusion">Conclusion</h2>
+        <p>
+            The UI adapts to common device breakpoints and maintains functional parity across screen sizes for key
+            product flows.
+        </p>
+    </body>
 </html>

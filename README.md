@@ -48,7 +48,7 @@ Automaspec helps organize test specifications, requirements, and individual test
 
 ## Tech Stack
 
-- Next.js 15 (Turbopack) + React 19
+- Next.js 16 (Turbopack) + React 19
 - Drizzle ORM with libsql/Turso
 - Better Auth (with organizations plugin)
 - oRPC + TanStack Query

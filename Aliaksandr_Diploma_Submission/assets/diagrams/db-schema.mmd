@@ -1,0 +1,11 @@
+erDiagram
+    User ||--o{ Member : "belongs to"
+    Organization ||--o{ Member : "has members"
+    Organization ||--o{ TestFolder : "owns"
+    TestFolder ||--o{ TestSpec : "contains"
+    TestSpec ||--o{ TestRequirement : "defines"
+    TestRequirement ||--o{ Test : "verified"
+
+    User { string id PK string email }
+    Organization { string id PK string name }
+    TestSpec { string id PK json statuses }
