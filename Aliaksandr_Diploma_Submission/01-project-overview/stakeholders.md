@@ -1,53 +1,113 @@
-# Stakeholders & Users
+# Stakeholders Analysis
 
-## Target Audience
+## Stakeholder Overview
 
-| Persona | Description | Key Needs |
-|---------|-------------|-----------|
-| [User Type 1] | [Demographics, role, context] | [What they need from the product] |
-| [User Type 2] | [Demographics, role, context] | [What they need from the product] |
-| [User Type 3] | [Demographics, role, context] | [What they need from the product] |
+| Stakeholder | Role | Interest | Influence | Engagement Strategy |
+|-------------|------|----------|-----------|---------------------|
+| **QA Engineers** | Primary Users | High | High | Direct involvement in requirements, beta testing |
+| **Development Teams** | Primary Users | High | High | Co-design features, continuous feedback |
+| **Product Managers** | Decision Makers | Medium-High | High | Regular updates, demo sessions, ROI metrics |
+| **Project Managers** | Oversight | High | Medium-High | Status reports, risk management |
+| **Academic Advisors** | Evaluators | Medium | High | Documentation, presentations |
+| **DevOps Engineers** | Integration Support | Medium | Medium | Technical consultation for CI/CD |
 
-## User Personas
+## Influence/Interest Matrix
 
-### Persona 1: [Name]
+```
+                        High Interest
+                             │
+         Keep Satisfied      │       Manage Closely
+                             │
+    ┌────────────────────────┼────────────────────────┐
+    │                        │                        │
+    │    Academic Advisors   │    QA Engineers        │
+    │                        │    Development Teams   │
+    │                        │    Product Managers    │
+    │                        │    Project Managers    │
+    │                        │                        │
+────┼────────────────────────┼────────────────────────┼────
+    │                        │                        │   High
+    │    Monitor             │    Keep Informed       │   Influence
+    │                        │                        │
+    │                        │    DevOps Engineers    │
+    │                        │    End Users           │
+    │                        │                        │
+    └────────────────────────┼────────────────────────┘
+                             │
+         Low Interest        │
+```
 
-| Attribute | Details |
-|-----------|---------|
-| **Role** | [Job title/role] |
-| **Age** | [Age range] |
-| **Tech Savviness** | [Low/Medium/High] |
-| **Goals** | [What they want to achieve] |
-| **Frustrations** | [Current pain points] |
-| **Scenario** | [Typical use case] |
+## Primary Stakeholders
 
-### Persona 2: [Name]
+### QA Engineers
 
-| Attribute | Details |
-|-----------|---------|
-| **Role** | [Job title/role] |
-| **Age** | [Age range] |
-| **Tech Savviness** | [Low/Medium/High] |
-| **Goals** | [What they want to achieve] |
-| **Frustrations** | [Current pain points] |
-| **Scenario** | [Typical use case] |
+**Role:** Primary users responsible for creating and managing test specifications
 
-## Stakeholder Map
+**Interests:**
+- Efficient test documentation workflow
+- Clear test coverage visibility
+- AI assistance for test creation
+- Integration with existing CI/CD pipelines
 
-[Optional: Include a stakeholder influence/interest matrix or list]
+**Engagement:**
+- Direct involvement in requirements gathering
+- Beta testing and feedback sessions
+- Feature prioritization input
 
-### High Influence / High Interest
+### Development Teams
 
-- [Stakeholder]: [Their interest in the project]
+**Role:** Users who create tests and integrate with codebase
 
-### High Influence / Low Interest
+**Interests:**
+- Fast AI-powered test generation
+- Code export to project structure
+- Status tracking for failing tests
+- Minimal context switching
 
-- [Stakeholder]: [Their interest in the project]
+**Engagement:**
+- Co-design of code generation features
+- Technical feedback on generated code quality
+- Integration workflow validation
 
-### Low Influence / High Interest
+### Product Managers
 
-- [Stakeholder]: [Their interest in the project]
+**Role:** Decision makers for feature prioritization
 
-### Low Influence / Low Interest
+**Interests:**
+- Test coverage metrics and reporting
+- Team productivity improvements
+- ROI demonstration
 
-- [Stakeholder]: [Their interest in the project]
+**Engagement:**
+- Regular demo sessions
+- Metrics dashboard access
+- Roadmap planning input
+
+## Secondary Stakeholders
+
+### Academic Advisors
+
+**Role:** Evaluators of the diploma project
+
+**Interests:**
+- Comprehensive documentation
+- Technical implementation quality
+- Achievement of stated goals
+
+**Engagement:**
+- Milestone presentations
+- Documentation reviews
+- Final evaluation
+
+### DevOps Engineers
+
+**Role:** Support CI/CD integration
+
+**Interests:**
+- GitHub Actions compatibility
+- Webhook reliability
+- Infrastructure requirements
+
+**Engagement:**
+- Technical consultation
+- Integration testing support

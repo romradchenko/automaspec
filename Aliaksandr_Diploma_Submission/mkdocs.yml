@@ -1,6 +1,6 @@
-site_name: '[Project Name] - Diploma Documentation'
+site_name: 'Automaspec - Diploma Documentation'
 site_description: 'Diploma project documentation'
-site_author: '[Student Name]'
+site_author: 'Aliaksandr Samatyia'
 
 theme:
     name: material
@@ -71,4 +71,4 @@ nav:
 extra:
     social:
         - icon: fontawesome/brands/github
-          link: '[GitHub Repository URL]'
+          link: 'https://github.com/qweered/automaspec'

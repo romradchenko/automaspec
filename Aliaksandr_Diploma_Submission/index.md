@@ -1,47 +1,68 @@
-# [Project Name]
+# Automaspec
 
 ## Project Information
 
 | Field | Value |
 |-------|-------|
-| **Student** | [Full Name] |
-| **Group** | [Group Number] |
-| **Supervisor** | [Supervisor Name] |
-| **Date** | [Submission Date] |
+| **Student** | Aliaksandr Samatyia |
+| **Group** | Js |
+| **Supervisor** | Volha Kuznetsova |
+| **Date** | January 7, 2026 |
 
 ## Links
 
 | Resource | URL |
 |----------|-----|
-| Production | [Deployed Application URL] |
-| Repository | [GitHub/GitLab URL] |
-| API Docs | [Swagger/OpenAPI URL] |
-| Design | [Figma/Design System URL] |
+| Production | [https://automaspec.vercel.app](https://automaspec.vercel.app) |
+| Repository | [GitHub Repository](https://github.com/qweered/automaspec) |
+| API Docs | [https://automaspec.vercel.app/rpc/docs](https://automaspec.vercel.app/rpc/docs) |
 
 ## Elevator Pitch
 
-[One paragraph (3-5 sentences) that explains: What is the product? Who is it for? What problem does it solve? What makes it unique?]
+Automaspec is an intelligent test management system that serves as the central nervous system for quality assurance. It unifies requirements, code, and test execution into a single source of truth. By syncing Playwright and Vitest results directly with business requirements and leveraging AI for test generation, Automaspec eliminates the fragmentation between what is expected (docs) and what is actually verified (code), enabling teams to ship with confidence and reduced manual overhead.
 
 ## Evaluation Criteria Checklist
 
 | # | Criterion | Status | Documentation |
 |---|-----------|--------|---------------|
-| 1 | [Criterion 1 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-1.md] |
-| 2 | [Criterion 2 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-2.md] |
-| 3 | [Criterion 3 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-3.md] |
-| 4 | [Criterion 4 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-4.md] |
-| 5 | [Criterion 5 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-5.md] |
-| 6 | [Criterion 6 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-6.md] |
-| 7 | [Criterion 7 Name] | ✅/⚠️/❌ | [Link to criteria/criterion-7.md] |
+| 1 | Front-End Configuration | ✅ | [Frontend Documentation](02-technical/frontend/frontend.md) |
+| 2 | Adaptive UI | ✅ | [Adaptive UI Documentation](02-technical/adaptive-ui/adaptive-ui.md) |
+| 3 | API Documentation | ✅ | [API Documentation](02-technical/api-documentation/api-documentation.md) |
+| 4 | CI/CD Pipeline | ✅ | [CI/CD Documentation](02-technical/ci-cd/ci-cd.md) |
+| 5 | Containerization | ✅ | [Containerization Documentation](02-technical/containerization/containerization.md) |
+| 6 | Database Design | ✅ | [Database Schema](appendices/db-schema.md) |
+| 7 | Deployment Strategy | ✅ | [Deployment Documentation](02-technical/deployment.md) |
 
 ## Documentation Navigation
 
-- [Project Overview](01-project-overview/index.md) - Business context, goals, and requirements
-- [Technical Implementation](02-technical/index.md) - Architecture, tech stack, and criteria details
-- [User Guide](03-user-guide/index.md) - How to use the application
-- [Retrospective](04-retrospective/index.md) - Lessons learned and future improvements
+- [Project Overview](01-project-overview/index.md) - Business context, goals, and stakeholders
+- [Technical Implementation](02-technical/index.md) - Architecture, tech stack, and detailed criteria ADRs
+- [User Guide](03-user-guide/index.md) - Manuals and workflows
+- [Retrospective](04-retrospective/index.md) - Challenges and outcomes
+
+## Quick Reference
+
+### Tech Stack
+
+- **Framework**: Next.js 16 (App Router), React 19
+- **Language**: TypeScript
+- **Database**: Turso (Distributed SQLite), Drizzle ORM
+- **API**: oRPC (Type-safe contracts)
+- **AI**: Vercel AI SDK (Google/OpenAI)
+- **Testing**: Playwright (E2E) + Vitest (Unit)
+- **Styling**: Tailwind CSS v4, Framer Motion
+- **Hosting**: Vercel (Production), Docker (Local/Dev)
+- **CI/CD**: GitHub Actions
+
+### Key Features
+
+1.  **Unified Test Lifecycle**: Syncs code, tests, and requirements automatically.
+2.  **Live Traceability**: Links business goals directly to passing/failing tests.
+3.  **AI Assistant**: Context-aware chatbot for test generation and debugging.
+4.  **Adaptive Interface**: Fully responsive design for Desktop, Tablet, and Mobile.
+5.  **Secure Multi-Tenancy**: Organization-based access control.
 
 ---
 
-*Document created: [Date]*
-*Last updated: [Date]*
+*Document created: January 7, 2026*
+*Last updated: January 7, 2026*
