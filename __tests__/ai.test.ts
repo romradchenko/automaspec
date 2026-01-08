@@ -312,6 +312,7 @@ describe('ai.chat', () => {
 
     it('rejects when google key is missing', async () => {
         vi.stubEnv('NODE_ENV', NODE_ENVS.test)
+        vi.stubEnv(AI_ENV_KEYS.google, '')
         await expect(
             client.ai.chat({ provider: AI_PROVIDERS.google, messages: [{ role: 'user', content: 'Hi' }] })
         ).rejects.toThrow(`Missing ${AI_ENV_KEYS.google}`)
