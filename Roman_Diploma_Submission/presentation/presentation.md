@@ -7,7 +7,7 @@ backgroundColor: #fff
 backgroundImage: url('https://marp.app/assets/hero-background.jpg')
 style: |
   section {
-    font-size: 24px;
+    font-size: 22px;
   }
   h2 {
     font-size: 1.4em;
@@ -106,9 +106,9 @@ style: |
 - **Auth Flow**: Secure login via Better Auth.
 - **Organization**: Seamlessly switch between workspaces.
 
-<div style="text-align: center;">
+<div style="text-align: center; margin-top: 20px;">
 
-![width:550px Home Page](../assets/screenshots/prod-home-desktop.png)
+![width:700px Home Page](../assets/screenshots/prod-home-desktop.png)
 
 </div>
 
@@ -120,32 +120,15 @@ style: |
 - **AI Side Panel**: Generate test code from requirements.
 - **Live Status**: Real-time results from GitHub Actions.
 
-<div style="text-align: center;">
+<div style="text-align: center; margin-top: 20px;">
 
-![width:500px Dashboard](../assets/screenshots/prod-dashboard-desktop.png)
-
-</div>
-
----
-
-## **7. Demo: Responsive Design**
-
-- **Full Mobile Support**: Check status on the go.
-- **Optimized for Tablets**: Full dashboard power.
-- **Unified UX**: Consistent across all screen sizes.
-
-<div style="text-align: center;">
-
-![width:200px Mobile Analytics](../assets/screenshots/prod-analytics-mobile.png)
+![width:700px Dashboard](../assets/screenshots/prod-dashboard-desktop.png)
 
 </div>
 
 ---
 
-## **8. Business Analysis**
-
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.8em;">
-<div>
+## **7. Business Analysis: Problem**
 
 ### **Problem Identified**
 - Docs spread across Jira, Confluence, Slack
@@ -156,8 +139,9 @@ style: |
 - QA Engineers (Primary Users)
 - Dev Teams, Product & Project Managers
 
-</div>
-<div>
+---
+
+## **7. Business Analysis: Strategy**
 
 ### **Success KPIs**
 - ↓ 20-30% test creation time
@@ -169,12 +153,9 @@ style: |
 - MoSCoW prioritization
 - Requirements traceability matrix
 
-</div>
-</div>
-
 ---
 
-## **9. Backend & oRPC**
+## **8. Backend & oRPC**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
 <div>
@@ -209,7 +190,7 @@ export const router = orpc.router({
 
 ---
 
-## **10. Database Engineering**
+## **9. Database Engineering**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
 <div>
@@ -248,7 +229,7 @@ export const specs = table('spec', {
 
 ---
 
-## **11. Testing Strategy**
+## **10. Testing Strategy**
 
 - **Quality Gates**: ≥70% coverage enforced in CI.
 - **Playwright E2E**: Critical flow (Auth, Tree Ops) validation.
@@ -258,27 +239,27 @@ export const specs = table('spec', {
 
 ---
 
-## **12. AI Orchestration**
+## **11. AI Assistant**
 
 <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items: center;">
 <div>
 
-### **Spec-Driven Gen**
-- **Mapping**: Specs to Vitest.
-- **Streaming**: Real-time feedback.
-- **Expert Prompts**: Best practices.
+### **How it works**
+- AI helps write specs & requirements
+- Streaming: see results in real-time
+- Context-aware suggestions
 
 </div>
 <div style="text-align: center;">
 
-![width:450px AI Panel](../assets/screenshots/prod-dashboard-desktop.png)
+![width:550px AI Panel](../assets/screenshots/prod-dashboard-desktop.png)
 
 </div>
 </div>
 
 ---
 
-## **13. Auth & Security**
+## **12. Auth & Security**
 
 - **Better Auth**: Enterprise-grade session management.
 - **Isolation**: Strict data separation at DB level.
@@ -286,15 +267,7 @@ export const specs = table('spec', {
 
 ---
 
-## **14. DevOps & Scaling**
-
-- **Docker**: Optimized multi-stage production builds.
-- **CI/CD**: Automated GitHub Actions (Lint/Test/Build).
-- **Edge Data**: Low latency via Turso Distributed SQLite.
-
----
-
-## **15. Technical Challenges**
+## **13. Technical Challenges**
 
 | Challenge | Solution | Impact |
 |-----------|----------|--------|
@@ -304,7 +277,7 @@ export const specs = table('spec', {
 
 ---
 
-## **16. Results & Future Work**
+## **14. Results & Future Work**
 
 - ✅ **90%** faster test creation via AI.
 - ✅ **100%** traceability to Requirements.
@@ -313,7 +286,7 @@ export const specs = table('spec', {
 
 ---
 
-## **17. Q&A**
+## **15. Q&A**
 
 **Roman Radchenko** (JS-22)
 
