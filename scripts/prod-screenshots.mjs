@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const BASE_URL = 'https://automaspec.vercel.app'
-const OUTPUT_DIR = path.join(process.cwd(), 'docs_requirments', 'screenshots-prod')
+const OUTPUT_DIR = path.join(process.cwd(), 'Aliaksandr_Diploma_Submission', 'assets', 'screenshots')
 const DEMO_EMAIL = 'demo@automaspec.com'
 const DEMO_PASSWORD = 'demo1234'
 
@@ -18,11 +18,8 @@ const PAGES = [
     { name: 'login', path: '/login' },
     { name: 'choose-organization', path: '/choose-organization' },
     { name: 'dashboard', path: '/dashboard' },
-    { name: 'folder-view', path: '/dashboard' },
     { name: 'analytics', path: '/analytics' },
-    { name: 'rpc-docs', path: '/rpc/docs' },
-    { name: 'rpc-spec', path: '/rpc/spec' },
-    { name: 'health', path: '/api/health' }
+    { name: 'rpc-docs', path: '/rpc/docs' }
 ]
 
 async function ensureDir() {
@@ -55,16 +52,66 @@ async function chooseOrganization(page) {
     }
 }
 
-async function navigateToFolderView(page) {
+async function findFolders(page) {
     await page.goto(`${BASE_URL}/dashboard`, { waitUntil: 'networkidle', timeout: 60000 })
-    await page.waitForTimeout(1000)
+    await page.waitForTimeout(2000)
 
-    const test8Folder = page.getByRole('treeitem', { name: 'test8' })
-    if (await test8Folder.isVisible()) {
-        await test8Folder.click()
-        await page.keyboard.press('ArrowRight')
-        await page.waitForTimeout(1500)
+    const allButtons = page.locator('button[type="button"]')
+    const buttonCount = await allButtons.count()
+    const folders = []
+    const seenNames = new Set()
+
+    for (let i = 0; i < buttonCount; i++) {
+        const button = allButtons.nth(i)
+        const isVisible = await button.isVisible().catch(() => false)
+        if (!isVisible) continue
+
+        const svgCount = await button.locator('svg').count()
+        if (svgCount < 2) continue
+
+        const text = await button.textContent()
+        if (!text || text.trim() === '' || text.includes('Loading...')) continue
+
+        const lines = text
+            .trim()
+            .split('\n')
+            .filter((line) => line.trim().length > 0)
+        if (lines.length === 0) continue
+
+        const folderName = lines[lines.length - 1].trim()
+        if (folderName && folderName.length > 0 && !seenNames.has(folderName)) {
+            seenNames.add(folderName)
+            folders.push({ name: folderName })
+        }
     }
+
+    return folders
+}
+
+async function openFolderAndScreenshot(page, folderName) {
+    await page.goto(`${BASE_URL}/dashboard`, { waitUntil: 'networkidle', timeout: 60000 })
+    await page.waitForTimeout(2000)
+
+    const allButtons = page.locator('button[type="button"]')
+    const buttonCount = await allButtons.count()
+
+    for (let i = 0; i < buttonCount; i++) {
+        const button = allButtons.nth(i)
+        const isVisible = await button.isVisible().catch(() => false)
+        if (!isVisible) continue
+
+        const text = await button.textContent()
+        if (text && text.includes(folderName)) {
+            const svgCount = await button.locator('svg').count()
+            if (svgCount >= 2) {
+                await button.click()
+                await page.waitForTimeout(1500)
+                return true
+            }
+        }
+    }
+
+    return false
 }
 
 async function captureScreenshots() {
@@ -87,17 +134,34 @@ async function captureScreenshots() {
                 const outputPath = path.join(OUTPUT_DIR, fileName)
 
                 try {
-                    if (target.name === 'folder-view') {
-                        await navigateToFolderView(page)
-                    } else {
-                        await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 })
-                    }
+                    await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 })
                     await page.waitForTimeout(1500)
                     await page.screenshot({ path: outputPath, fullPage: false })
                     indexLines.push(`- ${fileName} -> ${url}`)
                 } catch (error) {
                     const errorMessage = error instanceof Error ? error.message : String(error)
                     indexLines.push(`- FAILED ${fileName} -> ${url} (${errorMessage})`)
+                }
+            }
+
+            const folders = await findFolders(page)
+            indexLines.push('', '## Folder Views', '')
+
+            for (const folder of folders) {
+                const fileName = `prod-folder-${folder.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${viewport.name}.png`
+                const outputPath = path.join(OUTPUT_DIR, fileName)
+
+                try {
+                    const opened = await openFolderAndScreenshot(page, folder.name)
+                    if (opened) {
+                        await page.screenshot({ path: outputPath, fullPage: false })
+                        indexLines.push(`- ${fileName} -> Folder: ${folder.name}`)
+                    } else {
+                        indexLines.push(`- FAILED ${fileName} -> Folder: ${folder.name} (not found)`)
+                    }
+                } catch (error) {
+                    const errorMessage = error instanceof Error ? error.message : String(error)
+                    indexLines.push(`- FAILED ${fileName} -> Folder: ${folder.name} (${errorMessage})`)
                 }
             }
 

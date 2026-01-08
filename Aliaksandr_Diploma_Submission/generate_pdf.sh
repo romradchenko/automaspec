@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Script to generate a unified PDF for Aliaksandr Samatyia's Diploma Submission
 
 ROOT_DIR="/home/qweered/Projects/automaspec/Aliaksandr_Diploma_Submission"
