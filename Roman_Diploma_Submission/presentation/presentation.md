@@ -30,11 +30,15 @@ style: |
 
 ---
 
-## **1. The Problem: The "Silo" Effect**
+## **1. The Problem**
 
-- **Documentation Drift**: Requirements in Notion/Jira diverge from the code.
-- **Manual Traceability**: Hard to map which business specs are covered by which tests.
-- **Execution Silos**: Results are hidden in CI/CD logs (especially critical for E2E visibility).
+<div style="display: flex; flex-direction: column; justify-content: center; height: 60%; margin-top: 40px;">
+
+- Docs and code get out of sync over time.
+- Too many sources of truth: Jira, Confluence, Slack.
+- Test results hidden in CI/CD logs.
+
+</div>
 
 ---
 
