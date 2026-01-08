@@ -1,5 +1,5 @@
 pre-commit:
-    parallel: true
+    parallel: false
     jobs:
         - name: check database schema
           glob: 'db/schema/*.ts'
@@ -20,7 +20,7 @@ pre-commit:
 
 # json included for package.json
 pre-push:
-    parallel: true
+    parallel: false
     jobs:
         - name: typecheck
           glob: '**/*'

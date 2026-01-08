@@ -712,7 +712,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
         await Promise.all(specUpdateTasks)
     }
 
-    return { updated: updatedCount, missing: missingIds.length }
+    return { created: 0, updated: updatedCount, missing: missingIds.length }
 })
 
 export const testsRouter = {

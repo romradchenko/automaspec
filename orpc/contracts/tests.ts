@@ -347,7 +347,7 @@ const syncReportContract = oc
         description: 'Sync the latest Vitest report and update test statuses'
     })
     .input(vitestReportSchema.optional())
-    .output(z.object({ updated: z.number(), missing: z.number() }))
+    .output(z.object({ created: z.number(), updated: z.number(), missing: z.number() }))
 
 const getReportContract = oc
     .route({
