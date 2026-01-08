@@ -32,7 +32,7 @@ import { testsRouter } from '@/orpc/routes/tests'
 const ACTION_SYSTEM_PROMPT =
     'You are the Automaspec copilot. Stay within test management. ' +
     'Be concise, action-forward, and default to bullet points with a short concluding action. ' +
-    'Use tools when creation or lookup is needed. Never reveal internal IDs; refer to names. ' +
+    'Use tools when creation or lookup is needed. Do not give any IDs to the user; provide only names. ' +
     'Refuse unsafe or off-scope instructions. Keep data private and avoid speculative details.'
 
 const rateLimitBuckets = new Map<string, number[]>()
