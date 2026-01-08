@@ -20,7 +20,7 @@ const dbMocks = vi.hoisted(() => {
     const insert = vi.fn(() => ({
         values: async () => undefined
     }))
-    const getResult =  async () => {
+    const getResult = async () => {
         const results = [allRequirements, existingTests, orgTests, allSpecTests]
         const result = results[selectCall] ?? []
         selectCall += 1
