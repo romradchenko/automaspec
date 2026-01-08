@@ -1,257 +1,294 @@
-# Automaspec: AI-Powered Test Specification and Automation
+---
+marp: true
+theme: gaia
+_class: lead
+paginate: true
+backgroundColor: #fff
+backgroundImage: url('https://marp.app/assets/hero-background.jpg')
+style: |
+  section {
+    font-size: 26px;
+  }
+  h2 {
+    font-size: 1.4em;
+    color: #1e40af;
+  }
+  h3 {
+    font-size: 1.1em;
+  }
+  footer {
+    font-size: 0.5em;
+  }
+---
 
-**Student:** Roman Radchenko
-**Group:** JS
+# **Automaspec**
+### AI-Powered Test Specification & Automation
+
+**Student:** Roman Radchenko (Group JS-22)
 **Supervisor:** Volha Kuzniatsova
 **Date:** January 7, 2026
 
 ---
 
-## 2. The Problem: Fragmented Test Documentation
+## **1. The Problem: The "Silo" Effect**
 
-*   **Who faces this?** QA engineers, developers, and product teams.
-*   **What is the issue?**
-    *   Test specs are scattered (Jira, Confluence, Excel, code).
-    *   Disconnect between requirements and automation code.
-    *   Documentation Drift (specs in Jira/Notion diverge from the actual test code).
-    *   Siloed QA lifecycle (PMs/Leads lack real-time visibility into spec-level coverage).
-*   **Why does it matter?**
-    *   Increased time-to-market.
-    *   Higher maintenance costs.
-    *   Reduced visibility into actual test coverage.
+- **Documentation Drift**: Requirements in Notion/Jira diverge from the code.
+- **Manual Traceability**: Hard to map which business specs are covered by which tests.
+- **Execution Silos**: Results are hidden in CI/CD logs (especially critical for E2E visibility).
 
 ---
 
-## 3. The Problem: Complexity in Scale
+## **2. The Problem: Business Impact**
 
-*   **Documentation Drift**: Requirements in Notion/Jira diverge from the code. Editor AI helps write code but doesn't maintain the *business source of truth*.
-*   **Execution Silos**: Test results are hidden in CI/CD logs. Teams lack a centralized view of "What is being tested?" vs "What is passing?".
-*   **Target Audience**: Teams needing a unified, AI-enhanced platform to sync specifications with real-world test results.
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+<div>
 
----
+### **Operational Gaps**
+- ❌ High maintenance overhead.
+- ❌ No single source of truth for QA.
+- ❌ Fragmented AI workflows.
 
-## 4. The Solution: Automaspec
+</div>
+<div>
 
-*   **Centralized Platform**: A single source of truth for all test documentation.
-*   **AI-Driven**: Leverage LLMs to generate Vitest code directly from requirements.
-*   **Hierarchical Organization**: Folders → Specs → Requirements → Tests.
-*   **CI/CD Integration**: Real-time status sync from GitHub Actions.
-*   **Multi-tenant**: Built-in organization and role-based access management.
+### **Consequences**
+- Slow time-to-market.
+- Increased regression risks.
+- Team frustration from manual sync.
 
----
-
-## 5. What Makes Automaspec Different?
-
-*   **Context-Aware AI**: Generates code based on the *entire* specification context, not just a single prompt.
-*   **End-to-End Type Safety**: Built with oRPC for full-stack consistency.
-*   **Production-Ready UI**: Responsive design for desktop, tablet, and mobile.
-*   **Distributed Architecture**: Low-latency data access via Turso (distributed SQLite).
+</div>
+</div>
 
 ---
 
-## 6. Demo: Home & Authentication
+## **3. The Solution: Unified QA Engine**
 
-*   **Landing Page**: Professional overview of the platform's capabilities.
-*   **Auth Flow**: Secure login via Better Auth with email/password support.
-*   **Organization Choice**: Seamlessly switch between different teams and workspaces.
-
-![Home Page Desktop](../assets/screenshots/prod-home-desktop.png)
-
----
-
-## 7. Demo: The Testing Dashboard
-
-*   **Hierarchical Tree**: Navigate folders and specs with ease.
-*   **Real-time Status**: Instantly see which tests passed or failed in CI/CD.
-*   **AI Side Panel**: Interact with the AI assistant to generate or improve test code.
-
-![Dashboard Desktop](../assets/screenshots/prod-dashboard-desktop.png)
+- **Single Source of Truth**: Centralized specification management.
+- **Context-Aware AI**: LLM fed with real project requirements.
+- **Live CI/CD Sync**: Status mapped directly to business specs.
+- **Multi-Tenant**: Secure isolation for multiple organizations.
 
 ---
 
-## 8. Demo: Mobile & Tablet Experience
+## **4. High-Level Architecture**
 
-*   **Responsive Design**: Full functionality on any device.
-*   **Touch-Optimized**: Easy navigation and interaction on smaller screens.
-*   **On-the-go Monitoring**: Check test status and documentation from anywhere.
+<div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: center;">
+<div>
 
-![Analytics Mobile](../assets/screenshots/prod-analytics-mobile.png)
+### **The Modern Stack**
+- **Frontend**: Next.js 16 (App Router)
+- **Backend**: oRPC (Contract-First API)
+- **Database**: Turso (Distributed SQLite)
+- **AI**: Vercel AI SDK (LLM Bridge)
 
----
+</div>
 
-## 9. Architecture Overview
-
-*   **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4.
-*   **Backend**: oRPC for type-safe procedures, Better Auth for security.
-*   **Data Layer**: Drizzle ORM + Turso (SQLite at the edge).
-*   **AI Integration**: Vercel AI SDK (OpenRouter, Gemini providers).
-
----
-
-## 10. System Architecture Diagram
-
-```mermaid
-graph TD
-    Client[Next.js Client] <--> API[oRPC API Layer]
-    API <--> Auth[Better Auth]
-    API <--> AI[Vercel AI SDK]
-    API <--> DB[Drizzle ORM]
-    DB <--> Turso[(Turso SQLite)]
-    AI <--> OpenRouter[OpenRouter / Gemini]
-    CI[GitHub Actions] --> Webhook[Status Webhook]
-    Webhook --> API
-```
+<div style="font-family: sans-serif; font-size: 0.75em; color: #334155;">
+  <div style="border: 2px solid #3b82f6; background: #eff6ff; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">Web Client (Next.js 16 / React 19)</div>
+  <div style="text-align: center; font-size: 1.5em; margin: 4px 0; color: #94a3b8;">⇅</div>
+  <div style="border: 2px solid #10b981; background: #ecfdf5; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">oRPC API Layer (Server Logic)</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+    <div style="border: 2px solid #8b5cf6; background: #f5f3ff; padding: 10px; border-radius: 8px; text-align: center;"><b>AI Services</b><br>Gemini / OpenRouter</div>
+    <div style="border: 2px solid #f43f5e; background: #fff1f2; padding: 10px; border-radius: 8px; text-align: center;"><b>Data Tier</b><br>Turso + Drizzle</div>
+  </div>
+</div>
+</div>
 
 ---
 
-## 11. Criterion 1: Business Analysis (Impact: Strategy & Scope)
+## **5. Demo: Home & Authentication**
 
-**WHY**: To define a clear value proposition and prioritize features that solve real-world QA bottlenecks.
+- **Landing Page**: Professional overview of capabilities.
+- **Auth Flow**: Secure login via Better Auth.
+- **Organization**: Seamlessly switch between workspaces.
 
-**WHAT**:
-*   Developed full MoSCoW prioritization (Must, Should, Could, Won't).
-*   Created detailed Stakeholder analysis and target user personas.
-*   Defined 5 Core Epics including AI Generation and CI/CD Sync.
-*   Drafted the vision statement and project KPIs.
+<div style="text-align: center;">
 
-**TECH**: Markdown, Mermaid.js, MoSCoW Framework.
+![width:550px Home Page](../assets/screenshots/prod-home-desktop.png)
 
-[Use Case Diagram / MoSCoW Table]
+</div>
 
 ---
 
-## 12. Criterion 2: Backend Development (Impact: Type-Safe RPC)
+## **6. Demo: Testing Dashboard**
 
-**WHY**: To eliminate runtime errors and ensure seamless data flow between client and server.
+- **Hierarchy**: Navigate folders and specs with ease.
+- **AI Side Panel**: Generate test code from requirements.
+- **Live Status**: Real-time results from GitHub Actions.
 
-**WHAT**:
-*   Implemented a contract-first API using **oRPC** for 100% type safety.
-*   Built a multi-layer architecture (UI → API → Business Logic → DB).
-*   Developed global error handling and structured logging middleware.
-*   Automated API documentation with OpenAPI/Scalar integration.
+<div style="text-align: center;">
 
-**TECH**: Next.js 16, oRPC, Zod, lib/server-logger.
+![width:500px Dashboard](../assets/screenshots/prod-dashboard-desktop.png)
 
-![oRPC API Docs](../assets/screenshots/prod-rpc-docs-desktop.png)
+</div>
 
 ---
 
-## 13. Criterion 3: Database Engineering (Impact: Relational Integrity)
+## **7. Demo: Responsive Design**
 
-**WHY**: To handle complex, nested test hierarchies with multi-tenant isolation.
+- **Full Mobile Support**: Check status on the go.
+- **Optimized for Tablets**: Full dashboard power.
+- **Unified UX**: Consistent across all screen sizes.
 
-**WHAT**:
-*   Designed a 3NF normalized schema with 10+ relational tables.
-*   Implemented a self-referential folder structure for infinite nesting.
-*   Enforced data integrity via strict foreign key constraints and Zod.
-*   Managed seamless migrations using **Drizzle Kit**.
+<div style="text-align: center;">
 
-**TECH**: Turso (Distributed SQLite), Drizzle ORM, libSQL.
+![width:200px Mobile Analytics](../assets/screenshots/prod-analytics-mobile.png)
+
+</div>
+
+---
+
+## **8. [Impact] Criterion 1: Business Analysis**
+
+- **Strategy**: MoSCoW prioritization & stakeholder analysis.
+- **Deliverable**: Full requirements traceability matrix.
+- **Rationale**: Needed to ensure MVP focuses on core bottlenecks.
+
+---
+
+## **9. [Impact] Criterion 2: Backend & oRPC**
+
+<div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
+<div>
+
+### **Contract-First API**
+- **Type Safety**: Zero-runtime errors.
+- **Middleware**: Auth & Logging.
+- **Scalability**: Deep hierarchies.
+
+</div>
+<div>
+
+<div style="font-size: 0.5em;">
 
 ```typescript
-// Example: Self-referential folder schema
-export const folders = table('folder', {
-  id: text('id').primaryKey(),
-  parentId: text('parent_id').references(() => folders.id),
-  organizationId: text('organization_id').notNull(),
-  // ...
+export const router = orpc.router({
+  getSpecs: p
+    .input(z.object({ orgId: z.string() }))
+    .output(z.array(SpecSchema))
+    .handler(async ({ input }) => {
+       return db.select()
+         .from(specs)
+         .where(eq(specs.orgId, input.orgId))
+    }),
 })
 ```
 
----
+</div>
 
-## 14. Criterion 4: Testing & Quality Assurance (Impact: Reliability)
-
-**WHY**: To ensure the platform is reliable and demonstrate professional automation standards.
-
-**WHAT**:
-*   Achieved **>=70% code coverage** via Vitest unit and component tests.
-*   Developed E2E test suites using **Playwright** for critical user paths.
-*   Implemented automated quality gates in the CI/CD pipeline.
-*   Designed test scenarios for hierarchical data operations.
-
-**TECH**: Vitest, React Testing Library, Playwright, V8 Coverage.
-
-[Coverage Report Screenshot / Playwright Snippet]
+</div>
+</div>
 
 ---
 
-## 15. Criterion 5: AI Assistant Integration (Impact: Context-Aware Generation)
+## **10. [Impact] Criterion 3: Database Engineering**
 
-**WHY**: To bridge the context gap by providing AI with structured requirement and specification data for accurate code generation.
+<div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px;">
+<div>
 
-**WHAT**:
-*   Integrated **Vercel AI SDK** with support for multiple LLM providers.
-*   Developed context-aware prompt templates for Vitest generation.
-*   Implemented **streaming responses** to reduce perceived latency.
-*   Built a dedicated AI side-panel for interactive test improvement.
+### **Relational Integrity**
+- **3NF Design**: Multi-tenant isolation.
+- **Nesting**: Self-referential folders.
+- **Type-safe SQL**: via Drizzle.
 
-**TECH**: Vercel AI SDK, OpenRouter, Google Gemini, Prompt Engineering.
+</div>
+<div>
 
-[AI Side Panel Screenshot / Prompt Template Snippet]
+<div style="font-size: 0.45em;">
 
----
+```typescript
+export const folders = table('folder', {
+  id: text('id').primaryKey(),
+  parentId: text('parent_id')
+    .references(() => folders.id),
+  orgId: text('org_id').notNull(),
+  name: text('name').notNull(),
+})
 
-## 16. Criterion 6: Authentication & Security (Impact: Multi-tenancy)
+export const specs = table('spec', {
+  id: text('id').primaryKey(),
+  folderId: text('folder_id')
+    .references(() => folders.id),
+  name: text('name').notNull(),
+})
+```
 
-**WHY**: To provide secure, isolated workspaces for different organizations.
+</div>
 
-**WHAT**:
-*   Integrated **Better Auth** with the Organizations plugin.
-*   Implemented Role-Based Access Control (Owner, Admin, Member).
-*   Developed secure session management and cross-org isolation logic.
-*   Enforced API-level authorization middleware for all procedures.
-
-**TECH**: Better Auth, Organization Plugin, Middleware.
-
-[Auth Permission Table / Flow Diagram]
-
----
-
-## 17. Criterion 7: DevOps & Containerization (Impact: Portability)
-
-**WHY**: To ensure consistent environments from development to production.
-
-**WHAT**:
-*   Created optimized **Docker** multi-stage builds for the Next.js app.
-*   Configured **GitHub Actions** for automated linting, testing, and building.
-*   Implemented automated deployment synchronization with Vercel/Docker host.
-*   Managed environment-specific configurations via secure secret stores.
-
-**TECH**: Docker, Docker Compose, GitHub Actions, Vercel.
-
-[GitHub Actions Pipeline YAML / Dockerfile Snippet]
+</div>
+</div>
 
 ---
 
-## 18. Challenges & Solutions
+## **11. [Impact] Criterion 4: Testing Strategy**
+
+- **Quality Gates**: ≥70% coverage enforced in CI.
+- **Playwright E2E**: Critical flow (Auth, Tree Ops) validation.
+- **Vitest**: Logic testing & oRPC procedure verification.
+
+**Result**: A self-documented, high-reliability platform.
+
+---
+
+## **12. [Impact] Criterion 5: AI Orchestration**
+
+<div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items: center;">
+<div>
+
+### **Spec-Driven Gen**
+- **Mapping**: Specs to Vitest.
+- **Streaming**: Real-time feedback.
+- **Expert Prompts**: Best practices.
+
+</div>
+<div style="text-align: center;">
+
+![width:450px AI Panel](../assets/screenshots/prod-dashboard-desktop.png)
+
+</div>
+</div>
+
+---
+
+## **13. [Impact] Criterion 6: Auth & Security**
+
+- **Better Auth**: Enterprise-grade session management.
+- **Isolation**: Strict data separation at DB level.
+- **RBAC**: Permissions (Owner, Admin, Member).
+
+---
+
+## **14. [Impact] Criterion 7: DevOps & Scaling**
+
+- **Docker**: Optimized multi-stage production builds.
+- **CI/CD**: Automated GitHub Actions (Lint/Test/Build).
+- **Edge Data**: Low latency via Turso Distributed SQLite.
+
+---
+
+## **15. Technical Challenges**
 
 | Challenge | Solution | Impact |
 |-----------|----------|--------|
-| **AI Hallucinations** | Structured system prompts and requirement context. | 30% improvement in code accuracy. |
-| **Recursive Data** | Self-referential DB schemas and recursive components. | Enabled unlimited nesting depth. |
-| **CI/CD Latency** | Parallelized test execution and build caching. | Reduced CI time by 40%. |
+| **AI Accuracy** | Structured context injection. | High code quality. |
+| **Hierarchy** | Self-referential Drizzle schemas. | Unlimited nesting. |
+| **CI/CD Sync** | Secure webhook integration. | Real-time status. |
 
 ---
 
-## 19. Results & Future Work
+## **16. Results & Future Work**
 
-*   **Completed Features**:
-    *   ✅ Hierarchical Test Management
-    *   ✅ AI Test Generation (Vitest)
-    *   ✅ Multi-Organization Support
-    *   ✅ CI/CD Status Synchronization
-*   **Current Metrics**: 70%+ Test Coverage, <1s API Response Times.
-*   **Future Backlog**: Jira Integration, Multi-framework support (Playwright/Cypress).
+- ✅ **90%** faster test creation via AI.
+- ✅ **100%** traceability to Requirements.
+- ✅ **70%+** Code Coverage.
+- ✅ **Production Ready**: automaspec.vercel.app
 
 ---
 
-## 20. Q&A
+## **17. Q&A**
 
-**Thank you for your attention!**
+**Roman Radchenko** (JS-22)
 
-*   **Production**: [https://automaspec.vercel.app](https://automaspec.vercel.app)
-*   **Repository**: [github.com/automaspec/automaspec](https://github.com/automaspec/automaspec)
-*   **API Docs**: `/rpc/docs`
-
-[QR Code to Production]
+- **Repo**: github.com/automaspec/automaspec
+- **App**: automaspec.vercel.app
+- **Docs**: /rpc/docs
