@@ -44,7 +44,7 @@ style: |
 <div>
 
 ### **Operational Gaps**
-- ❌ High maintenance overhead.
+- ❌ Hard to keep docs up to date.
 - ❌ Too many sources of truth: Jira, Confluence, Slack.
 - ❌ Poor visibility into test coverage.
 
