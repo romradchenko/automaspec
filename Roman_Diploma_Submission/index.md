@@ -30,6 +30,7 @@ Automaspec is an AI-powered test specification and automation platform that revo
 | 3 | Database Design | ✅ | [Database Documentation](02-technical/databases/databases.md) |
 | 4 | Qualitative/Quantitative Testing | ✅ | [Testing Documentation](02-technical/qualiative-quantitive-testing/testing.md) |
 | 5 | AI Assistant / Chatbot | ✅ | [AI Documentation](02-technical/ai-assistant/ai-assistant.md) |
+| 6 | Analytics & Reporting | ✅ | [Analytics Documentation](02-technical/analytics/analytics.md) |
 
 ## Documentation Navigation
 
