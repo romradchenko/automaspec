@@ -46,7 +46,8 @@ export default defineConfig({
         video: 'retain-on-failure',
         screenshot: 'only-on-failure'
     },
-    outputDir: path.join(os.tmpdir(), 'automaspec-playwright'),
+    reporter: [['html', { open: 'never' }], ['json', { outputFile: 'test-results.json' }], ['list']],
+    outputDir: path.join(__dirname, 'test-results'),
     webServer: {
         command: `pnpm dev --hostname ${hostname} --port ${port}`,
         url: baseURL,
