@@ -25,7 +25,7 @@ This section provides the business context, goals, and requirements for Automasp
 | User Type | Primary Use Cases |
 |-----------|-------------------|
 | QA Engineers | Create specs, define requirements, review tests |
-| Developers | Generate tests, export code, track status |
+| Developers | Create specifications with AI, organize structure, track status |
 | Team Leads | Manage organizations, view reports, oversee coverage |
 
 ### Technology Foundation

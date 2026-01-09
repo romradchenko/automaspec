@@ -46,7 +46,7 @@ Modern software development teams rely heavily on test automation to ensure qual
 ### Must Have
 
 - [x] Hierarchical test organization (Folders → Specs → Requirements → Tests)
-- [x] AI-powered test code generation for Vitest
+- [x] AI assistant for creating specifications, organizing test structure, and managing requirements
 - [x] Multi-organization support with role-based access
 - [x] CI/CD integration with GitHub Actions
 - [x] Responsive UI for desktop, tablet, mobile

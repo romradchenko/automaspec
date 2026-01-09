@@ -19,7 +19,7 @@
 
 ## Elevator Pitch
 
-Automaspec is an AI-powered test specification and automation platform that revolutionizes how development teams manage, document, and generate test cases. It targets QA engineers and developers who struggle with scattered test documentation across multiple tools, manual and time-consuming test creation, and lack of visibility into test coverage. By combining intelligent AI-driven Vitest code generation with a hierarchical specification management system and real-time CI/CD synchronization via GitHub Actions, Automaspec enables teams to create comprehensive test coverage 20-30% faster while maintaining a centralized, organized documentation hub.
+Automaspec is an AI-powered test specification and automation platform that revolutionizes how development teams manage, document, and organize test cases. It targets QA engineers and developers who struggle with scattered test documentation across multiple tools, manual and time-consuming specification creation, and lack of visibility into test coverage. By combining an intelligent AI assistant for creating specifications and organizing test structure with a hierarchical specification management system and real-time CI/CD synchronization via GitHub Actions, Automaspec enables teams to create comprehensive test documentation 20-30% faster while maintaining a centralized, organized documentation hub.
 
 ## Evaluation Criteria Checklist
 

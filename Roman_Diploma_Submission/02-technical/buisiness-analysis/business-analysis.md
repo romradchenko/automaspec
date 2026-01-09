@@ -16,7 +16,7 @@ Modern software development teams face significant challenges in test management
 
 Automaspec addresses these challenges through:
 - Centralized test documentation with hierarchical organization
-- AI-powered test code generation using Vercel AI SDK
+- AI assistant for creating test specifications, organizing structure, and managing requirements using Vercel AI SDK
 - Real-time CI/CD synchronization via GitHub Actions integration
 - Multi-organization support with role-based access control
 

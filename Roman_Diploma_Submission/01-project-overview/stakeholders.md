@@ -59,14 +59,14 @@
 **Role:** Users who create tests and integrate with codebase
 
 **Interests:**
-- Fast AI-powered test generation
-- Code export to project structure
+- Fast AI-powered specification creation
+- Organized test structure
 - Status tracking for failing tests
 - Minimal context switching
 
 **Engagement:**
-- Co-design of code generation features
-- Technical feedback on generated code quality
+- Co-design of AI assistant features
+- Technical feedback on specification quality
 - Integration workflow validation
 
 ### Product Managers
