@@ -21,6 +21,7 @@ FILES=(
     "02-technical/databases/databases.md"
     "02-technical/qualiative-quantitive-testing/testing.md"
     "02-technical/ai-assistant/ai-assistant.md"
+    "02-technical/analytics/analytics.md"
     "02-technical/deployment.md"
     "03-user-guide/index.md"
     "03-user-guide/features.md"

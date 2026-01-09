@@ -61,6 +61,7 @@ nav:
                 - Database: 02-technical/databases/databases.md
                 - Testing: 02-technical/qualiative-quantitive-testing/testing.md
                 - AI Assistant: 02-technical/ai-assistant/ai-assistant.md
+                - Analytics: 02-technical/analytics/analytics.md
     - User Guide:
           - Getting Started: 03-user-guide/index.md
           - Features: 03-user-guide/features.md
