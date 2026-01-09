@@ -66,8 +66,7 @@ style: |
 <!-- _class: lead -->
 
 # **AutomaSpec**
-## Intelligent Test Management System
-
+## AI-Powered Test Specification Management System
 <br>
 
 **Student:** Aliaksandr Samatyia
@@ -256,6 +255,12 @@ To automate quality control and ensure safe, frequent deployments to production.
 4.  **Delivery:** Auto-deploy to Vercel (Preview/Prod).
 
 **TECH:** GitHub Actions, Vercel CLI, Docker, Lefthook
+
+---
+
+<!-- _header: Criterion 4: CI/CD Pipeline -->
+
+# CI/CD Pipeline: Diagram
 
 ![w:100%](../assets/diagrams/ci-cd.png)
 
