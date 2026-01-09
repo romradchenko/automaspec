@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script to generate a unified PDF for Aliaksandr Samatyia's Diploma Submission
 
-ROOT_DIR="/home/qweered/Projects/automaspec/Aliaksandr_Diploma_Submission"
+ROOT_DIR="/home/qweered/Projects/automaspec/Aliaksandr_Diploma_Submission/docs"
 COMBINED_MD="$ROOT_DIR/combined_documentation.md"
 OUTPUT_PDF="$ROOT_DIR/Aliaksandr_Samatyia_Documentation.pdf"
 TEMP_HTML="$ROOT_DIR/temp_documentation.html"
