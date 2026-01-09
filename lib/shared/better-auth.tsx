@@ -18,7 +18,11 @@ export const auth = betterAuth({
     },
     trustedOrigins: process.env.VERCEL_URL
         ? [`https://${process.env.VERCEL_URL}`, `http://${process.env.E2E_HOSTNAME}:${process.env.E2E_PORT}`]
-        : ['http://localhost:3000', `http://${process.env.E2E_HOSTNAME}:${process.env.E2E_PORT}`],
+        : [
+              'http://localhost:3000',
+              'http://localhost:3001',
+              `http://${process.env.E2E_HOSTNAME}:${process.env.E2E_PORT}`
+          ],
     emailAndPassword: {
         enabled: true
     },
