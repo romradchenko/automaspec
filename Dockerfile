@@ -14,11 +14,13 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Set a dummy/default DB URL during build to prevent failures during page data collection
+ENV NEXT_PUBLIC_DATABASE_URL=file:db/local.db
 RUN corepack enable pnpm && pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
-RUN apk add libc6-compat curl
+RUN apk add --no-cache libc6-compat curl
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 WORKDIR /app
 ENV NODE_ENV=production

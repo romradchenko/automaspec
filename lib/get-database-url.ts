@@ -7,5 +7,5 @@ export function getDatabaseUrl() {
         return process.env.NEXT_PUBLIC_DATABASE_LOCAL_URL ?? 'file:db/local.db'
     }
 
-    return process.env.NEXT_PUBLIC_DATABASE_URL ?? ''
+    return process.env.NEXT_PUBLIC_DATABASE_URL ?? 'file:db/local.db'
 }
