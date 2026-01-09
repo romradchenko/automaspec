@@ -6,7 +6,7 @@
 
 **Q: What is Automaspec?**
 
-A: Automaspec is an AI-powered test specification and automation platform that helps QA engineers and developers organize test documentation, generate test code using AI, and track test coverage in a centralized location.
+A: Automaspec is an AI-powered test specification and automation platform that helps QA engineers and developers organize test documentation, create specifications using AI assistant, and track test coverage in a centralized location.
 
 ---
 

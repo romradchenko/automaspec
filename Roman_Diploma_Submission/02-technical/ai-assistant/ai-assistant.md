@@ -10,7 +10,7 @@
 
 ### Context
 
-The application requires AI-powered test code generation to help developers create Vitest tests from natural language requirements. The AI assistant should provide value beyond simple API proxying and demonstrate understanding of prompt engineering.
+The application requires an AI-powered assistant to help QA engineers and developers create test specifications, organize test structure, and manage requirements through natural language interaction. The AI assistant should provide value beyond simple API proxying and demonstrate understanding of prompt engineering.
 
 ### Decision
 
@@ -20,10 +20,10 @@ Using Vercel AI SDK for LLM integration with multiple model support (OpenRouter,
 
 | # | Requirement | Status | Evidence/Notes |
 |---|-------------|--------|----------------|
-| 1 | Assistant purpose & audience documented | ✅ | Test generation for QA/developers |
+| 1 | Assistant purpose & audience documented | ✅ | Specification assistant for QA/developers |
 | 2 | Architecture with model selection | ✅ | AI SDK with multiple providers |
-| 3 | System prompt documentation | ✅ | Vitest-specific prompts |
-| 4 | Prompt templates for scenarios | ✅ | Requirement → test code generation |
+| 3 | System prompt documentation | ✅ | Context-aware prompts |
+| 4 | Prompt templates for scenarios | ✅ | Natural language → specification structure |
 | 5 | API documentation | ✅ | oRPC endpoints documented |
 | 6 | System limitations documented | ✅ | Section below |
 | 7 | User instructions | ✅ | UI guidance provided |
@@ -70,12 +70,12 @@ Using Vercel AI SDK for LLM integration with multiple model support (OpenRouter,
 
 ### System Prompt Structure
 
-The AI assistant uses structured prompts optimized for Vitest test generation:
+The AI assistant uses structured prompts optimized for specification creation and organization:
 
-1. **Role Definition**: Expert Vitest test writer
-2. **Context Injection**: Requirement text, spec structure, existing tests
-3. **Output Format**: Valid TypeScript/Vitest code
-4. **Constraints**: Follow project conventions, no external dependencies
+1. **Role Definition**: Expert test specification assistant
+2. **Context Injection**: Requirement text, spec structure, folder hierarchy
+3. **Output Format**: Structured specification suggestions
+4. **Constraints**: Follow project conventions, maintain consistency
 
 ### Prompt Templates
 
@@ -109,14 +109,14 @@ lib/
    - Follows project test conventions
 
 2. **Streaming Responses**
-   - Real-time code generation display
+   - Real-time response display
    - Reduced perceived latency
    - Progress indication
 
-3. **Code Quality**
-   - Generated code follows Vitest patterns
-   - Includes describe/it blocks
-   - Proper assertions and matchers
+3. **Quality Suggestions**
+   - Suggestions follow best practices
+   - Organized structure recommendations
+   - Consistent naming patterns
 
 4. **Error Handling**
    - API timeout handling

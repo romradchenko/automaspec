@@ -130,7 +130,7 @@ style: |
 ## **7. Demo: Testing Dashboard**
 
 - **Hierarchy**: Navigate folders and specs with ease.
-- **AI Side Panel**: Generate test code from requirements.
+- **AI Side Panel**: Create specifications and organize requirements with AI assistance.
 - **Live Status**: Real-time results from GitHub Actions.
 
 <div style="text-align: center; margin-top: 20px;">

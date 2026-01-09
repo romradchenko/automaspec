@@ -10,11 +10,11 @@
    - Drag-and-drop reordering
    - Rich text descriptions and documentation
 
-2. **AI-Powered Test Code Generation**
-   - Vitest framework support
-   - AI SDK integration for intelligent code generation
-   - Context-aware test generation based on requirements
-   - Code review and editing capabilities
+2. **AI-Powered Test Specification Assistant**
+   - Intelligent specification creation and organization
+   - AI SDK integration for requirement analysis and structuring
+   - Context-aware suggestions for test structure
+   - Natural language interaction for creating specs and requirements
 
 3. **Multi-Organization Support**
    - Organization creation and management

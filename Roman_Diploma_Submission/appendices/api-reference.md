@@ -200,12 +200,12 @@ POST /rpc/tests.updateStatus
 
 ---
 
-### AI Generation
+### AI Assistant
 
-#### Generate Test Code
+#### AI Chat Interaction
 
 ```http
-POST /rpc/ai.generate
+POST /rpc/ai.chat
 ```
 
 **Request Body:**

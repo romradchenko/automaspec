@@ -11,12 +11,12 @@
 
 ## Project Overview
 
-**Automaspec** is an AI-powered test specification and automation platform that helps QA engineers and developers organize test documentation, generate test code using AI, and track test coverage in a centralized location.
+**Automaspec** is an AI-powered test specification and automation platform that helps QA engineers and developers organize test documentation, create specifications using AI assistant, and track test coverage in a centralized location.
 
 ### Key Features
 
 - Hierarchical test organization (Folders → Specs → Requirements → Tests)
-- AI-powered Vitest test code generation
+- AI assistant for creating specifications, organizing structure, and managing requirements
 - Multi-organization support with role-based access
 - Real-time test status tracking
 - CI/CD integration with GitHub Actions

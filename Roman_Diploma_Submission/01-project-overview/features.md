@@ -6,7 +6,7 @@
 |------|-------------|---------|--------|
 | E1: Authentication & Organizations | User auth, org management, invitations | 4 | ✅ |
 | E2: Test Specification Hierarchy | Folders, specs, requirements, tests | 5 | ✅ |
-| E3: AI Test Generation | AI-powered Vitest code generation | 4 | ✅ |
+| E3: AI Test Assistant | AI-powered specification and structure assistant | 4 | ✅ |
 | E4: Test Status Tracking | Status visualization and aggregation | 3 | ✅ |
 | E5: CI/CD Integration | GitHub Actions sync | 4 | ✅ |
 | E6: Collaboration | Role-based access, real-time updates | 3 | ⚠️ |
@@ -33,14 +33,14 @@
 | US-008 | As a developer, I want to reorder items via drag-and-drop | Should | ✅ |
 | US-009 | As a QA engineer, I want to bulk move specs | Could | ⚠️ |
 
-### Epic 3: AI Test Generation
+### Epic 3: AI Test Assistant
 
 | ID | User Story | Priority | Status |
 |----|------------|----------|--------|
-| US-010 | As a developer, I want to generate Vitest code from requirements | Must | ✅ |
-| US-011 | As a QA engineer, I want to review AI-generated code | Must | ✅ |
-| US-012 | As a developer, I want to edit generated test code | Must | ✅ |
-| US-013 | As a developer, I want to export test code to files | Should | ✅ |
+| US-010 | As a developer, I want to create specifications using AI assistant | Must | ✅ |
+| US-011 | As a QA engineer, I want AI to help organize test requirements | Must | ✅ |
+| US-012 | As a developer, I want AI suggestions for test structure | Must | ✅ |
+| US-013 | As a developer, I want to chat with AI about test organization | Should | ✅ |
 
 ### Epic 4: Test Status Tracking
 

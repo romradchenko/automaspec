@@ -72,7 +72,7 @@ This section reflects on the project development process, lessons learned, and f
 ### High Priority
 
 1. **Multi-Framework Support**
-   - Description: Add Jest, Playwright, and Cypress code generation
+   - Description: Add support for Jest, Playwright, and Cypress specifications
    - Value: Broader user adoption, framework flexibility
    - Effort: Medium (2-3 weeks per framework)
 
