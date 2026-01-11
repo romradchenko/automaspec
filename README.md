@@ -130,31 +130,65 @@ Notes:
 
 ## Containerization
 
-- Copy `.env.example` to `.env` and set secrets before running containers.
-- Start everything with `docker compose up --build`; stop with `docker compose down`.
-- App listens on port `3000`; database is expected to be an external cloud libsql endpoint.
+The application is fully containerized for reproducible deployments and local development.
 
-### Images
+### Prerequisites
 
-- `automaspec-web:local`: built from `Dockerfile` (multi-stage, non-root runtime).
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-### Environment variables
+### Quick Start
 
-- `NEXT_PUBLIC_DATABASE_URL`: cloud libsql endpoint.
-- `DATABASE_AUTH_TOKEN`: auth token for the cloud libsql endpoint.
-- `OPENROUTER_API_KEY`: key for OpenRouter AI provider.
-- `GEMINI_API_KEY`: key for Gemini AI provider.
-- `VERCEL_URL`: optional host used by Better Auth for trusted origins.
+1.  **Configure Environment**:
+    Copy `.env.example` to `.env` and fill in the required secrets.
+    ```bash
+    cp .env.example .env
+    ```
 
-### Container architecture
+2.  **Start Application**:
+    ```bash
+    # For standard development
+    docker compose up --build
+
+    # For production-optimized profile
+    docker compose -f docker-compose.prod.yml up --build -d
+    ```
+
+3.  **Stop Application**:
+    ```bash
+    docker compose down
+    ```
+
+### Container Architecture
+
+The system uses a multi-stage Alpine-based container to minimize footprint and maximize security.
 
 ```mermaid
-[browser] -> :3000 -> [automaspec-web] -> cloud libsql
+graph TD
+    Client[Browser/Client] -->|port 3000| App[Automaspec App Container]
+    App -->|Drizzle ORM| DB[(External libSQL / local.db)]
+    
+    subgraph "Docker Environment"
+        App
+    end
 ```
 
-### Resource requirements (min)
+### Resource Management
 
-- App container: 1 CPU / 1.5 GB RAM.
+| Environment | CPU Limit | Memory Limit | Restart Policy |
+|-------------|-----------|--------------|----------------|
+| **Development** | 1.0 | 1.5 GB | `unless-stopped` |
+| **Production** | 2.0 | 2.0 GB | `always` |
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_DATABASE_URL` | Primary database connection string (cloud or local) | Yes |
+| `DATABASE_AUTH_TOKEN` | Auth token for cloud libSQL | If cloud |
+| `OPENROUTER_API_KEY` | API key for AI features | Optional |
+| `GEMINI_API_KEY` | API key for AI features | Optional |
+| `PORT` | Container internal/external port (default: 3000) | No |
 
 ## Scripts
 

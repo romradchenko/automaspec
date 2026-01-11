@@ -66,8 +66,7 @@ style: |
 <!-- _class: lead -->
 
 # **AutomaSpec**
-## Intelligent Test Management System
-
+## AI-Powered Test Specification Management System
 <br>
 
 **Student:** Aliaksandr Samatyia
@@ -86,7 +85,7 @@ QA Engineers, Developers, and Product Managers in fast-paced teams.
 - ❌ **Disconnected Workflows:** Requirements live in docs, tests live in code. Links are manual and fragile.
 - ❌ **Visibility Black Holes:** Stakeholders cannot verify if a specific requirement is actually covered by a passing test.
 - ❌ **Stale Documentation:** Test cases often lag behind code changes, leading to false confidence.
-- ❌ **Manual & Slow:** meaningful reporting requires manual spreadsheet updates.
+- ❌ **Manual & Slow:** Meaningful reporting requires manual spreadsheet updates.
 
 > *"We don't know if we broke the feature until users tell us."*
 
@@ -98,7 +97,7 @@ QA Engineers, Developers, and Product Managers in fast-paced teams.
 AutomaSpec acts as the **central nervous system** for quality assurance, syncing code, tests, and requirements.
 
 **Key Capabilities:**
-- 🔗 **Deep Integration:** Automatically syncs Playwright & Vitest execution results to requirements.
+- 🔗 **Deep Integration:** Automatically syncs Vitest execution results to requirements.
 - 📋 **Live Traceability:** Requirement $\leftrightarrow$ Test Spec $\leftrightarrow$ Execution Result. All linked.
 - 🤖 **AI Assistant:** Chat with your test suite to generate cases or explain failures.
 
@@ -143,7 +142,7 @@ Comprehensive metrics and visualizations for test coverage and execution trends.
 Organized view of projects, folders, and test specifications.
 
 - **Hierarchical Structure:** Navigate through organizations and projects.
-- **Quick Access:** Direct links to requirements and test specs.
+- **Quick Access:** Tree view of folders and test specs.
 - **Status Overview:** Visual indicators for test execution status.
 
 ![w:100% center](../assets/screenshots/prod-folder-components-desktop.png)
@@ -171,9 +170,9 @@ Organized view of projects, folders, and test specifications.
 | **Language** | **TypeScript** | Strict type safety across full stack |
 | **Database** | **Turso (LibSQL)** | Edge-compatible distributed SQLite |
 | **ORM** | **Drizzle ORM** | Type-safe SQL builder and schema management |
-| **API** | **ORPC** | End-to-end type-safe API contracts |
-| **Testing** | **Playwright + Vitest** | E2E and Unit testing frameworks |
-| **AI** | **Vercel AI SDK** | Integration with LLM providers (Google/OpenAI) |
+| **API** | **oRPC** | End-to-end type-safe API contracts with OpenAPI generation |
+| **Testing** | **Vitest** | Unit testing framework |
+| **AI** | **Vercel AI SDK** | Integration with LLM providers (Google Gemini/OpenRouter) |
 
 ---
 
@@ -190,7 +189,7 @@ Needed a scalable, SEO-friendly SPA with robust server integration for a complex
 - **Type Safety:** End-to-end typed API calls via oRPC.
 - **Components:** Modular UI using Radix Primitives.
 
-**TECH:** Next.js 16, React 19, TanStack Query, Radix UI
+**TECH:** Next.js 16, React 19, TanStack Query, Radix UI, Tailwind CSS v4
 
 ```typescript
 // Type-safe reactive data fetching with TanStack Query
@@ -215,7 +214,7 @@ To provide a seamless experience for QA engineers across Desktop (4K), Tablet, a
 - **Theme Support:** System-aware Dark/Light mode integration.
 - **Accessibility:** WCAG 2.1 AA compliance via Radix UI.
 
-**TECH:** Tailwind CSS v4, Lucide Icons, next-themes
+**TECH:** Tailwind CSS v4, Lucide Icons, next-themes, Radix UI Primitives
 
 <br>
 
@@ -233,7 +232,7 @@ Ensure external integrations and developers have an accurate source of truth.
 **WHAT:**
 - **Auto-Generated:** Docs derived from Zod schemas.
 - **Interactive:** Scalar UI for in-browser testing.
-- **OpenAPI:** Exports valid 3.0 spec.
+- **OpenAPI:** Exports valid 3.1 spec.
 - **Zero Drift:** Docs update with code.
 
 **TECH:** oRPC, Scalar UI, Zod, OpenAPI
@@ -252,10 +251,16 @@ To automate quality control and ensure safe, frequent deployments to production.
 **WHAT:**
 1.  **Quality Gate:** Lint (`oxlint`), Format, Typecheck before merge.
 2.  **Security:** Automated `pnpm audit` for dependencies.
-3.  **Test Automation:** Unit (Vitest) + E2E (Playwright) execution.
+3.  **Test Automation:** Unit testing execution with coverage.
 4.  **Delivery:** Auto-deploy to Vercel (Preview/Prod).
 
 **TECH:** GitHub Actions, Vercel CLI, Docker, Lefthook
+
+---
+
+<!-- _header: Criterion 4: CI/CD Pipeline -->
+
+# CI/CD Pipeline: Diagram
 
 ![w:100%](../assets/diagrams/ci-cd.png)
 
@@ -274,7 +279,7 @@ To guarantee environment consistency ("works on my machine") and enable portabil
 - **Security:** Runs as non-root user (`nextjs`).
 - **Orchestration:** Docker Compose profiles for Dev vs. Prod.
 
-**TECH:** Docker, Docker Compose, node-alpine
+**TECH:** Docker, Docker Compose, node:24-alpine, Next.js Standalone
 
 ```dockerfile
 # Final Stage
