@@ -12,59 +12,192 @@ The application uses **SQLite** (via LibSQL/Turso) as its relational database, w
 
 ## Entity Relationship Diagram
 
+> **Interactive Version**: Open `db-schema.html` in a browser for an interactive, printable version.
+
 ```mermaid
 erDiagram
-    User ||--o{ Account : "has"
-    User ||--o{ Session : "has"
-    User ||--o{ Member : "belongs to"
-    User ||--o{ APIKey : "owns"
+    %% ==========================================
+    %% USER & AUTHENTICATION TABLES
+    %% ==========================================
     
-    Organization ||--o{ Member : "has members"
-    Organization ||--o{ Invitation : "sends"
-    Organization ||--o{ TestFolder : "owns"
-    Organization ||--o{ TestSpec : "owns"
-    
-    User ||--o{ Invitation : "invites"
-
-    TestFolder ||--o{ TestSpec : "contains"
-    TestFolder ||--o{ TestFolder : "parent"
-    
-    TestSpec ||--o{ TestRequirement : "defines"
-    TestRequirement ||--o{ Test : "verified by"
-
-    User {
-        string id PK
-        string email
-        string name
+    user {
+        text id PK
+        text name
+        text email UK
         boolean emailVerified
+        text image
+        timestamp createdAt
+        timestamp updatedAt
     }
 
-    Organization {
-        string id PK
-        string name
-        string slug
-        string plan
+    account {
+        text id PK
+        text accountId
+        text providerId
+        text userId FK
+        text accessToken
+        text refreshToken
+        text idToken
+        timestamp accessTokenExpiresAt
+        timestamp refreshTokenExpiresAt
+        text scope
+        text password
+        timestamp createdAt
+        timestamp updatedAt
     }
 
-    TestSpec {
-        string id PK
-        string name
+    session {
+        text id PK
+        timestamp expiresAt
+        text token UK
+        timestamp createdAt
+        timestamp updatedAt
+        text ipAddress
+        text userAgent
+        text userId FK
+        text activeOrganizationId
+    }
+
+    verification {
+        text id PK
+        text identifier
+        text value
+        timestamp expiresAt
+        timestamp createdAt
+        timestamp updatedAt
+    }
+
+    apiKey {
+        text id PK
+        text name
+        text start
+        text prefix
+        text key
+        text userId FK
+        integer refillInterval
+        integer refillAmount
+        timestamp lastRefillAt
+        boolean enabled
+        boolean rateLimitEnabled
+        integer rateLimitTimeWindow
+        integer rateLimitMax
+        integer requestCount
+        integer remaining
+        timestamp lastRequest
+        timestamp expiresAt
+        timestamp createdAt
+        timestamp updatedAt
+        text permissions
+        text metadata
+    }
+
+    rateLimit {
+        text id PK
+        text key
+        integer count
+        timestamp lastRequest
+    }
+
+    %% ==========================================
+    %% ORGANIZATION TABLES
+    %% ==========================================
+
+    organization {
+        text id PK
+        text name
+        text slug UK
+        text logo
+        text plan
+        timestamp createdAt
+        timestamp updatedAt
+        text metadata
+    }
+
+    member {
+        text id PK
+        text organizationId FK
+        text userId FK
+        text role
+        timestamp createdAt
+        timestamp updatedAt
+    }
+
+    invitation {
+        text id PK
+        text organizationId FK
+        text email
+        text role
+        text status
+        timestamp expiresAt
+        text inviterId FK
+        timestamp createdAt
+    }
+
+    %% ==========================================
+    %% TEST MANAGEMENT TABLES
+    %% ==========================================
+
+    testFolder {
+        text id PK
+        text name
+        text description
+        text parentFolderId FK
+        text organizationId FK
+        integer order
+        text createdAt
+        text updatedAt
+    }
+
+    testSpec {
+        text id PK
+        text name
+        text fileName
+        text description
         json statuses
         integer numberOfTests
+        text folderId FK
+        text organizationId FK
+        text createdAt
+        text updatedAt
     }
 
-    TestRequirement {
-        string id PK
-        string name
-        string description
+    testRequirement {
+        text id PK
+        text name
+        text description
+        integer order
+        text specId FK
+        text createdAt
+        text updatedAt
     }
 
-    Test {
-        string id PK
-        string status
-        string framework
-        string code
+    test {
+        text id PK
+        text status
+        text framework
+        text code
+        text requirementId FK
+        text createdAt
+        text updatedAt
     }
+
+    %% ==========================================
+    %% RELATIONSHIPS
+    %% ==========================================
+
+    user ||--o{ account : "has"
+    user ||--o{ session : "has"
+    user ||--o{ apiKey : "owns"
+    user ||--o{ member : "is"
+    organization ||--o{ member : "has"
+    organization ||--o{ invitation : "has"
+    user ||--o{ invitation : "invites"
+    testFolder ||--o{ testFolder : "contains"
+    organization ||--o{ testFolder : "owns"
+    organization ||--o{ testSpec : "owns"
+    testFolder ||--o{ testSpec : "contains"
+    testSpec ||--o{ testRequirement : "has"
+    testRequirement ||--o{ test : "has"
 ```
 
 ## Tables Reference
