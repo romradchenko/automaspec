@@ -1,0 +1,14 @@
+{
+    "name": "vitest-pnpm",
+    "version": "1.0.0",
+    "description": "Minimal Vitest project (pnpm) for Automaspec integration",
+    "type": "module",
+    "scripts": {
+        "test": "vitest",
+        "test:run": "vitest run",
+        "test:json": "vitest run --reporter=json --outputFile=test-results.json"
+    },
+    "devDependencies": {
+        "vitest": "^3.0.0"
+    }
+}

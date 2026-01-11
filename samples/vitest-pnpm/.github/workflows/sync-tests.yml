@@ -1,0 +1,40 @@
+name: Sync Test Results to Automaspec
+
+on:
+    push:
+        branches: [main, master, dev]
+    pull_request:
+        branches: [main, master, dev]
+
+jobs:
+    test-and-sync:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Run tests with JSON reporter
+              run: pnpm run test:json
+              continue-on-error: true
+
+            - name: Sync test results to Automaspec
+              if: always()
+              run: |
+                  curl -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "x-api-key: ${{ secrets.AUTOMASPEC_API_KEY }}" \
+                    -d @test-results.json \
+                    "${{ secrets.AUTOMASPEC_WEBHOOK_URL }}"
