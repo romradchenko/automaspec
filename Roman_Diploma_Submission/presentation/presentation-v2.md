@@ -103,17 +103,7 @@ style: |
 
 ---
 
-## **5. High-Level Architecture**
-
-<div style="text-align: center;">
-
-![width:700px Architecture](../assets/diagrams/architecture.png)
-
-</div>
-
----
-
-## **6. Demo: Home & Authentication**
+## **5. Demo: Home & Authentication**
 
 <div style="text-align: center;">
 
@@ -123,7 +113,7 @@ style: |
 
 ---
 
-## **7. Demo: Testing Dashboard**
+## **6. Demo: Testing Dashboard**
 
 **Hierarchy**: Navigate folders and specs with ease • Real-time results from GitHub Actions
 
@@ -135,7 +125,7 @@ style: |
 
 ---
 
-## **8. Analytics Dashboard** <span class="criterion-badge">📋 CRITERION</span>
+## **7. Analytics Dashboard** <span class="criterion-badge">📋 CRITERION</span>
 
 **Test Status Distribution**: Visual breakdown of passed/failed/pending tests
 
@@ -147,7 +137,7 @@ style: |
 
 ---
 
-## **9. Business Analysis**
+## **8. Business Analysis**
 
 ### **Key User Stories Implemented**
 
@@ -163,7 +153,7 @@ style: |
 
 ---
 
-## **10. Backend Architecture** <span class="criterion-badge">📋 CRITERION</span>
+## **9. Backend Architecture** <span class="criterion-badge">📋 CRITERION</span>
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
 <div>
@@ -201,7 +191,7 @@ style: |
 
 ---
 
-## **11. Database Engineering** <span class="criterion-badge">📋 CRITERION</span>
+## **10. Database Engineering** <span class="criterion-badge">📋 CRITERION</span>
 
 **Design**: 3NF • Multi-tenant isolation • Self-referential folders • Turso (distributed SQLite) • Drizzle ORM
 
@@ -221,7 +211,7 @@ style: |
 
 ---
 
-## **12. Testing Strategy** <span class="criterion-badge">📋 CRITERION</span>
+## **11. Testing Strategy** <span class="criterion-badge">📋 CRITERION</span>
 
 - **Quality Gates**: ≥70% coverage enforced in CI.
 - **Playwright E2E**: Critical flow (Auth, Tree Ops) validation.
@@ -231,7 +221,7 @@ style: |
 
 ---
 
-## **13. AI Assistant** <span class="criterion-badge">📋 CRITERION</span>
+## **12. AI Assistant** <span class="criterion-badge">📋 CRITERION</span>
 
 **How it works:** AI helps write specs & requirements • Streaming responses • Context-aware suggestions • Multiple LLM providers
 
@@ -243,7 +233,7 @@ style: |
 
 ---
 
-## **14. Technical Challenges**
+## **13. Technical Challenges**
 
 | Challenge | Solution | Impact |
 |-----------|----------|--------|
@@ -254,7 +244,7 @@ style: |
 
 ---
 
-## **15. Results & Future Work**
+## **14. Results & Future Work**
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
 <div>
@@ -281,7 +271,7 @@ style: |
 
 ---
 
-## **16. Q&A**
+## **15. Q&A**
 
 **Roman Radchenko** (JS-22)
 
