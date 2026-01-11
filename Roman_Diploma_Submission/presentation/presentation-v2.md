@@ -103,59 +103,41 @@ style: |
 
 ---
 
-## **5. High-Level Architecture**
+## **5. Demo: Home & Authentication**
 
 <div style="text-align: center;">
 
-![width:900px Architecture](../assets/diagrams/architecture.png)
+![width:1000px Home Page](../assets/screenshots/prod-home-desktop.png)
 
 </div>
 
 ---
 
-## **6. Demo: Home & Authentication**
+## **6. Demo: Testing Dashboard**
 
-- **Landing Page**: Professional overview of capabilities.
-- **Auth Flow**: Secure login via Better Auth.
-- **Organization**: Seamlessly switch between workspaces.
+**Hierarchy**: Navigate folders and specs with ease • Real-time results from GitHub Actions
 
-<div style="text-align: center; margin-top: 20px;">
+<div style="text-align: center;">
 
-![width:700px Home Page](../assets/screenshots/prod-home-desktop.png)
+![width:1000px Dashboard](../assets/screenshots/prod-dashboard-desktop.png)
 
 </div>
 
 ---
 
-## **7. Demo: Testing Dashboard**
+## **7. Analytics Dashboard** <span class="criterion-badge">📋 CRITERION</span>
 
-- **Hierarchy**: Navigate folders and specs with ease.
-- **AI Side Panel**: Create specifications and organize requirements with AI assistance.
-- **Live Status**: Real-time results from GitHub Actions.
+**Test Status Distribution**: Visual breakdown of passed/failed/pending tests
 
-<div style="text-align: center; margin-top: 20px;">
+<div style="text-align: center;">
 
-![width:700px Dashboard](../assets/screenshots/prod-dashboard-desktop.png)
+![width:1000px Analytics](../assets/screenshots/prod-analytics-desktop.png)
 
 </div>
 
 ---
 
-## **8. Analytics Dashboard** <span class="criterion-badge">📋 CRITERION</span>
-
-- **Test Status Distribution**: Visual breakdown of passed/failed/pending tests.
-- **Coverage Metrics**: Track test coverage across specifications.
-- **Trend Analysis**: Monitor testing progress over time.
-
-<div style="text-align: center; margin-top: 20px;">
-
-![width:700px Analytics](../assets/screenshots/prod-analytics-desktop.png)
-
-</div>
-
----
-
-## **9. Business Analysis**
+## **8. Business Analysis**
 
 ### **Key User Stories Implemented**
 
@@ -171,7 +153,7 @@ style: |
 
 ---
 
-## **10. Backend Architecture** <span class="criterion-badge">📋 CRITERION</span>
+## **9. Backend Architecture** <span class="criterion-badge">📋 CRITERION</span>
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
 <div>
@@ -209,7 +191,7 @@ style: |
 
 ---
 
-## **11. Database Engineering** <span class="criterion-badge">📋 CRITERION</span>
+## **10. Database Engineering** <span class="criterion-badge">📋 CRITERION</span>
 
 **Design**: 3NF • Multi-tenant isolation • Self-referential folders • Turso (distributed SQLite) • Drizzle ORM
 
@@ -229,7 +211,7 @@ style: |
 
 ---
 
-## **12. Testing Strategy** <span class="criterion-badge">📋 CRITERION</span>
+## **11. Testing Strategy** <span class="criterion-badge">📋 CRITERION</span>
 
 - **Quality Gates**: ≥70% coverage enforced in CI.
 - **Playwright E2E**: Critical flow (Auth, Tree Ops) validation.
@@ -239,29 +221,19 @@ style: |
 
 ---
 
-## **13. AI Assistant** <span class="criterion-badge">📋 CRITERION</span>
+## **12. AI Assistant** <span class="criterion-badge">📋 CRITERION</span>
 
-<div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items: center;">
-<div>
+**How it works:** AI helps write specs & requirements • Streaming responses • Context-aware suggestions • Multiple LLM providers
 
-### **How it works**
-- AI helps write specs & requirements
-- Streaming: see results in real-time
-- Context-aware suggestions
-- Multiple LLM providers (OpenRouter, Gemini)
-- Prompt engineering for quality output
+<div style="text-align: center; margin-top: 10px;">
 
-</div>
-<div style="text-align: center;">
+![width:450px AI Panel](../assets/screenshots/prod-ai-anyplatform.png)
 
-![width:550px AI Panel](../assets/screenshots/prod-dashboard-desktop.png)
-
-</div>
 </div>
 
 ---
 
-## **14. Technical Challenges**
+## **13. Technical Challenges**
 
 | Challenge | Solution | Impact |
 |-----------|----------|--------|
@@ -272,7 +244,7 @@ style: |
 
 ---
 
-## **15. Results & Future Work**
+## **14. Results & Future Work**
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
 <div>
@@ -299,7 +271,7 @@ style: |
 
 ---
 
-## **16. Q&A**
+## **15. Q&A**
 
 **Roman Radchenko** (JS-22)
 
