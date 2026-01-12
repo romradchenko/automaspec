@@ -3,7 +3,7 @@
 import { useForm } from '@tanstack/react-form'
 import { Loader2, Building2, Info } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -16,7 +16,7 @@ import { authClient } from '@/lib/shared/better-auth-client'
 export default function CreateOrganizationPage() {
     const router = useRouter()
     const hasLoadedRef = useRef(false)
-    const isSubmittingRef = useRef(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const {
         data: activeOrganization,
         isPending: isPendingActiveOrganization,
@@ -25,11 +25,11 @@ export default function CreateOrganizationPage() {
     const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
 
     useEffect(() => {
-        if (isSubmittingRef.current) return
+        if (isSubmitting) return
         if (!isPendingActiveOrganization && !isPendingOrganizations && !hasLoadedRef.current) {
             hasLoadedRef.current = true
         }
-    }, [isPendingActiveOrganization, isPendingOrganizations])
+    }, [isPendingActiveOrganization, isPendingOrganizations, isSubmitting])
 
     const form = useForm({
         defaultValues: {
@@ -37,7 +37,7 @@ export default function CreateOrganizationPage() {
             slug: ''
         },
         onSubmit: async ({ value }) => {
-            isSubmittingRef.current = true
+            setIsSubmitting(true)
             const { data: createdOrg, error: createError } = await authClient.organization.create({
                 name: value.name,
                 slug: value.slug
@@ -45,7 +45,7 @@ export default function CreateOrganizationPage() {
 
             if (createError) {
                 toast.error(createError.message || 'Failed to create organization')
-                isSubmittingRef.current = false
+                setIsSubmitting(false)
                 return
             }
 
@@ -55,7 +55,7 @@ export default function CreateOrganizationPage() {
 
             if (setActiveError) {
                 toast.error(setActiveError.message || 'Failed to set active organization')
-                isSubmittingRef.current = false
+                setIsSubmitting(false)
                 return
             }
 
@@ -72,11 +72,11 @@ export default function CreateOrganizationPage() {
     }
 
     const isInitialLoading =
-        (isPendingActiveOrganization || isPendingOrganizations) && !hasLoadedRef.current && !isSubmittingRef.current
+        (isPendingActiveOrganization || isPendingOrganizations) && !hasLoadedRef.current && !isSubmitting
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            {isInitialLoading ? (
+            {isInitialLoading || isSubmitting ? (
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     <p className="text-muted-foreground">Checking your organizations...</p>

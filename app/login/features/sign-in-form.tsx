@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -19,6 +20,14 @@ interface SignInFormProps {
 
 export function SignInForm({ onToggle, initialEmail = '', initialPassword = '', onValuesChange }: SignInFormProps) {
     const router = useRouter()
+    const isRedirectingRef = useRef(false)
+    const { data: session } = authClient.useSession()
+
+    useEffect(() => {
+        if (session && isRedirectingRef.current) {
+            router.replace('/choose-organization')
+        }
+    }, [session, router])
 
     const formApi = useAppForm({
         defaultValues: {
@@ -36,8 +45,8 @@ export function SignInForm({ onToggle, initialEmail = '', initialPassword = '', 
                 },
                 {
                     onSuccess: async () => {
+                        isRedirectingRef.current = true
                         toast.success('Sign in successful')
-                        router.replace('/choose-organization')
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)

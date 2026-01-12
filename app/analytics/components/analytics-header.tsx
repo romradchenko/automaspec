@@ -2,6 +2,7 @@
 
 import { User, LogOut, Building2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { authClient } from '@/lib/shared/better-auth-client'
 
 export function AnalyticsHeader() {
+    const router = useRouter()
     const { data: activeOrganization } = authClient.useActiveOrganization()
 
     return (
@@ -42,11 +44,14 @@ export function AnalyticsHeader() {
                                 Profile
                             </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href="/login" onClick={async () => authClient.signOut()}>
-                                <LogOut className="mr-2 size-4" />
-                                Logout
-                            </Link>
+                        <DropdownMenuItem
+                            onClick={async () => {
+                                await authClient.signOut()
+                                router.replace('/login')
+                            }}
+                        >
+                            <LogOut className="mr-2 size-4" />
+                            Logout
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

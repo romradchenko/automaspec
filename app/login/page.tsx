@@ -17,15 +17,21 @@ import { SignUpForm } from './features/sign-up-form'
 export default function LoginPage() {
     const router = useRouter()
     const { data: session, isPending } = authClient.useSession()
+    const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
     const [isSignUp, setIsSignUp] = useState(false)
     const [authValues, setAuthValues] = useState({ email: '', password: '' })
     const [resetKey, setResetKey] = useState(0)
 
     useEffect(() => {
-        if (!isPending && session) {
-            router.replace('/choose-organization')
+        if (isPending || isPendingOrganizations) return
+        if (session) {
+            if (organizations && organizations.length > 0) {
+                router.replace('/choose-organization')
+            } else {
+                router.replace('/create-organization')
+            }
         }
-    }, [session, isPending, router])
+    }, [session, organizations, isPending, isPendingOrganizations, router])
 
     const handleValuesChange = useCallback((values: { email?: string; password?: string }) => {
         setAuthValues((prev) => ({
@@ -100,7 +106,10 @@ export default function LoginPage() {
                                     <Button
                                         variant="link"
                                         className="p-0 h-auto text-primary hover:underline"
-                                        onClick={async () => authClient.signOut()}
+                                        onClick={async () => {
+                                            await authClient.signOut()
+                                            router.replace('/login')
+                                        }}
                                     >
                                         sign out
                                     </Button>
