@@ -90,6 +90,10 @@ export function ImportTestsDialog({ open, onOpenChange, onImportComplete }: Impo
         }
 
         const reader = new FileReader()
+        reader.onerror = () => {
+            setParseError('Failed to read JSON file')
+            setParsedReport(null)
+        }
         reader.onload = (e) => {
             try {
                 const content = e.target?.result as string
