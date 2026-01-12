@@ -721,7 +721,7 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
         .where(eq(testFolder.organizationId, organizationId))
 
     const existingSpecs = await db
-        .select({ id: testSpec.id, name: testSpec.name })
+        .select({ id: testSpec.id, name: testSpec.name, folderId: testSpec.folderId })
         .from(testSpec)
         .where(eq(testSpec.organizationId, organizationId))
 
@@ -746,7 +746,8 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
 
     const specCache: Record<string, string> = {}
     for (const spec of existingSpecs) {
-        specCache[spec.name] = spec.id
+        const folderKey = spec.folderId || 'root'
+        specCache[`${folderKey}:${spec.name}`] = spec.id
     }
 
     const reqCache: Record<string, string> = {}
@@ -826,10 +827,12 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
         }
 
         const specName = normalizeTestFileName(fileName)
+        const specFolderKey = parentFolderId || 'root'
+        const specCacheKey = `${specFolderKey}:${specName}`
         let specId: string
 
-        if (specCache[specName]) {
-            specId = specCache[specName]
+        if (specCache[specCacheKey]) {
+            specId = specCache[specCacheKey]
         } else {
             specId = crypto.randomUUID()
             specsToInsert.push({
@@ -842,7 +845,7 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
                 folderId: parentFolderId,
                 organizationId
             })
-            specCache[specName] = specId
+            specCache[specCacheKey] = specId
         }
 
         affectedSpecIds.add(specId)
