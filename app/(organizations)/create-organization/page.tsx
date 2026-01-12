@@ -1,12 +1,12 @@
 'use client'
 
 import { useForm } from '@tanstack/react-form'
-import { Loader2, Building2 } from 'lucide-react'
+import { Loader2, Building2, Info } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,7 @@ import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function CreateOrganizationPage() {
     const router = useRouter()
+    const hasLoadedRef = useRef(false)
     const {
         data: activeOrganization,
         isPending: isPendingActiveOrganization,
@@ -23,10 +24,10 @@ export default function CreateOrganizationPage() {
     const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
 
     useEffect(() => {
-        if (isPendingActiveOrganization || isPendingOrganizations) return
-        if (activeOrganization) router.push('/dashboard')
-        else if (organizations && organizations.length > 0) router.push('/choose-organization')
-    }, [activeOrganization, organizations, router, isPendingActiveOrganization, isPendingOrganizations])
+        if (!isPendingActiveOrganization && !isPendingOrganizations && !hasLoadedRef.current) {
+            hasLoadedRef.current = true
+        }
+    }, [isPendingActiveOrganization, isPendingOrganizations])
 
     const form = useForm({
         defaultValues: {
@@ -65,11 +66,11 @@ export default function CreateOrganizationPage() {
             .replace(/^-+|-+$/g, '')
     }
 
-    const isPending = isPendingActiveOrganization || isPendingOrganizations
+    const isInitialLoading = (isPendingActiveOrganization || isPendingOrganizations) && !hasLoadedRef.current
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
-            {isPending ? (
+            {isInitialLoading ? (
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     <p className="text-muted-foreground">Checking your organizations...</p>
@@ -84,6 +85,56 @@ export default function CreateOrganizationPage() {
                         <CardDescription>Set up your workspace to get started with AutomaSpec</CardDescription>
                     </CardHeader>
                     <CardContent>
+                        {organizations && organizations.length > 0 && (
+                            <Alert variant="info" className="mb-6">
+                                <Info className="size-4" />
+                                <AlertTitle>Already part of an organization</AlertTitle>
+                                <AlertDescription className="mt-2">
+                                    {activeOrganization ? (
+                                        <div className="space-y-2">
+                                            <p>
+                                                You are currently using <strong>{activeOrganization.name}</strong>
+                                                {organizations.length > 1 && (
+                                                    <> and have {organizations.length} organizations total</>
+                                                )}
+                                                .
+                                            </p>
+                                            <p className="flex items-center gap-2 flex-wrap">
+                                                <span>Want to switch?</span>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => router.push('/choose-organization')}
+                                                    className="text-xs"
+                                                >
+                                                    View all organizations
+                                                </Button>
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <p>
+                                                You are already part of {organizations.length}{' '}
+                                                {organizations.length === 1 ? 'organization' : 'organizations'}.
+                                            </p>
+                                            <p className="flex items-center gap-2 flex-wrap">
+                                                <span>Want to use an existing one?</span>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => router.push('/choose-organization')}
+                                                    className="text-xs"
+                                                >
+                                                    Choose organization
+                                                </Button>
+                                            </p>
+                                        </div>
+                                    )}
+                                </AlertDescription>
+                            </Alert>
+                        )}
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault()
@@ -118,7 +169,7 @@ export default function CreateOrganizationPage() {
                                                 form.setFieldValue('slug', slug)
                                             }}
                                             placeholder="Acme Inc."
-                                            disabled={isPending}
+                                            disabled={isInitialLoading}
                                         />
                                         {field.state.meta.errors && (
                                             <p className="text-sm text-destructive">{field.state.meta.errors[0]}</p>
