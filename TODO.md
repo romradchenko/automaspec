@@ -62,6 +62,7 @@ assertionResults[].title (it)  → Requirement + Test (linked)
 - [ ] Create Spec per unique file, nested in correct folder
 - [ ] Create Requirement per `assertionResults[].title`
 - [ ] Create Test, link to Requirement, status from JSON
+- [ ] Verify `syncReport` only UPDATES status, never CREATES (import creates, sync updates)
 
 **Frontend:**
 
