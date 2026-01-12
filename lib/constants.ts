@@ -6,6 +6,15 @@ import { CheckCircle, XCircle, Clock, MinusCircle, type LucideIcon } from 'lucid
 import type { SpecStatus } from './types'
 
 export const TEST_FRAMEWORK = 'vitest'
+
+export const IGNORED_TEST_FOLDERS = new Set(['__tests__', 'tests', 'test', 'e2e'])
+
+export const FILE_UPLOAD = {
+    ALLOWED_EXTENSIONS: ['.json'],
+    ALLOWED_MIME_TYPES: ['application/json'],
+    MAX_SIZE_BYTES: 10 * 1024 * 1024
+} as const
+
 export const ORGANIZATION_PLANS = {
     free: 'free',
     pro: 'pro',

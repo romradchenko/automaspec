@@ -30,6 +30,7 @@ certificates
 mermaid-filter.err
 coverage/
 test-results/
+playwright-report/
 .last-run.json
 
 # Devenv
