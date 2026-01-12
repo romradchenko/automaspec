@@ -12,5 +12,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
+    // all routes that require session should be here
     matcher: ['/dashboard', '/profile', '/create-organization', '/invitations']
 }

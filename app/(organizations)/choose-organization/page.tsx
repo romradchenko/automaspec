@@ -30,7 +30,7 @@ export default function ChooseOrganizationPage() {
             router.push('/create-organization')
         } else {
             toast.success(`Organization ${data.name} set as active successfully!`)
-            window.location.href = '/dashboard'
+            router.push('/dashboard')
         }
     }
 

@@ -40,12 +40,7 @@ export default function CreateOrganizationPage() {
             })
 
             if (createError) {
-                toast.error(createError.message)
-                return
-            }
-
-            if (!createdOrg?.id) {
-                toast.error('Failed to create organization')
+                toast.error(createError.message || 'Failed to create organization')
                 return
             }
 
@@ -59,7 +54,7 @@ export default function CreateOrganizationPage() {
             }
 
             toast.success('Organization created successfully!')
-            router.push('/dashboard')
+            router.push('/choose-organization')
         }
     })
 
@@ -100,7 +95,6 @@ export default function CreateOrganizationPage() {
                             <form.Field
                                 name="name"
                                 validators={{
-                                    onChange: ({ value }) => (!value ? 'Organization name is required' : undefined),
                                     onChangeAsyncDebounceMs: 500,
                                     onChangeAsync: async ({ value }) => {
                                         if (!value) return 'Organization name is required'
