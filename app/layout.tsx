@@ -4,7 +4,6 @@ import './globals.css'
 import '../lib/orpc/orpc.server' // for pre-rendering
 import { Providers } from './providers'
 
-// oxlint-disable-next-line only-export-components
 export const metadata: Metadata = {
     title: 'Automaspec',
     description: 'Automaspec - Your AI-powered solution for automating your business processes'

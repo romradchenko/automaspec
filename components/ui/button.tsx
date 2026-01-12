@@ -44,5 +44,4 @@ const Button = ({ ref, className, variant, size, asChild = false, ...props }: Bu
 }
 Button.displayName = 'Button'
 
-// oxlint-disable-next-line only-export-components
 export { Button, buttonVariants }

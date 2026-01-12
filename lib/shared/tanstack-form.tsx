@@ -1,4 +1,12 @@
-import type { AnyFieldApi } from '@tanstack/react-form'
+import { type AnyFieldApi, createFormHookContexts, createFormHook } from '@tanstack/react-form'
+
+import {
+    EmailField,
+    PasswordField,
+    NameField,
+    SubmitButton,
+    SyncEmailAndPasswordValues
+} from '@/app/login/features/shared'
 
 export const FieldInfo = ({ field }: { field: AnyFieldApi }) => {
     return (
@@ -10,3 +18,19 @@ export const FieldInfo = ({ field }: { field: AnyFieldApi }) => {
         </>
     )
 }
+
+export const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts()
+
+export const { useAppForm, withForm } = createFormHook({
+    fieldContext,
+    formContext,
+    fieldComponents: {
+        EmailField,
+        PasswordField,
+        NameField
+    },
+    formComponents: {
+        SubmitButton,
+        SyncEmailAndPasswordValues
+    }
+})

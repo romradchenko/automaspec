@@ -3,7 +3,6 @@ import { cache } from 'react'
 
 import { createQueryClient } from './client'
 
-// oxlint-disable-next-line only-export-components
 export const getQueryClient = cache(createQueryClient)
 
 /**
