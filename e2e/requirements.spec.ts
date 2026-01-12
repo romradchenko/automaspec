@@ -48,11 +48,15 @@ test('requirements replace supports add and delete', async ({ page }) => {
     await lastRequirementInput.locator('..').getByRole('button').click()
     await page.getByRole('button', { name: 'Save Changes' }).click()
 
+    await expect(page.getByText('Requirements saved successfully')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('button', { name: 'Edit' })).toBeVisible({ timeout: 10_000 })
     await expect(page.getByText(requirementName)).toHaveCount(0)
 
     await page.getByRole('treeitem', { name: 'Dashboard Tests' }).click()
     await page.keyboard.press('ArrowRight')
     await page.getByRole('treeitem', { name: 'Dashboard Tree View' }).click()
 
+    await expect(page.getByText('Functional Requirements', { exact: true })).toBeVisible({ timeout: 10_000 })
+    await page.waitForLoadState('networkidle', { timeout: 10_000 })
     await expect(page.getByText(requirementName)).toHaveCount(0)
 })

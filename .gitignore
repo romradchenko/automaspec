@@ -44,3 +44,4 @@ devenv.local.yaml
 .pre-commit-config.yaml
 
 db/local.db
+playwright-report/
