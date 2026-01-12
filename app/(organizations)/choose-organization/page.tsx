@@ -2,7 +2,7 @@
 
 import { Loader2, Building2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -11,14 +11,37 @@ import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function ChooseOrganizationPage() {
     const router = useRouter()
-    const { data: organizations, isPending, error } = authClient.useListOrganizations()
+    const hasRefetchedRef = useRef(false)
+    const { data: session, isPending: isPendingSession } = authClient.useSession()
+    const { data: organizations, isPending, error, refetch } = authClient.useListOrganizations()
 
     useEffect(() => {
+        if (isPendingSession) return
+
+        if (!session) {
+            router.push('/login')
+            return
+        }
+
+        if (!hasRefetchedRef.current) {
+            hasRefetchedRef.current = true
+            void refetch()
+        }
+    }, [session, isPendingSession, router, refetch])
+
+    useEffect(() => {
+        if (isPending || isPendingSession) return
+
+        if (error) {
+            toast.error(error.message || 'Failed to load organizations')
+            return
+        }
+
         if (organizations && organizations.length === 0) {
             toast.error('No organizations available. Please create an organization first.')
             router.push('/create-organization')
         }
-    }, [organizations, router])
+    }, [organizations, error, isPending, isPendingSession, router])
 
     const handleSetActiveOrganization = async (orgId: string) => {
         const { data, error } = await authClient.organization.setActive({
@@ -32,6 +55,17 @@ export default function ChooseOrganizationPage() {
             toast.success(`Organization ${data.name} set as active successfully!`)
             router.push('/dashboard')
         }
+    }
+
+    if (isPendingSession || !session) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background p-4">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <p className="text-muted-foreground">Checking authentication...</p>
+                </div>
+            </div>
+        )
     }
 
     return (
