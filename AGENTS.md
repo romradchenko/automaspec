@@ -240,3 +240,8 @@ export function validateSize(size: number) {
 ## Commit Messages
 
 - Commit messages should be short and clear.
+
+## Pull Requests
+
+- Always create PRs based on `dev` branch, never `main`.
+- Use `gh pr create --base dev` when creating PRs via CLI.
