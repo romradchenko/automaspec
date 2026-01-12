@@ -14,6 +14,7 @@ export default function ChooseOrganizationPage() {
     const [activatingOrgId, setActivatingOrgId] = useState<string | null>(null)
     const hasRefetchedRef = useRef(false)
     const previousSessionUserIdRef = useRef<string | null>(null)
+    const isRedirectingRef = useRef(false)
     const { data: session, isPending: isPendingSession } = authClient.useSession()
     const { data: organizations, isPending, error, refetch } = authClient.useListOrganizations()
     const { refetch: refetchActiveOrg } = authClient.useActiveOrganization()
@@ -21,6 +22,7 @@ export default function ChooseOrganizationPage() {
     useEffect(() => {
         if (isPendingSession) return
         if (activatingOrgId !== null) return
+        if (isRedirectingRef.current) return
 
         if (!session) {
             previousSessionUserIdRef.current = null
@@ -47,16 +49,11 @@ export default function ChooseOrganizationPage() {
 
         if (error) {
             toast.error(error.message || 'Failed to load organizations')
-            return
-        }
-
-        if (!error && organizations && organizations.length === 0) {
-            toast.error('No organizations available. Please create an organization first.')
-            router.push('/create-organization')
         }
     }, [organizations, error, isPending, isPendingSession, router])
 
     const handleSetActiveOrganization = async (orgId: string) => {
+        isRedirectingRef.current = false
         setActivatingOrgId(orgId)
         const { data, error } = await authClient.organization.setActive({
             organizationId: orgId
@@ -69,8 +66,9 @@ export default function ChooseOrganizationPage() {
         } else {
             await refetchActiveOrg()
             toast.success(`Organization ${data.name} set as active successfully!`)
-            setActivatingOrgId(null)
+            isRedirectingRef.current = true
             router.replace('/dashboard')
+            setActivatingOrgId(null)
         }
     }
 

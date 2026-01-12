@@ -17,21 +17,16 @@ import { SignUpForm } from './features/sign-up-form'
 export default function LoginPage() {
     const router = useRouter()
     const { data: session, isPending } = authClient.useSession()
-    const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
     const [isSignUp, setIsSignUp] = useState(false)
     const [authValues, setAuthValues] = useState({ email: '', password: '' })
     const [resetKey, setResetKey] = useState(0)
 
     useEffect(() => {
-        if (isPending || isPendingOrganizations) return
+        if (isPending) return
         if (session) {
-            if (organizations && organizations.length > 0) {
-                router.replace('/choose-organization')
-            } else {
-                router.replace('/create-organization')
-            }
+            router.replace('/choose-organization')
         }
-    }, [session, organizations, isPending, isPendingOrganizations, router])
+    }, [session, isPending, router])
 
     const handleValuesChange = useCallback((values: { email?: string; password?: string }) => {
         setAuthValues((prev) => ({
