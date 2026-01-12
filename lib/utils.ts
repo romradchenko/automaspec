@@ -11,7 +11,7 @@ export function normalizeTestFileName(filePath: string): string {
     const parts = filePath.split('/')
     const fileName = parts[parts.length - 1]
     const withoutExtension = fileName.replace(/\.(test|spec)\.(ts|tsx|js|jsx)$/, '')
-    const words = withoutExtension.split(/[-_.]/)
+    const words = withoutExtension.split(/[-_.]/).filter(Boolean)
     const capitalized = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     return capitalized.join(' ')
 }
