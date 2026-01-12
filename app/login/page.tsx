@@ -2,7 +2,8 @@
 
 import { Code } from 'lucide-react'
 import Link from 'next/link'
-import { useCallback, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
 import Loader from '@/components/loader'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -14,10 +15,17 @@ import { SignInForm } from './features/sign-in-form'
 import { SignUpForm } from './features/sign-up-form'
 
 export default function LoginPage() {
+    const router = useRouter()
     const { data: session, isPending } = authClient.useSession()
     const [isSignUp, setIsSignUp] = useState(false)
     const [authValues, setAuthValues] = useState({ email: '', password: '' })
     const [resetKey, setResetKey] = useState(0)
+
+    useEffect(() => {
+        if (!isPending && session) {
+            router.replace('/choose-organization')
+        }
+    }, [session, isPending, router])
 
     const handleValuesChange = useCallback((values: { email?: string; password?: string }) => {
         setAuthValues((prev) => ({

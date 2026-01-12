@@ -16,6 +16,7 @@ import { authClient } from '@/lib/shared/better-auth-client'
 export default function CreateOrganizationPage() {
     const router = useRouter()
     const hasLoadedRef = useRef(false)
+    const isSubmittingRef = useRef(false)
     const {
         data: activeOrganization,
         isPending: isPendingActiveOrganization,
@@ -24,6 +25,7 @@ export default function CreateOrganizationPage() {
     const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
 
     useEffect(() => {
+        if (isSubmittingRef.current) return
         if (!isPendingActiveOrganization && !isPendingOrganizations && !hasLoadedRef.current) {
             hasLoadedRef.current = true
         }
@@ -35,6 +37,7 @@ export default function CreateOrganizationPage() {
             slug: ''
         },
         onSubmit: async ({ value }) => {
+            isSubmittingRef.current = true
             const { data: createdOrg, error: createError } = await authClient.organization.create({
                 name: value.name,
                 slug: value.slug
@@ -42,6 +45,7 @@ export default function CreateOrganizationPage() {
 
             if (createError) {
                 toast.error(createError.message || 'Failed to create organization')
+                isSubmittingRef.current = false
                 return
             }
 
@@ -51,6 +55,7 @@ export default function CreateOrganizationPage() {
 
             if (setActiveError) {
                 toast.error(setActiveError.message || 'Failed to set active organization')
+                isSubmittingRef.current = false
                 return
             }
 
@@ -66,7 +71,8 @@ export default function CreateOrganizationPage() {
             .replace(/^-+|-+$/g, '')
     }
 
-    const isInitialLoading = (isPendingActiveOrganization || isPendingOrganizations) && !hasLoadedRef.current
+    const isInitialLoading =
+        (isPendingActiveOrganization || isPendingOrganizations) && !hasLoadedRef.current && !isSubmittingRef.current
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">

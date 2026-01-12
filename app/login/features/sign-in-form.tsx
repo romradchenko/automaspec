@@ -37,7 +37,7 @@ export function SignInForm({ onToggle, initialEmail = '', initialPassword = '', 
                 {
                     onSuccess: async () => {
                         toast.success('Sign in successful')
-                        router.push('/choose-organization')
+                        router.replace('/choose-organization')
                     },
                     onError: (ctx) => {
                         toast.error(ctx.error.message)

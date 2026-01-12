@@ -11,6 +11,26 @@ import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function LandingPage() {
     const { data: session } = authClient.useSession()
+    const { data: activeOrganization } = authClient.useActiveOrganization()
+    const { data: organizations } = authClient.useListOrganizations()
+
+    const getAppLink = () => {
+        if (!session) return '/dashboard'
+        if (!activeOrganization) {
+            if (organizations && organizations.length > 0) return '/choose-organization'
+            return '/create-organization'
+        }
+        return '/dashboard'
+    }
+
+    const getAppButtonText = () => {
+        if (!session) return 'Go to App'
+        if (!activeOrganization) {
+            if (organizations && organizations.length > 0) return 'Choose Organization'
+            return 'Create Organization'
+        }
+        return 'Go to App'
+    }
 
     return (
         <div className="min-h-screen bg-background">
@@ -31,8 +51,8 @@ export default function LandingPage() {
                         </Link>
                         {session ? (
                             <div className="flex items-center gap-4">
-                                <Link href="/dashboard">
-                                    <Button>Go to App</Button>
+                                <Link href={getAppLink()}>
+                                    <Button>{getAppButtonText()}</Button>
                                 </Link>
                                 <Avatar className="h-8 w-8">
                                     <AvatarImage src={session.user.image || undefined} alt={session.user.name} />
@@ -68,9 +88,9 @@ export default function LandingPage() {
                         a modern dashboard built for developers, testers, and managers.
                     </p>
                     <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                        <Link href="/dashboard">
+                        <Link href={getAppLink()}>
                             <Button className="px-8 text-lg" size="lg">
-                                {session ? 'Go to App' : 'Start Testing Free'}
+                                {session ? getAppButtonText() : 'Start Testing Free'}
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
@@ -186,7 +206,7 @@ export default function LandingPage() {
                                         <span className="text-sm">1 project</span>
                                     </div>
                                 </div>
-                                <Link className="block" href="/dashboard">
+                                <Link className="block" href={getAppLink()}>
                                     <Button className="w-full">{session ? 'Go to App' : 'Get Started Free'}</Button>
                                 </Link>
                             </CardContent>
@@ -201,9 +221,9 @@ export default function LandingPage() {
                     <p className="mb-8 text-xl opacity-90">
                         Join thousands of developers who trust AutomaSpec for their testing needs.
                     </p>
-                    <Link href="/dashboard">
+                    <Link href={getAppLink()}>
                         <Button className="px-8 text-lg" size="lg" variant="secondary">
-                            {session ? 'Go to App' : 'Start Your Free Trial'}
+                            {session ? getAppButtonText() : 'Start Your Free Trial'}
                             <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
