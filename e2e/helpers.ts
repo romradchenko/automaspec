@@ -42,7 +42,8 @@ export async function ensureDashboard(page: Page) {
         const activateButtons = page.getByRole('button', { name: 'Set as active' })
         await expect(activateButtons.first()).toBeVisible()
         await activateButtons.first().click()
-        await page.waitForURL('**/dashboard', { waitUntil: 'load' })
+        await page.waitForSelector('text=Setting...', { state: 'hidden', timeout: 10_000 })
+        await page.waitForURL('**/dashboard', { waitUntil: 'load', timeout: 30_000 })
         return
     }
 
@@ -84,6 +85,7 @@ export async function ensureDashboard(page: Page) {
         const activateButtons = page.getByRole('button', { name: 'Set as active' })
         await expect(activateButtons.first()).toBeVisible()
         await activateButtons.first().click()
-        await page.waitForURL('**/dashboard', { waitUntil: 'load' })
+        await page.waitForSelector('text=Setting...', { state: 'hidden', timeout: 10_000 })
+        await page.waitForURL('**/dashboard', { waitUntil: 'load', timeout: 30_000 })
     }
 }

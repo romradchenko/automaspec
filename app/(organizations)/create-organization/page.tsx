@@ -20,7 +20,7 @@ export default function CreateOrganizationPage() {
     const {
         data: activeOrganization,
         isPending: isPendingActiveOrganization,
-        error
+        refetch: refetchActiveOrg
     } = authClient.useActiveOrganization()
     const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
 
@@ -59,6 +59,7 @@ export default function CreateOrganizationPage() {
                 return
             }
 
+            await refetchActiveOrg()
             toast.success('Organization created successfully!')
             router.push('/choose-organization')
         }
@@ -231,12 +232,6 @@ export default function CreateOrganizationPage() {
                                     </div>
                                 )}
                             </form.Field>
-
-                            {error && (
-                                <Alert variant="destructive">
-                                    <AlertDescription>{error.message}</AlertDescription>
-                                </Alert>
-                            )}
 
                             <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                                 {([canSubmit, isSubmitting]) => (

@@ -16,9 +16,11 @@ export default function ChooseOrganizationPage() {
     const previousSessionUserIdRef = useRef<string | null>(null)
     const { data: session, isPending: isPendingSession } = authClient.useSession()
     const { data: organizations, isPending, error, refetch } = authClient.useListOrganizations()
+    const { refetch: refetchActiveOrg } = authClient.useActiveOrganization()
 
     useEffect(() => {
         if (isPendingSession) return
+        if (activatingOrgId !== null) return
 
         if (!session) {
             previousSessionUserIdRef.current = null
@@ -38,7 +40,7 @@ export default function ChooseOrganizationPage() {
                 void refetch()
             }
         }
-    }, [session, isPendingSession, isPending, error, router, refetch])
+    }, [session, isPendingSession, isPending, error, router, refetch, activatingOrgId])
 
     useEffect(() => {
         if (isPending || isPendingSession) return
@@ -65,12 +67,14 @@ export default function ChooseOrganizationPage() {
             toast.error(error.message || 'Failed to set active organization')
             router.push('/create-organization')
         } else {
+            await refetchActiveOrg()
             toast.success(`Organization ${data.name} set as active successfully!`)
-            router.push('/dashboard')
+            setActivatingOrgId(null)
+            router.replace('/dashboard')
         }
     }
 
-    if (isPendingSession || !session) {
+    if ((isPendingSession || !session) && activatingOrgId === null) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background p-4">
                 <div className="flex flex-col items-center gap-4">

@@ -13,6 +13,6 @@ test.beforeEach(async ({ page }) => {
 
 test('user signs in and activates organization', async ({ page }) => {
     await ensureDashboard(page)
-    await expect(page.getByText('Automaspec Org')).toBeVisible({ timeout: 30_000 })
+    await expect(page.getByRole('heading', { name: 'Automaspec Org' })).toBeVisible({ timeout: 30_000 })
     await expect(page.getByText('Free Plan')).toBeVisible({ timeout: 30_000 })
 })
