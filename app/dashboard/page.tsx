@@ -59,9 +59,9 @@ export default function Dashboard() {
 
         if (!activeOrganization) {
             if (organizations && organizations.length > 0) {
-                router.push('/choose-organization')
+                router.replace('/choose-organization')
             } else {
-                router.push('/create-organization')
+                router.replace('/create-organization')
             }
         }
     }, [activeOrganization, organizations, isPendingActiveOrg, isPendingOrganizations, router])
@@ -425,7 +425,18 @@ export default function Dashboard() {
         }
     }
 
-    if (isPendingActiveOrg || isPendingOrganizations || !activeOrganization) {
+    if (isPendingActiveOrg || isPendingOrganizations) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-background">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                    <p className="text-muted-foreground">Loading dashboard...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (!activeOrganization) {
         return null
     }
 
