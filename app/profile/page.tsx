@@ -341,7 +341,7 @@ export default function ProfilePage() {
                                     variant="outline"
                                     onClick={async () => {
                                         await authClient.signOut()
-                                        router.push('/login')
+                                        router.replace('/login')
                                     }}
                                 >
                                     <LogOut className="mr-2 size-4" /> Sign out

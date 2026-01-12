@@ -10,12 +10,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function LandingPage() {
-    const { data: session } = authClient.useSession()
-    const { data: activeOrganization } = authClient.useActiveOrganization()
-    const { data: organizations } = authClient.useListOrganizations()
+    const { data: session, isPending: isPendingSession } = authClient.useSession()
+    const { data: activeOrganization, isPending: isPendingActiveOrg } = authClient.useActiveOrganization()
+    const { data: organizations, isPending: isPendingOrganizations } = authClient.useListOrganizations()
+
+    const isLoading = isPendingSession || isPendingActiveOrg || isPendingOrganizations
 
     const getAppLink = () => {
-        if (!session) return '/dashboard'
+        if (!session || isLoading) return '/dashboard'
         if (!activeOrganization) {
             if (organizations && organizations.length > 0) return '/choose-organization'
             return '/create-organization'
@@ -24,7 +26,7 @@ export default function LandingPage() {
     }
 
     const getAppButtonText = () => {
-        if (!session) return 'Go to App'
+        if (!session || isLoading) return 'Go to App'
         if (!activeOrganization) {
             if (organizations && organizations.length > 0) return 'Choose Organization'
             return 'Create Organization'

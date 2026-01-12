@@ -2,7 +2,7 @@
 
 import { Loader2, Building2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,9 @@ import { authClient } from '@/lib/shared/better-auth-client'
 
 export default function ChooseOrganizationPage() {
     const router = useRouter()
+    const [activatingOrgId, setActivatingOrgId] = useState<string | null>(null)
     const hasRefetchedRef = useRef(false)
+    const previousSessionUserIdRef = useRef<string | null>(null)
     const { data: session, isPending: isPendingSession } = authClient.useSession()
     const { data: organizations, isPending, error, refetch } = authClient.useListOrganizations()
 
@@ -19,15 +21,24 @@ export default function ChooseOrganizationPage() {
         if (isPendingSession) return
 
         if (!session) {
+            previousSessionUserIdRef.current = null
+            hasRefetchedRef.current = false
             router.push('/login')
             return
         }
 
-        if (!hasRefetchedRef.current) {
-            hasRefetchedRef.current = true
+        const currentUserId = session.user.id
+        if (previousSessionUserIdRef.current !== currentUserId) {
+            previousSessionUserIdRef.current = currentUserId
+            hasRefetchedRef.current = false
             void refetch()
+        } else if (!hasRefetchedRef.current && !isPending) {
+            hasRefetchedRef.current = true
+            if (error) {
+                void refetch()
+            }
         }
-    }, [session, isPendingSession, router, refetch])
+    }, [session, isPendingSession, isPending, error, router, refetch])
 
     useEffect(() => {
         if (isPending || isPendingSession) return
@@ -37,18 +48,20 @@ export default function ChooseOrganizationPage() {
             return
         }
 
-        if (organizations && organizations.length === 0) {
+        if (!error && organizations && organizations.length === 0) {
             toast.error('No organizations available. Please create an organization first.')
             router.push('/create-organization')
         }
     }, [organizations, error, isPending, isPendingSession, router])
 
     const handleSetActiveOrganization = async (orgId: string) => {
+        setActivatingOrgId(orgId)
         const { data, error } = await authClient.organization.setActive({
             organizationId: orgId
         })
 
         if (error) {
+            setActivatingOrgId(null)
             toast.error(error.message || 'Failed to set active organization')
             router.push('/create-organization')
         } else {
@@ -85,36 +98,67 @@ export default function ChooseOrganizationPage() {
                         <CardDescription>Select the workspace you want to use</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        {error && <p className="text-sm text-destructive mb-4">{error.message}</p>}
+                        {error ? (
+                            <div className="space-y-4">
+                                <p className="text-sm text-destructive mb-4">
+                                    {error.message || 'Failed to load organizations'}
+                                </p>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => router.push('/create-organization')}
+                                    className="w-full"
+                                >
+                                    Create Organization
+                                </Button>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="space-y-3">
+                                    {organizations &&
+                                    organizations.length > 0 &&
+                                    session &&
+                                    previousSessionUserIdRef.current === session.user.id ? (
+                                        // TODO: use Organization type when better-auth fixes its authClient types
+                                        organizations.map((org: { id: string; name: string; slug: string }) => (
+                                            <div
+                                                key={org.id}
+                                                className="flex items-center justify-between p-3 rounded border"
+                                            >
+                                                <div>
+                                                    <div className="font-medium">{org.name}</div>
+                                                    <div className="text-xs text-muted-foreground">{org.slug}</div>
+                                                </div>
+                                                <Button
+                                                    onClick={async () => handleSetActiveOrganization(org.id)}
+                                                    disabled={activatingOrgId !== null}
+                                                >
+                                                    {activatingOrgId === org.id ? (
+                                                        <>
+                                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                            Setting...
+                                                        </>
+                                                    ) : (
+                                                        'Set as active'
+                                                    )}
+                                                </Button>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground">No organizations available.</p>
+                                    )}
+                                </div>
 
-                        <div className="space-y-3">
-                            {organizations && organizations.length > 0 ? (
-                                // TODO: use Organization type when better-auth fixes its authClient types
-                                organizations.map((org: { id: string; name: string; slug: string }) => (
-                                    <div key={org.id} className="flex items-center justify-between p-3 rounded border">
-                                        <div>
-                                            <div className="font-medium">{org.name}</div>
-                                            <div className="text-xs text-muted-foreground">{org.slug}</div>
-                                        </div>
-                                        <Button onClick={async () => handleSetActiveOrganization(org.id)}>
-                                            Set as active
-                                        </Button>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-sm text-muted-foreground">No organizations available.</p>
-                            )}
-                        </div>
-
-                        <div className="mt-6 text-center">
-                            <Button
-                                variant="outline"
-                                onClick={() => router.push('/create-organization')}
-                                className="w-full"
-                            >
-                                Create New Organization
-                            </Button>
-                        </div>
+                                <div className="mt-6 text-center">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => router.push('/create-organization')}
+                                        className="w-full"
+                                    >
+                                        Create New Organization
+                                    </Button>
+                                </div>
+                            </>
+                        )}
                     </CardContent>
                 </Card>
             )}
