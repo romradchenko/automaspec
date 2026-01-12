@@ -13,7 +13,7 @@ import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
 
 const os = implement(testsContract).use(authMiddleware).use(organizationMiddleware)
 
-async function recalculateSpecStatuses(specIds: string[]): Promise<void> {
+async function recalculateSpecStatuses(specIds: string[], organizationId: string): Promise<void> {
     if (specIds.length === 0) return
 
     const allSpecTests = await db
@@ -23,7 +23,8 @@ async function recalculateSpecStatuses(specIds: string[]): Promise<void> {
         })
         .from(test)
         .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
-        .where(inArray(testRequirement.specId, specIds))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(and(inArray(testRequirement.specId, specIds), eq(testSpec.organizationId, organizationId)))
 
     const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
 
@@ -701,7 +702,7 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     }
     const affectedSpecIds = Array.from(affectedSpecIdSet)
 
-    await recalculateSpecStatuses(affectedSpecIds)
+    await recalculateSpecStatuses(affectedSpecIds, context.organizationId)
 
     return { created: 0, updated: updatedCount, missing: missingIds.length }
 })
@@ -911,7 +912,7 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
         await Promise.all(updateTasks)
     }
 
-    await recalculateSpecStatuses(Array.from(affectedSpecIds))
+    await recalculateSpecStatuses(Array.from(affectedSpecIds), organizationId)
 
     return {
         foldersCreated: foldersToInsert.length,
