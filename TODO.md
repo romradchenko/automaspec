@@ -94,7 +94,7 @@ assertionResults[].title (it)  → Requirement + Test (linked)
 
 ---
 
-## 4. Onboarding — From Scratch (LOW PRIORITY)
+## 4. Onboarding — From Scratch
 
 > For now: placeholder UI, no implementation
 
