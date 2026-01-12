@@ -42,7 +42,7 @@ export async function ensureDashboard(page: Page) {
         const activateButtons = page.getByRole('button', { name: 'Set as active' })
         await expect(activateButtons.first()).toBeVisible()
         await activateButtons.first().click()
-        await page.waitForURL('**/dashboard', { waitUntil: 'commit' })
+        await page.waitForURL('**/dashboard', { waitUntil: 'load' })
         return
     }
 
@@ -50,18 +50,40 @@ export async function ensureDashboard(page: Page) {
     const dashboardLink = page.getByRole('link', { name: 'Go to dashboard' })
     if (await dashboardLink.isVisible()) {
         await dashboardLink.click()
+        await page.waitForURL(/(choose-organization|dashboard|create-organization)/, {
+            waitUntil: 'load',
+            timeout: 30_000
+        })
     } else {
         await page.fill('input[name="email"]', 'demo@automaspec.com')
         await page.fill('input[name="password"]', 'demo1234')
         await page.getByRole('button', { name: 'Sign in' }).click()
+        await page.waitForURL(/(choose-organization|dashboard|create-organization)/, {
+            waitUntil: 'load',
+            timeout: 30_000
+        })
     }
 
-    await page.waitForURL(/(choose-organization|dashboard)/, { waitUntil: 'commit' })
+    if (page.url().includes('/create-organization')) {
+        await page.waitForSelector('text=Create Your Organization', { timeout: 15_000 })
+        // oxlint-disable-next-line no-empty-function
+        await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => {})
+
+        const chooseOrgButton = page.locator('button').filter({ hasText: /Choose organization|View all organizations/ })
+        const isVisible = await chooseOrgButton.isVisible({ timeout: 10_000 }).catch(() => false)
+
+        if (isVisible) {
+            await chooseOrgButton.click()
+            await page.waitForURL(/(choose-organization|dashboard)/, { waitUntil: 'load', timeout: 30_000 })
+        } else {
+            await page.goto('/choose-organization', { waitUntil: 'domcontentloaded', timeout: 30_000 })
+        }
+    }
 
     if (page.url().includes('choose-organization')) {
         const activateButtons = page.getByRole('button', { name: 'Set as active' })
         await expect(activateButtons.first()).toBeVisible()
         await activateButtons.first().click()
-        await page.waitForURL('**/dashboard', { waitUntil: 'commit' })
+        await page.waitForURL('**/dashboard', { waitUntil: 'load' })
     }
 }
