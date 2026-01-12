@@ -25,6 +25,8 @@ import { CreateSpecDialog } from './components/create-spec-dialog'
 import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
 import { FolderDetailsPanel } from './components/folder-details-panel'
 import { DashboardHeader } from './components/header'
+import { ImportTestsDialog } from './components/import-tests-dialog'
+import { OnboardingEmptyState } from './components/onboarding-empty-state'
 import { TestDetailsPanel } from './components/test-details-panel'
 import { invalidateAndRefetchQueries } from './hooks'
 import { Tree, type TreeHandle } from './tree'
@@ -47,6 +49,7 @@ export default function Dashboard() {
     const [aiIsLoading, setAiIsLoading] = useState(false)
     const [aiError, setAiError] = useState<string | null>(null)
     const [aiProgress, setAiProgress] = useState<string[]>([])
+    const [importDialogOpen, setImportDialogOpen] = useState(false)
     const router = useRouter()
 
     const { data: activeOrganization, isPending: isPendingActiveOrg } = authClient.useActiveOrganization()
@@ -83,6 +86,13 @@ export default function Dashboard() {
         }
     }, [aiOpen])
 
+    const { data: specs = [], isLoading: isLoadingSpecs } = useQuery({
+        queryKey: ['test-specs'],
+        queryFn: async () => {
+            const res = await safeClient.testSpecs.list({})
+            return res.data || []
+        }
+    })
     const { data: requirements = [] } = useQuery({
         queryKey: ['test-requirements'],
         queryFn: async () => {
@@ -97,6 +107,8 @@ export default function Dashboard() {
             return res.data || []
         }
     })
+
+    const isEmptyOrganization = !isLoadingSpecs && specs.length === 0
 
     const handleSpecSelect = (spec: TestSpec) => {
         const specRequirements = []
@@ -429,11 +441,30 @@ export default function Dashboard() {
         return null
     }
 
+    if (isEmptyOrganization) {
+        return (
+            <>
+                <div className="flex h-screen flex-col bg-background">
+                    <DashboardHeader onImportClick={() => setImportDialogOpen(true)} />
+                    <OnboardingEmptyState onImportClick={() => setImportDialogOpen(true)} />
+                </div>
+                <ImportTestsDialog
+                    open={importDialogOpen}
+                    onOpenChange={setImportDialogOpen}
+                    onImportComplete={() => {
+                        void queryClient.invalidateQueries({ queryKey: ['test-specs'] })
+                        void treeRef.current?.refreshItemChildren('root')
+                    }}
+                />
+            </>
+        )
+    }
+
     return (
         <>
             <div className="flex h-screen flex-col bg-background lg:flex-row">
                 <div className="flex flex-col border-b lg:w-1/2 lg:border-b-0 lg:border-r">
-                    <DashboardHeader />
+                    <DashboardHeader onImportClick={() => setImportDialogOpen(true)} />
 
                     <div className="flex-1 overflow-auto p-3 sm:p-2">
                         <Tree
@@ -516,6 +547,11 @@ export default function Dashboard() {
                 onSubmit={handleAiSubmit}
                 onToggleOpen={handleToggleAiOpen}
                 onResetChat={handleResetAiChat}
+            />
+            <ImportTestsDialog
+                open={importDialogOpen}
+                onOpenChange={setImportDialogOpen}
+                onImportComplete={async () => treeRef.current?.refreshItemChildren('root')}
             />
         </>
     )

@@ -5,13 +5,57 @@ import { asc, eq, and, inArray, isNull, notInArray, sql } from 'drizzle-orm'
 import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestRequirementUpsertValue } from '@/lib/types'
 
 import { db } from '@/db'
-import { testFolder, testSpec, testRequirement, test } from '@/db/schema'
+import { testFolder, testSpec, testRequirement, test, DEFAULT_SPEC_STATUSES } from '@/db/schema'
 import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import { normalizeTestFileName, extractFolderPath, extractRelativeFilePath } from '@/lib/utils'
 import { testsContract } from '@/orpc/contracts/tests'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
-import testResultsData from '@/test-results.json'
 
 const os = implement(testsContract).use(authMiddleware).use(organizationMiddleware)
+
+async function recalculateSpecStatuses(specIds: string[]): Promise<void> {
+    if (specIds.length === 0) return
+
+    const allSpecTests = await db
+        .select({
+            specId: testRequirement.specId,
+            status: test.status
+        })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .where(inArray(testRequirement.specId, specIds))
+
+    const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
+
+    for (const specId of specIds) {
+        const counts = {} as Record<SpecStatus, number>
+        for (const status of Object.values(SPEC_STATUSES)) {
+            counts[status as SpecStatus] = 0
+        }
+        specData[specId] = { counts, total: 0 }
+    }
+
+    for (const t of allSpecTests) {
+        if (specData[t.specId] && t.status in specData[t.specId].counts) {
+            specData[t.specId].counts[t.status as SpecStatus]++
+            specData[t.specId].total++
+        }
+    }
+
+    const updateTasks: Array<Promise<unknown>> = []
+    for (const specId of specIds) {
+        updateTasks.push(
+            db
+                .update(testSpec)
+                .set({
+                    statuses: specData[specId].counts,
+                    numberOfTests: specData[specId].total
+                })
+                .where(eq(testSpec.id, specId))
+        )
+    }
+    await Promise.all(updateTasks)
+}
 
 const getTestFolder = os.testFolders.get.handler(async ({ input, context }) => {
     const folder = await db
@@ -574,13 +618,9 @@ const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input,
     return { success: true }
 })
 
-const getReport = os.tests.getReport.handler(async () => {
-    return testResultsData
-})
-
 const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     const titleToStatus: Record<string, TestStatus> = {}
-    const report = input || testResultsData
+    const report = input
 
     if (report.testResults) {
         for (const result of report.testResults as VitestTestResult[]) {
@@ -661,58 +701,224 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     }
     const affectedSpecIds = Array.from(affectedSpecIdSet)
 
-    const allSpecTests =
-        affectedSpecIds.length === 0
-            ? []
-            : await db
-                  .select({
-                      specId: testRequirement.specId,
-                      status: test.status
-                  })
-                  .from(test)
-                  .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
-                  .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
-                  .where(
-                      and(eq(testSpec.organizationId, context.organizationId), inArray(testSpec.id, affectedSpecIds))
-                  )
-
-    const specData: Record<string, { counts: Record<SpecStatus, number>; total: number }> = {}
-
-    for (const specId of affectedSpecIds) {
-        const counts = {} as Record<SpecStatus, number>
-        for (const status of Object.values(SPEC_STATUSES)) {
-            counts[status as SpecStatus] = 0
-        }
-        specData[specId] = {
-            counts,
-            total: 0
-        }
-    }
-
-    for (const t of allSpecTests) {
-        if (specData[t.specId] && t.status in specData[t.specId].counts) {
-            specData[t.specId].counts[t.status as SpecStatus]++
-            specData[t.specId].total++
-        }
-    }
-
-    if (affectedSpecIds.length > 0) {
-        const specUpdateTasks: Array<Promise<unknown>> = []
-        for (const sid of affectedSpecIds) {
-            specUpdateTasks.push(
-                db
-                    .update(testSpec)
-                    .set({
-                        statuses: specData[sid].counts as Record<SpecStatus, number>,
-                        numberOfTests: specData[sid].total
-                    })
-                    .where(eq(testSpec.id, sid))
-            )
-        }
-        await Promise.all(specUpdateTasks)
-    }
+    await recalculateSpecStatuses(affectedSpecIds)
 
     return { created: 0, updated: updatedCount, missing: missingIds.length }
+})
+
+const importFromJson = os.tests.importFromJson.handler(async ({ input, context }) => {
+    const organizationId = context.organizationId
+    const report = input
+
+    if (!report.testResults || report.testResults.length === 0) {
+        return { foldersCreated: 0, specsCreated: 0, requirementsCreated: 0, testsCreated: 0 }
+    }
+
+    const existingFolders = await db
+        .select({ id: testFolder.id, name: testFolder.name, parentFolderId: testFolder.parentFolderId })
+        .from(testFolder)
+        .where(eq(testFolder.organizationId, organizationId))
+
+    const existingSpecs = await db
+        .select({ id: testSpec.id, name: testSpec.name })
+        .from(testSpec)
+        .where(eq(testSpec.organizationId, organizationId))
+
+    const existingRequirements = await db
+        .select({ id: testRequirement.id, name: testRequirement.name, specId: testRequirement.specId })
+        .from(testRequirement)
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, organizationId))
+
+    const existingTests = await db
+        .select({ id: test.id, requirementId: test.requirementId })
+        .from(test)
+        .innerJoin(testRequirement, eq(test.requirementId, testRequirement.id))
+        .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
+        .where(eq(testSpec.organizationId, organizationId))
+
+    const folderCache: Record<string, string> = {}
+    for (const folder of existingFolders) {
+        const parentKey = folder.parentFolderId || 'root'
+        folderCache[`${parentKey}:${folder.name}`] = folder.id
+    }
+
+    const specCache: Record<string, string> = {}
+    for (const spec of existingSpecs) {
+        specCache[spec.name] = spec.id
+    }
+
+    const reqCache: Record<string, string> = {}
+    for (const req of existingRequirements) {
+        reqCache[`${req.specId}:${req.name}`] = req.id
+    }
+
+    const testByReqId: Record<string, string> = {}
+    for (const t of existingTests) {
+        testByReqId[t.requirementId] = t.id
+    }
+
+    const foldersToInsert: Array<{
+        id: string
+        name: string
+        description: null
+        parentFolderId: string | null
+        organizationId: string
+        order: number
+    }> = []
+    const specsToInsert: Array<{
+        id: string
+        name: string
+        fileName: string
+        description: null
+        statuses: typeof DEFAULT_SPEC_STATUSES
+        numberOfTests: number
+        folderId: string | null
+        organizationId: string
+    }> = []
+    const requirementsToInsert: Array<{
+        id: string
+        name: string
+        description: null
+        order: number
+        specId: string
+    }> = []
+    const testsToInsert: Array<{
+        id: string
+        status: TestStatus
+        framework: 'vitest'
+        code: null
+        requirementId: string
+    }> = []
+    const testsToUpdate: Array<{ id: string; status: TestStatus }> = []
+    const affectedSpecIds: Set<string> = new Set()
+
+    let folderOrder = existingFolders.length
+
+    for (const testResult of report.testResults as VitestTestResult[]) {
+        const fileName = testResult.name
+        if (!fileName) continue
+
+        const folderPaths = extractFolderPath(fileName)
+        let parentFolderId: string | null = null
+
+        for (const folderName of folderPaths) {
+            const parentKey: string = parentFolderId || 'root'
+            const cacheKey: string = `${parentKey}:${folderName}`
+
+            if (folderCache[cacheKey]) {
+                parentFolderId = folderCache[cacheKey]
+                continue
+            }
+
+            const newFolderId = crypto.randomUUID()
+            foldersToInsert.push({
+                id: newFolderId,
+                name: folderName,
+                description: null,
+                parentFolderId,
+                organizationId,
+                order: folderOrder++
+            })
+            folderCache[cacheKey] = newFolderId
+            parentFolderId = newFolderId
+        }
+
+        const specName = normalizeTestFileName(fileName)
+        let specId: string
+
+        if (specCache[specName]) {
+            specId = specCache[specName]
+        } else {
+            specId = crypto.randomUUID()
+            specsToInsert.push({
+                id: specId,
+                name: specName,
+                fileName: extractRelativeFilePath(fileName),
+                description: null,
+                statuses: DEFAULT_SPEC_STATUSES,
+                numberOfTests: 0,
+                folderId: parentFolderId,
+                organizationId
+            })
+            specCache[specName] = specId
+        }
+
+        affectedSpecIds.add(specId)
+
+        if (!testResult.assertionResults) continue
+
+        let reqOrder = 0
+        for (const assertion of testResult.assertionResults) {
+            if (!assertion.title) continue
+
+            const reqCacheKey = `${specId}:${assertion.title}`
+            let requirementId: string
+
+            if (reqCache[reqCacheKey]) {
+                requirementId = reqCache[reqCacheKey]
+            } else {
+                requirementId = crypto.randomUUID()
+                requirementsToInsert.push({
+                    id: requirementId,
+                    name: assertion.title,
+                    description: null,
+                    order: reqOrder++,
+                    specId
+                })
+                reqCache[reqCacheKey] = requirementId
+            }
+
+            const status = (assertion.status as TestStatus) || TEST_STATUSES.pending
+
+            if (testByReqId[requirementId]) {
+                testsToUpdate.push({ id: testByReqId[requirementId], status })
+            } else {
+                const testId = crypto.randomUUID()
+                testsToInsert.push({
+                    id: testId,
+                    status,
+                    framework: 'vitest',
+                    code: null,
+                    requirementId
+                })
+                testByReqId[requirementId] = testId
+            }
+        }
+    }
+
+    if (foldersToInsert.length > 0) {
+        await db.insert(testFolder).values(foldersToInsert)
+    }
+
+    if (specsToInsert.length > 0) {
+        await db.insert(testSpec).values(specsToInsert)
+    }
+
+    if (requirementsToInsert.length > 0) {
+        await db.insert(testRequirement).values(requirementsToInsert)
+    }
+
+    if (testsToInsert.length > 0) {
+        await db.insert(test).values(testsToInsert)
+    }
+
+    if (testsToUpdate.length > 0) {
+        const updateTasks: Array<Promise<unknown>> = []
+        for (const t of testsToUpdate) {
+            updateTasks.push(db.update(test).set({ status: t.status }).where(eq(test.id, t.id)))
+        }
+        await Promise.all(updateTasks)
+    }
+
+    await recalculateSpecStatuses(Array.from(affectedSpecIds))
+
+    return {
+        foldersCreated: foldersToInsert.length,
+        specsCreated: specsToInsert.length,
+        requirementsCreated: requirementsToInsert.length,
+        testsCreated: testsToInsert.length
+    }
 })
 
 export const testsRouter = {
@@ -745,6 +951,6 @@ export const testsRouter = {
         edit: editTest,
         delete: deleteTest,
         syncReport: syncReport,
-        getReport: getReport
+        importFromJson: importFromJson
     }
 }

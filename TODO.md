@@ -53,23 +53,29 @@ assertionResults[].title (it)  → Requirement + Test (linked)
 
 **Backend:**
 
-- [ ] Create `importFromJson` endpoint in `orpc/routes/tests.ts`
-- [ ] Filename normalization function in `lib/utils.ts`
+- [x] Create `importFromJson` endpoint in `orpc/routes/tests.ts`
+- [x] Filename normalization function in `lib/utils.ts`
   - `user-service.test.tsx` → "User Service"
   - Remove: `.test.ts`, `.spec.ts`, `.tsx`, `-`, `_`
   - Convert to Title Case
-- [ ] Create Folder structure from file paths (e.g., `__tests__/lib/utils/` → "Lib" → "Utils" nested folders)
-- [ ] Create Spec per unique file, nested in correct folder
-- [ ] Create Requirement per `assertionResults[].title`
-- [ ] Create Test, link to Requirement, status from JSON
-- [ ] Verify `syncReport` only UPDATES status, never CREATES (import creates, sync updates)
+- [x] Create Folder structure from file paths (e.g., `__tests__/lib/utils/` → "Lib" → "Utils" nested folders)
+- [x] Create Spec per unique file, nested in correct folder
+- [x] Create Requirement per `assertionResults[].title`
+- [x] Create Test, link to Requirement, status from JSON
+- [x] Verify `syncReport` only UPDATES status, never CREATES (import creates, sync updates)
+- [x] Unit tests for import feature
 
 **Frontend:**
 
-- [ ] UI: Upload JSON component in `components/ui/`
+- [x] UI: Upload JSON component in `app/dashboard/components/import-tests-dialog.tsx`
+- [x] UI: Import button in header
+- [x] UI: Preview parsed results (file count, spec count, requirement count, test count)
+- [x] UI: Confirm & import button with success toast
+
+**Future enhancements:**
+
 - [ ] UI: Show command to copy: `pnpm vitest --reporter=json --outputFile=test-results.json`
-- [ ] UI: Preview tree in `app/dashboard/` (folders → specs → requirements with test status)
-- [ ] UI: Confirm & import button
+- [ ] UI: Preview tree (folders → specs → requirements with test status) before import
 
 ### 3.4 JSON Structure (what we parse)
 
