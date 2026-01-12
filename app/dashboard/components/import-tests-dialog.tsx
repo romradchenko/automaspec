@@ -59,7 +59,11 @@ export function ImportTestsDialog({ open, onOpenChange, onImportComplete }: Impo
         }
 
         const mimeType = file.type || ''
-        if (mimeType !== '' && mimeType !== 'application/json') {
+        if (!mimeType) {
+            return `Unable to determine file type. Only JSON files are allowed.`
+        }
+
+        if (mimeType !== 'application/json') {
             return `Invalid file type. Only JSON files are allowed.`
         }
 
