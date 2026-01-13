@@ -46,11 +46,7 @@ export default function ChooseOrganizationPage() {
 
     useEffect(() => {
         if (isPending || isPendingSession) return
-
-        if (error) {
-            toast.error(error.message || 'Failed to load organizations')
-        }
-    }, [organizations, error, isPending, isPendingSession, router])
+    }, [isPending, isPendingSession])
 
     const handleSetActiveOrganization = async (orgId: string) => {
         isRedirectingRef.current = false
