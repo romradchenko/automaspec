@@ -346,18 +346,26 @@ const syncReportContract = oc
         summary: 'Sync test report',
         description: 'Sync the latest Vitest report and update test statuses'
     })
-    .input(vitestReportSchema.optional())
+    .input(vitestReportSchema)
     .output(z.object({ created: z.number(), updated: z.number(), missing: z.number() }))
 
-const getReportContract = oc
+const importFromJsonContract = oc
     .route({
-        method: 'GET',
-        path: '/tests/report',
-        tags: ['tests'],
-        summary: 'Get test report',
-        description: 'Get the test report'
+        method: 'POST',
+        path: '/tests/import',
+        tags: ['tests', 'import'],
+        summary: 'Import tests from Vitest JSON',
+        description: 'Parse Vitest JSON report and create Folders, Specs, Requirements, and Tests'
     })
-    .output(vitestReportSchema)
+    .input(vitestReportSchema)
+    .output(
+        z.object({
+            foldersCreated: z.number(),
+            specsCreated: z.number(),
+            requirementsCreated: z.number(),
+            testsCreated: z.number()
+        })
+    )
 
 export const testsContract = {
     testFolders: {
@@ -389,6 +397,6 @@ export const testsContract = {
         edit: editTestContract,
         delete: deleteTestContract,
         syncReport: syncReportContract,
-        getReport: getReportContract
+        importFromJson: importFromJsonContract
     }
 }

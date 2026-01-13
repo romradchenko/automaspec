@@ -417,9 +417,6 @@ describe('tests routes', () => {
         })
         expect(upserted.id).toBe('t1')
 
-        const report = await client.tests.getReport()
-        expect(report).toBeDefined()
-
         dbMocks.setSelectResults([
             [
                 {

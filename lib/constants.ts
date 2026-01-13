@@ -6,6 +6,21 @@ import { CheckCircle, XCircle, Clock, MinusCircle, type LucideIcon } from 'lucid
 import type { SpecStatus } from './types'
 
 export const TEST_FRAMEWORK = 'vitest'
+
+export const IGNORED_TEST_FOLDERS = new Set(['__tests__', 'tests', 'test', 'e2e'])
+
+export const FILE_UPLOAD = {
+    ALLOWED_EXTENSIONS: ['.json'],
+    ALLOWED_MIME_TYPES: ['application/json'],
+    MAX_SIZE_BYTES: 10 * 1024 * 1024
+} as const
+
+export const IMPORT_TESTS_ERRORS = {
+    PLAYWRIGHT_REPORT_NOT_SUPPORTED:
+        'This looks like a Playwright JSON report. The importer supports Vitest JSON reporter output only.',
+    NO_TEST_RESULTS_FOUND: 'No tests found in the report. Make sure this is a Vitest JSON reporter output.'
+} as const
+
 export const ORGANIZATION_PLANS = {
     free: 'free',
     pro: 'pro',

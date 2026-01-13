@@ -1,6 +1,6 @@
 'use client'
 
-import { User, LogOut, Building2, BarChart3 } from 'lucide-react'
+import { User, LogOut, Building2, BarChart3, Upload } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -9,7 +9,11 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { authClient } from '@/lib/shared/better-auth-client'
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+    onImportClick?: () => void
+}
+
+export function DashboardHeader({ onImportClick }: DashboardHeaderProps) {
     const router = useRouter()
     const { data: activeOrganization } = authClient.useActiveOrganization()
 
@@ -25,6 +29,12 @@ export function DashboardHeader() {
                 </Badge>
             </div>
             <div className="flex items-center gap-2">
+                {onImportClick && (
+                    <Button size="sm" variant="outline" onClick={onImportClick} className="flex-1 sm:flex-initial">
+                        <Upload className="mr-2 size-4" />
+                        <span className="hidden sm:inline">Import</span>
+                    </Button>
+                )}
                 <Button asChild size="sm" variant="outline" className="flex-1 sm:flex-initial">
                     <Link href="/analytics">
                         <BarChart3 className="mr-2 size-4" />

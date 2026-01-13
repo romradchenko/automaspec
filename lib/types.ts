@@ -218,6 +218,7 @@ export const vitestAssertionSchema = z.object({
 })
 
 export const vitestTestResultSchema = z.object({
+    name: z.string().optional(),
     assertionResults: z.array(vitestAssertionSchema).optional()
 })
 
