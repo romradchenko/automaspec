@@ -31,6 +31,7 @@ mermaid-filter.err
 coverage/
 test-results/
 test-results.json
+vitest-results.json
 playwright-report/
 .last-run.json
 

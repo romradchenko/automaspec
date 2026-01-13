@@ -33,10 +33,17 @@ describe('invalidateAndRefetchQueries', () => {
             unknown,
             readonly unknown[]
         >
+        const matchingStringQueryKey = { queryKey: ['test-folders'] } as unknown as Query<
+            unknown,
+            Error,
+            unknown,
+            readonly unknown[]
+        >
         const invalidQueryKey = { queryKey: ['plain'] } as unknown as Query<unknown, Error, unknown, readonly unknown[]>
 
         expect(predicate?.(matchingQuery)).toBe(true)
         expect(predicate?.(nonMatchingQuery)).toBe(false)
+        expect(predicate?.(matchingStringQueryKey)).toBe(true)
         expect(predicate?.(invalidQueryKey)).toBe(false)
         expect(refetchQueries.mock.calls[0]?.[0]?.predicate).toBe(predicate)
     })
