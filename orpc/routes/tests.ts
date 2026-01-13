@@ -6,7 +6,7 @@ import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestRequirem
 
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test, DEFAULT_SPEC_STATUSES } from '@/db/schema'
-import { TEST_STATUSES, SPEC_STATUSES, IMPORT_TESTS_ERRORS } from '@/lib/constants'
+import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
 import { normalizeTestFileName, extractFolderPath, extractRelativeFilePath } from '@/lib/utils'
 import { testsContract } from '@/orpc/contracts/tests'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
@@ -622,16 +622,6 @@ const deleteTestRequirement = os.testRequirements.delete.handler(async ({ input,
 const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     const titleToStatus: Record<string, TestStatus> = {}
     const report = input
-
-    if (
-        report &&
-        typeof report === 'object' &&
-        'config' in report &&
-        'suites' in report &&
-        Array.isArray((report as Record<string, unknown>).suites)
-    ) {
-        throw new ORPCError(IMPORT_TESTS_ERRORS.PLAYWRIGHT_REPORT_NOT_SUPPORTED)
-    }
 
     if (report.testResults) {
         for (const result of report.testResults as VitestTestResult[]) {

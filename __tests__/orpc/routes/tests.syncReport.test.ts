@@ -1,10 +1,8 @@
 import { createRouterClient } from '@orpc/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { VitestReport } from '@/lib/types'
-
 import { testSpec as testSpecTable, test as testTable } from '@/db/schema'
-import { IMPORT_TESTS_ERRORS, TEST_STATUSES } from '@/lib/constants'
+import { TEST_STATUSES } from '@/lib/constants'
 import { router } from '@/orpc/routes'
 
 let allRequirements: Array<Record<string, unknown>> = []
@@ -102,16 +100,5 @@ describe('syncReport', () => {
         expect(calls.length).toBeGreaterThanOrEqual(3)
         expect(calls[0][0]).toBe(testTable)
         expect(calls.some((call) => call[0] === testSpecTable)).toBe(true)
-    })
-
-    it('rejects Playwright JSON reports', async () => {
-        const report = {
-            config: {},
-            suites: []
-        } as unknown as VitestReport
-
-        await expect(testClient.tests.syncReport(report)).rejects.toThrow(
-            IMPORT_TESTS_ERRORS.PLAYWRIGHT_REPORT_NOT_SUPPORTED
-        )
     })
 })
