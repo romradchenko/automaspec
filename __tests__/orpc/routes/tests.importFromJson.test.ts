@@ -13,6 +13,7 @@ import { router } from '@/orpc/routes'
 const dbMocks = vi.hoisted(() => {
     const insertedItems: Array<{ table: unknown; values: unknown }> = []
     const updatedItems: Array<{ table: unknown }> = []
+    let selectResults: unknown[] = []
 
     const update = vi.fn((_table: unknown) => {
         updatedItems.push({ table: _table })
@@ -30,23 +31,29 @@ const dbMocks = vi.hoisted(() => {
         }
     }))
 
-    const createThenableWithLimit = async () => {
-        const result: unknown[] = []
-        const promise = Promise.resolve(result)
+    const createThenableWithLimit = async (rows: unknown[]) => {
+        const promise = Promise.resolve(rows)
         return Object.assign(promise, {
-            limit: async () => Promise.resolve(result)
+            limit: async () => Promise.resolve(rows),
+            orderBy: async () => Promise.resolve(rows)
         })
     }
 
-    const createQueryResult = (): Record<string, unknown> => ({
-        innerJoin: () => createQueryResult(),
-        where: async () => createThenableWithLimit(),
-        limit: async () => Promise.resolve([])
-    })
+    const selectChain = {
+        from: () => selectChain,
+        innerJoin: () => selectChain,
+        where: async () => {
+            const value = selectResults.shift() ?? []
+            const rows = Array.isArray(value) ? value : []
+            return createThenableWithLimit(rows)
+        }
+    }
 
-    const select = vi.fn(() => ({
-        from: () => createQueryResult()
-    }))
+    const select = vi.fn(() => selectChain)
+
+    const setSelectResults = (results: unknown[]) => {
+        selectResults = results
+    }
 
     const reset = () => {
         update.mockClear()
@@ -54,12 +61,13 @@ const dbMocks = vi.hoisted(() => {
         insert.mockClear()
         insertedItems.length = 0
         updatedItems.length = 0
+        selectResults = []
     }
 
     const getInsertedItems = () => insertedItems
     const getUpdatedItems = () => updatedItems
 
-    return { update, select, insert, reset, getInsertedItems, getUpdatedItems }
+    return { update, select, insert, reset, getInsertedItems, getUpdatedItems, setSelectResults }
 })
 
 vi.mock('@/db', () => {
@@ -261,5 +269,31 @@ describe('importFromJson', () => {
         const result = await testClient.tests.importFromJson(report)
 
         expect(result.foldersCreated).toBe(2)
+    })
+
+    it('appends requirement order after existing requirements', async () => {
+        dbMocks.setSelectResults([
+            [],
+            [{ id: 'spec-1', name: 'Utils', folderId: null }],
+            [{ id: 'req-1', name: 'Existing', specId: 'spec-1', order: 5 }],
+            []
+        ])
+
+        const report = {
+            testResults: [
+                {
+                    name: 'utils.test.ts',
+                    assertionResults: [{ title: 'New', status: TEST_STATUSES.passed }]
+                }
+            ]
+        }
+
+        const result = await testClient.tests.importFromJson(report)
+        expect(result.requirementsCreated).toBe(1)
+
+        const insertedReqs = dbMocks.getInsertedItems().filter((item) => item.table === testRequirementTable)
+        const values = insertedReqs[0].values as unknown[]
+        const first = values[0] as { order: number }
+        expect(first.order).toBe(6)
     })
 })

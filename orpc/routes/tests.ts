@@ -6,7 +6,7 @@ import type { TestStatus, SpecStatus, VitestTestResult, TestFolder, TestRequirem
 
 import { db } from '@/db'
 import { testFolder, testSpec, testRequirement, test, DEFAULT_SPEC_STATUSES } from '@/db/schema'
-import { TEST_STATUSES, SPEC_STATUSES } from '@/lib/constants'
+import { TEST_STATUSES, SPEC_STATUSES, IMPORT_TESTS_ERRORS } from '@/lib/constants'
 import { normalizeTestFileName, extractFolderPath, extractRelativeFilePath } from '@/lib/utils'
 import { testsContract } from '@/orpc/contracts/tests'
 import { authMiddleware, organizationMiddleware } from '@/orpc/middleware'
@@ -623,6 +623,16 @@ const syncReport = os.tests.syncReport.handler(async ({ input, context }) => {
     const titleToStatus: Record<string, TestStatus> = {}
     const report = input
 
+    if (
+        report &&
+        typeof report === 'object' &&
+        'config' in report &&
+        'suites' in report &&
+        Array.isArray((report as Record<string, unknown>).suites)
+    ) {
+        throw new ORPCError(IMPORT_TESTS_ERRORS.PLAYWRIGHT_REPORT_NOT_SUPPORTED)
+    }
+
     if (report.testResults) {
         for (const result of report.testResults as VitestTestResult[]) {
             if (result.assertionResults) {
@@ -726,7 +736,12 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
         .where(eq(testSpec.organizationId, organizationId))
 
     const existingRequirements = await db
-        .select({ id: testRequirement.id, name: testRequirement.name, specId: testRequirement.specId })
+        .select({
+            id: testRequirement.id,
+            name: testRequirement.name,
+            specId: testRequirement.specId,
+            order: testRequirement.order
+        })
         .from(testRequirement)
         .innerJoin(testSpec, eq(testRequirement.specId, testSpec.id))
         .where(eq(testSpec.organizationId, organizationId))
@@ -751,8 +766,14 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
     }
 
     const reqCache: Record<string, string> = {}
+    const nextRequirementOrderBySpecId: Record<string, number> = {}
     for (const req of existingRequirements) {
         reqCache[`${req.specId}:${req.name}`] = req.id
+        const nextOrder = req.order + 1
+        const currentNextOrder = nextRequirementOrderBySpecId[req.specId]
+        if (currentNextOrder === undefined || nextOrder > currentNextOrder) {
+            nextRequirementOrderBySpecId[req.specId] = nextOrder
+        }
     }
 
     const testByReqId: Record<string, string> = {}
@@ -852,7 +873,9 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
 
         if (!testResult.assertionResults) continue
 
-        let reqOrder = 0
+        if (nextRequirementOrderBySpecId[specId] === undefined) {
+            nextRequirementOrderBySpecId[specId] = 0
+        }
         for (const assertion of testResult.assertionResults) {
             if (!assertion.title) continue
 
@@ -863,13 +886,15 @@ const importFromJson = os.tests.importFromJson.handler(async ({ input, context }
                 requirementId = reqCache[reqCacheKey]
             } else {
                 requirementId = crypto.randomUUID()
+                const order = nextRequirementOrderBySpecId[specId]
                 requirementsToInsert.push({
                     id: requirementId,
                     name: assertion.title,
                     description: null,
-                    order: reqOrder++,
+                    order,
                     specId
                 })
+                nextRequirementOrderBySpecId[specId] = order + 1
                 reqCache[reqCacheKey] = requirementId
             }
 

@@ -9,7 +9,7 @@ import type { VitestReport } from '@/lib/types'
 
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { FILE_UPLOAD } from '@/lib/constants'
+import { FILE_UPLOAD, IMPORT_TESTS_ERRORS } from '@/lib/constants'
 import { safeClient } from '@/lib/orpc/orpc'
 import { vitestReportSchema } from '@/lib/types'
 
@@ -27,6 +27,16 @@ export function ImportTestsDialog({ open, onOpenChange, onImportComplete }: Impo
     const [fileName, setFileName] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const queryClient = useQueryClient()
+
+    function looksLikePlaywrightReport(value: unknown): boolean {
+        if (!value || typeof value !== 'object') return false
+        if (Array.isArray(value)) return false
+
+        const record = value as Record<string, unknown>
+        if (!('config' in record) || !('suites' in record)) return false
+
+        return Array.isArray(record.suites)
+    }
 
     const importMutation = useMutation({
         mutationFn: async (report: VitestReport) => {
@@ -105,10 +115,23 @@ export function ImportTestsDialog({ open, onOpenChange, onImportComplete }: Impo
                 }
 
                 const json = JSON.parse(content)
+
+                if (looksLikePlaywrightReport(json)) {
+                    setParseError(IMPORT_TESTS_ERRORS.PLAYWRIGHT_REPORT_NOT_SUPPORTED)
+                    setParsedReport(null)
+                    return
+                }
+
                 const validated = vitestReportSchema.safeParse(json)
 
                 if (!validated.success) {
                     setParseError('Invalid Vitest report format')
+                    setParsedReport(null)
+                    return
+                }
+
+                if (!validated.data.testResults || validated.data.testResults.length === 0) {
+                    setParseError(IMPORT_TESTS_ERRORS.NO_TEST_RESULTS_FOUND)
                     setParsedReport(null)
                     return
                 }

@@ -8,7 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function normalizeTestFileName(filePath: string): string {
-    const parts = filePath.split('/')
+    const parts = filePath.split('/').filter(Boolean)
+    if (parts.length === 0) return ''
     const fileName = parts[parts.length - 1]
     const withoutExtension = fileName.replace(/\.(test|spec)\.(ts|tsx|js|jsx)$/, '')
     const words = withoutExtension.split(/[-_.]/).filter(Boolean)
@@ -17,7 +18,7 @@ export function normalizeTestFileName(filePath: string): string {
 }
 
 export function extractFolderPath(filePath: string): string[] {
-    const parts = filePath.split('/')
+    const parts = filePath.split('/').filter(Boolean)
     parts.pop()
 
     let startIndex = 0
@@ -38,6 +39,7 @@ export function extractFolderPath(filePath: string): string[] {
 }
 
 export function extractRelativeFilePath(filePath: string): string {
-    const parts = filePath.split('/')
+    const parts = filePath.split('/').filter(Boolean)
+    if (parts.length === 0) return ''
     return parts[parts.length - 1]
 }

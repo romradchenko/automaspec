@@ -15,6 +15,12 @@ export const FILE_UPLOAD = {
     MAX_SIZE_BYTES: 10 * 1024 * 1024
 } as const
 
+export const IMPORT_TESTS_ERRORS = {
+    PLAYWRIGHT_REPORT_NOT_SUPPORTED:
+        'This looks like a Playwright JSON report. The importer supports Vitest JSON reporter output only.',
+    NO_TEST_RESULTS_FOUND: 'No tests found in the report. Make sure this is a Vitest JSON reporter output.'
+} as const
+
 export const ORGANIZATION_PLANS = {
     free: 'free',
     pro: 'pro',

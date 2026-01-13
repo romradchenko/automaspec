@@ -70,6 +70,11 @@ describe('utils', () => {
             expect(result).toEqual(['Lib', 'Utils'])
         })
 
+        it('should ignore empty path segments', () => {
+            const result = extractFolderPath('__tests__//lib//utils/helpers.test.ts')
+            expect(result).toEqual(['Lib', 'Utils'])
+        })
+
         it('should skip __tests__ folder', () => {
             const result = extractFolderPath('__tests__/components/button.test.tsx')
             expect(result).toEqual(['Components'])
