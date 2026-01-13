@@ -1,0 +1,1273 @@
+{
+    "numTotalTestSuites": 53,
+    "numPassedTestSuites": 53,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "numTotalTests": 119,
+    "numPassedTests": 119,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "snapshot": {
+        "added": 0,
+        "failure": false,
+        "filesAdded": 0,
+        "filesRemoved": 0,
+        "filesRemovedList": [],
+        "filesUnmatched": 0,
+        "filesUpdated": 0,
+        "matched": 0,
+        "total": 0,
+        "unchecked": 0,
+        "uncheckedKeysByFile": [],
+        "unmatched": 0,
+        "updated": 0,
+        "didUpdate": false
+    },
+    "startTime": 1768330865239,
+    "success": true,
+    "testResults": [
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["createAiTools"],
+                    "fullName": "createAiTools calls test folder upsert with context and returns success",
+                    "status": "passed",
+                    "title": "calls test folder upsert with context and returns success",
+                    "duration": 5.703499999999622,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["createAiTools"],
+                    "fullName": "createAiTools returns failure when folder is not found by name",
+                    "status": "passed",
+                    "title": "returns failure when folder is not found by name",
+                    "duration": 1.9583000000002357,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["createAiTools"],
+                    "fullName": "createAiTools creates a spec and replaces requirements",
+                    "status": "passed",
+                    "title": "creates a spec and replaces requirements",
+                    "duration": 1.7785000000003492,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["createAiTools"],
+                    "fullName": "createAiTools returns failure when create folder throws",
+                    "status": "passed",
+                    "title": "returns failure when create folder throws",
+                    "duration": 1.710399999999936,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai helpers"],
+                    "fullName": "ai helpers normalizes messages to core messages",
+                    "status": "passed",
+                    "title": "normalizes messages to core messages",
+                    "duration": 0.36819999999897846,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai helpers"],
+                    "fullName": "ai helpers resolves provider and model defaults",
+                    "status": "passed",
+                    "title": "resolves provider and model defaults",
+                    "duration": 0.3294000000005326,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai helpers"],
+                    "fullName": "ai helpers finds last user content and blocked patterns",
+                    "status": "passed",
+                    "title": "finds last user content and blocked patterns",
+                    "duration": 0.35310000000026776,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai helpers"],
+                    "fullName": "ai helpers enforces prompt guard and length limits",
+                    "status": "passed",
+                    "title": "enforces prompt guard and length limits",
+                    "duration": 1.5424000000002707,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai helpers"],
+                    "fullName": "ai helpers enforces rate limits per organization",
+                    "status": "passed",
+                    "title": "enforces rate limits per organization",
+                    "duration": 0.521999999999025,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai.chat"],
+                    "fullName": "ai.chat returns text from openrouter stream",
+                    "status": "passed",
+                    "title": "returns text from openrouter stream",
+                    "duration": 5.414600000000064,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai.chat"],
+                    "fullName": "ai.chat returns fallback text when openrouter stream is empty",
+                    "status": "passed",
+                    "title": "returns fallback text when openrouter stream is empty",
+                    "duration": 3.09190000000126,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai.chat"],
+                    "fullName": "ai.chat rejects when google key is missing",
+                    "status": "passed",
+                    "title": "rejects when google key is missing",
+                    "duration": 2.7204000000001543,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["ai.chat"],
+                    "fullName": "ai.chat returns text from google stream",
+                    "status": "passed",
+                    "title": "returns text from google stream",
+                    "duration": 1.540499999999156,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873909,
+            "endTime": 1768330873936.5405,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/ai.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Analytics Page Components"],
+                    "fullName": "Analytics Page Components renders metrics cards with correct values",
+                    "status": "passed",
+                    "title": "renders metrics cards with correct values",
+                    "duration": 107.49299999999857,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Analytics Page Components"],
+                    "fullName": "Analytics Page Components renders status distribution chart with data",
+                    "status": "passed",
+                    "title": "renders status distribution chart with data",
+                    "duration": 43.447000000000116,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Analytics Page Components"],
+                    "fullName": "Analytics Page Components renders tests growth chart with data",
+                    "status": "passed",
+                    "title": "renders tests growth chart with data",
+                    "duration": 14.13589999999931,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Analytics Page Components"],
+                    "fullName": "Analytics Page Components renders stale tests table with items",
+                    "status": "passed",
+                    "title": "renders stale tests table with items",
+                    "duration": 14.297199999999066,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Analytics Page Components"],
+                    "fullName": "Analytics Page Components displays empty state when no stale tests",
+                    "status": "passed",
+                    "title": "displays empty state when no stale tests",
+                    "duration": 7.085100000000239,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330876014,
+            "endTime": 1768330876200.0852,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/components/analytics-page.test.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["FolderDetailsPanel"],
+                    "fullName": "FolderDetailsPanel shows empty state when no folder is selected",
+                    "status": "passed",
+                    "title": "shows empty state when no folder is selected",
+                    "duration": 152.58190000000104,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["FolderDetailsPanel"],
+                    "fullName": "FolderDetailsPanel shows empty state when folder has no specs",
+                    "status": "passed",
+                    "title": "shows empty state when folder has no specs",
+                    "duration": 145.97109999999884,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["FolderDetailsPanel"],
+                    "fullName": "FolderDetailsPanel shows empty state when folder has no subfolders",
+                    "status": "passed",
+                    "title": "shows empty state when folder has no subfolders",
+                    "duration": 64.24789999999848,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["FolderDetailsPanel"],
+                    "fullName": "FolderDetailsPanel displays folder statistics",
+                    "status": "passed",
+                    "title": "displays folder statistics",
+                    "duration": 60.25140000000101,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330875006,
+            "endTime": 1768330875429.2515,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/components/folder-details-panel.test.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Test Details Panel"],
+                    "fullName": "Test Details Panel should display test spec details",
+                    "status": "passed",
+                    "title": "should display test spec details",
+                    "duration": 171.41539999999986,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Details Panel"],
+                    "fullName": "Test Details Panel should display test statistics",
+                    "status": "passed",
+                    "title": "should display test statistics",
+                    "duration": 48.86789999999928,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Test Details Panel"],
+                    "fullName": "Test Details Panel should handle no spec selected",
+                    "status": "passed",
+                    "title": "should handle no spec selected",
+                    "duration": 14.550900000000183,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330875153,
+            "endTime": 1768330875388.5508,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/components/test-details-panel.test.tsx"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have testFolder table defined",
+                    "status": "passed",
+                    "title": "should have testFolder table defined",
+                    "duration": 1.920100000000275,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have testSpec table defined",
+                    "status": "passed",
+                    "title": "should have testSpec table defined",
+                    "duration": 0.33750000000009095,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have testRequirement table defined",
+                    "status": "passed",
+                    "title": "should have testRequirement table defined",
+                    "duration": 0.219300000000203,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Test Tables"],
+                    "fullName": "Database Schema Test Tables should have test table defined",
+                    "status": "passed",
+                    "title": "should have test table defined",
+                    "duration": 0.20630000000028303,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Auth Tables"],
+                    "fullName": "Database Schema Auth Tables should have user table defined",
+                    "status": "passed",
+                    "title": "should have user table defined",
+                    "duration": 0.2153000000002976,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Auth Tables"],
+                    "fullName": "Database Schema Auth Tables should have organization table defined",
+                    "status": "passed",
+                    "title": "should have organization table defined",
+                    "duration": 0.18519999999989523,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Auth Tables"],
+                    "fullName": "Database Schema Auth Tables should have member table defined",
+                    "status": "passed",
+                    "title": "should have member table defined",
+                    "duration": 0.12030000000004293,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Table Columns"],
+                    "fullName": "Database Schema Table Columns testFolder should have required columns",
+                    "status": "passed",
+                    "title": "testFolder should have required columns",
+                    "duration": 0.8355999999998858,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Table Columns"],
+                    "fullName": "Database Schema Table Columns testSpec should have required columns",
+                    "status": "passed",
+                    "title": "testSpec should have required columns",
+                    "duration": 0.6554999999998472,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Database Schema", "Table Columns"],
+                    "fullName": "Database Schema Table Columns test should have required columns",
+                    "status": "passed",
+                    "title": "test should have required columns",
+                    "duration": 0.2784999999998945,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330872208,
+            "endTime": 1768330872214.2786,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/db/schema.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["invalidateAndRefetchQueries"],
+                    "fullName": "invalidateAndRefetchQueries invalidates and refetches queries matching a path predicate",
+                    "status": "passed",
+                    "title": "invalidates and refetches queries matching a path predicate",
+                    "duration": 2.0898999999999432,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330876156,
+            "endTime": 1768330876158.0898,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/integration/query-invalidation.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Constants", "TEST_STATUSES"],
+                    "fullName": "Constants TEST_STATUSES should contain all required test statuses",
+                    "status": "passed",
+                    "title": "should contain all required test statuses",
+                    "duration": 2.9313999999999396,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "TEST_STATUSES"],
+                    "fullName": "Constants TEST_STATUSES should have string values matching keys",
+                    "status": "passed",
+                    "title": "should have string values matching keys",
+                    "duration": 0.5781999999999243,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "SPEC_STATUSES"],
+                    "fullName": "Constants SPEC_STATUSES should extend TEST_STATUSES with additional statuses",
+                    "status": "passed",
+                    "title": "should extend TEST_STATUSES with additional statuses",
+                    "duration": 0.3213999999998123,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "SPEC_STATUSES"],
+                    "fullName": "Constants SPEC_STATUSES should include all test statuses",
+                    "status": "passed",
+                    "title": "should include all test statuses",
+                    "duration": 0.45620000000008076,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "STATUS_CONFIGS"],
+                    "fullName": "Constants STATUS_CONFIGS should have config for each status",
+                    "status": "passed",
+                    "title": "should have config for each status",
+                    "duration": 0.5294000000003507,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "STATUS_CONFIGS"],
+                    "fullName": "Constants STATUS_CONFIGS should have required properties for each config",
+                    "status": "passed",
+                    "title": "should have required properties for each config",
+                    "duration": 1.1204000000002452,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Constants", "STATUS_CONFIGS"],
+                    "fullName": "Constants STATUS_CONFIGS should have correct labels",
+                    "status": "passed",
+                    "title": "should have correct labels",
+                    "duration": 0.21770000000014988,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330875938,
+            "endTime": 1768330875944.2178,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/constants.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["getDatabaseUrl"],
+                    "fullName": "getDatabaseUrl returns local url in development",
+                    "status": "passed",
+                    "title": "returns local url in development",
+                    "duration": 3.0241000000000895,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["getDatabaseUrl"],
+                    "fullName": "getDatabaseUrl falls back to default local file in development",
+                    "status": "passed",
+                    "title": "falls back to default local file in development",
+                    "duration": 1.1743999999998778,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["getDatabaseUrl"],
+                    "fullName": "getDatabaseUrl returns production url outside development",
+                    "status": "passed",
+                    "title": "returns production url outside development",
+                    "duration": 0.42770000000018626,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330876160,
+            "endTime": 1768330876164.4277,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/get-database-url.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["createServerLogger"],
+                    "fullName": "createServerLogger uses standard pino logger in production",
+                    "status": "passed",
+                    "title": "uses standard pino logger in production",
+                    "duration": 2.3688999999999396,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["createServerLogger"],
+                    "fullName": "createServerLogger uses pretty logger outside production",
+                    "status": "passed",
+                    "title": "uses pretty logger outside production",
+                    "duration": 1.533900000000358,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330876226,
+            "endTime": 1768330876230.534,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/server-logger.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Type Schemas", "testSpecInsertSchema"],
+                    "fullName": "Type Schemas testSpecInsertSchema should validate required fields",
+                    "status": "passed",
+                    "title": "should validate required fields",
+                    "duration": 13.169200000000274,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Type Schemas", "testSpecInsertSchema"],
+                    "fullName": "Type Schemas testSpecInsertSchema should accept valid test spec data",
+                    "status": "passed",
+                    "title": "should accept valid test spec data",
+                    "duration": 9.504300000000512,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Type Schemas", "testFolderInsertSchema"],
+                    "fullName": "Type Schemas testFolderInsertSchema should accept valid folder data",
+                    "status": "passed",
+                    "title": "should accept valid folder data",
+                    "duration": 3.0131000000001222,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Type Schemas", "testFolderInsertSchema"],
+                    "fullName": "Type Schemas testFolderInsertSchema should require organization ID",
+                    "status": "passed",
+                    "title": "should require organization ID",
+                    "duration": 1.0937999999996464,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873194,
+            "endTime": 1768330873221.0938,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/types.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["utils", "cn (className merger)"],
+                    "fullName": "utils cn (className merger) should merge class names",
+                    "status": "passed",
+                    "title": "should merge class names",
+                    "duration": 59.86709999999948,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "cn (className merger)"],
+                    "fullName": "utils cn (className merger) should handle conditional classes",
+                    "status": "passed",
+                    "title": "should handle conditional classes",
+                    "duration": 10.104499999999462,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "cn (className merger)"],
+                    "fullName": "utils cn (className merger) should handle tailwind merge",
+                    "status": "passed",
+                    "title": "should handle tailwind merge",
+                    "duration": 13.67529999999988,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "cn (className merger)"],
+                    "fullName": "utils cn (className merger) should handle undefined and null",
+                    "status": "passed",
+                    "title": "should handle undefined and null",
+                    "duration": 1.7606000000005224,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "normalizeTestFileName"],
+                    "fullName": "utils normalizeTestFileName should convert kebab-case file names",
+                    "status": "passed",
+                    "title": "should convert kebab-case file names",
+                    "duration": 0.9467999999997119,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "normalizeTestFileName"],
+                    "fullName": "utils normalizeTestFileName should convert snake_case file names",
+                    "status": "passed",
+                    "title": "should convert snake_case file names",
+                    "duration": 11.16820000000007,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "normalizeTestFileName"],
+                    "fullName": "utils normalizeTestFileName should handle dot-separated file names",
+                    "status": "passed",
+                    "title": "should handle dot-separated file names",
+                    "duration": 0.33690000000024156,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "normalizeTestFileName"],
+                    "fullName": "utils normalizeTestFileName should handle mixed separators",
+                    "status": "passed",
+                    "title": "should handle mixed separators",
+                    "duration": 0.30279999999947904,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "normalizeTestFileName"],
+                    "fullName": "utils normalizeTestFileName should handle spec files",
+                    "status": "passed",
+                    "title": "should handle spec files",
+                    "duration": 0.3371000000006461,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "normalizeTestFileName"],
+                    "fullName": "utils normalizeTestFileName should handle simple file names",
+                    "status": "passed",
+                    "title": "should handle simple file names",
+                    "duration": 0.3463999999994485,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should extract folder names from path",
+                    "status": "passed",
+                    "title": "should extract folder names from path",
+                    "duration": 1.0784999999996217,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should ignore empty path segments",
+                    "status": "passed",
+                    "title": "should ignore empty path segments",
+                    "duration": 12.757399999999507,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should skip __tests__ folder",
+                    "status": "passed",
+                    "title": "should skip __tests__ folder",
+                    "duration": 0.3098999999992884,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should skip tests folder",
+                    "status": "passed",
+                    "title": "should skip tests folder",
+                    "duration": 0.31739999999990687,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should skip test folder",
+                    "status": "passed",
+                    "title": "should skip test folder",
+                    "duration": 0.22450000000026193,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should skip e2e folder",
+                    "status": "passed",
+                    "title": "should skip e2e folder",
+                    "duration": 0.26150000000052387,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should return empty array for root level files",
+                    "status": "passed",
+                    "title": "should return empty array for root level files",
+                    "duration": 19.038000000000466,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["utils", "extractFolderPath"],
+                    "fullName": "utils extractFolderPath should handle deeply nested paths",
+                    "status": "passed",
+                    "title": "should handle deeply nested paths",
+                    "duration": 19.987500000000182,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330869751,
+            "endTime": 1768330869915.9875,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/utils.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["orpc middleware"],
+                    "fullName": "orpc middleware rejects calls without a session",
+                    "status": "passed",
+                    "title": "rejects calls without a session",
+                    "duration": 9.50500000000011,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["orpc middleware"],
+                    "fullName": "orpc middleware rejects calls without an active organization",
+                    "status": "passed",
+                    "title": "rejects calls without an active organization",
+                    "duration": 57.00579999999991,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330875526,
+            "endTime": 1768330875592.0059,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/middleware.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should add two numbers correctly",
+                    "status": "passed",
+                    "title": "should add two numbers correctly",
+                    "duration": 1.0537999999996828,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should subtract two numbers correctly",
+                    "status": "passed",
+                    "title": "should subtract two numbers correctly",
+                    "duration": 0.17880000000013752,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should multiply two numbers correctly",
+                    "status": "passed",
+                    "title": "should multiply two numbers correctly",
+                    "duration": 0.09940000000005966,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should check if array contains element",
+                    "status": "passed",
+                    "title": "should check if array contains element",
+                    "duration": 0.9870999999998276,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should return correct array length",
+                    "status": "passed",
+                    "title": "should return correct array length",
+                    "duration": 0.6653999999998632,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330876097,
+            "endTime": 1768330876099.6653,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/samples/vitest-pnpm/tests/example.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should add two numbers correctly",
+                    "status": "passed",
+                    "title": "should add two numbers correctly",
+                    "duration": 1.1325999999999112,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should subtract two numbers correctly",
+                    "status": "passed",
+                    "title": "should subtract two numbers correctly",
+                    "duration": 0.40650000000005093,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should multiply two numbers correctly",
+                    "status": "passed",
+                    "title": "should multiply two numbers correctly",
+                    "duration": 0.27389999999968495,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should check if array contains element",
+                    "status": "passed",
+                    "title": "should check if array contains element",
+                    "duration": 1.3339000000000851,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should return correct array length",
+                    "status": "passed",
+                    "title": "should return correct array length",
+                    "duration": 0.7201000000000022,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330876063,
+            "endTime": 1768330876067.7202,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/samples/vitest-npm/tests/example.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["account routes"],
+                    "fullName": "account routes exports account data with memberships",
+                    "status": "passed",
+                    "title": "exports account data with memberships",
+                    "duration": 5.511800000000221,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["account routes"],
+                    "fullName": "account routes deletes account when user exists",
+                    "status": "passed",
+                    "title": "deletes account when user exists",
+                    "duration": 1.6211999999995896,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["account routes"],
+                    "fullName": "account routes throws when deleting missing user",
+                    "status": "passed",
+                    "title": "throws when deleting missing user",
+                    "duration": 2.2400999999990745,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873908,
+            "endTime": 1768330873917.24,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/account.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["analytics.getMetrics"],
+                    "fullName": "analytics.getMetrics returns correct total counts",
+                    "status": "passed",
+                    "title": "returns correct total counts",
+                    "duration": 17.88260000000082,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["analytics.getMetrics"],
+                    "fullName": "analytics.getMetrics returns correct status distribution",
+                    "status": "passed",
+                    "title": "returns correct status distribution",
+                    "duration": 1.3729999999995925,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["analytics.getMetrics"],
+                    "fullName": "analytics.getMetrics returns stale tests older than 30 days",
+                    "status": "passed",
+                    "title": "returns stale tests older than 30 days",
+                    "duration": 1.100800000000163,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["analytics.getMetrics"],
+                    "fullName": "analytics.getMetrics returns tests growth data grouped by date",
+                    "status": "passed",
+                    "title": "returns tests growth data grouped by date",
+                    "duration": 0.8753000000015163,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["analytics.getMetrics"],
+                    "fullName": "analytics.getMetrics respects period filter for tests growth",
+                    "status": "passed",
+                    "title": "respects period filter for tests growth",
+                    "duration": 0.9795000000012806,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["analytics.getMetrics"],
+                    "fullName": "analytics.getMetrics returns active members count",
+                    "status": "passed",
+                    "title": "returns active members count",
+                    "duration": 0.5787000000000262,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873909,
+            "endTime": 1768330873931.5786,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/analytics.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes gets a folder and rejects missing folders",
+                    "status": "passed",
+                    "title": "gets a folder and rejects missing folders",
+                    "duration": 8.678099999999176,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes lists folders with parent filters",
+                    "status": "passed",
+                    "title": "lists folders with parent filters",
+                    "duration": 2.341099999999642,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes lists folder children with depth",
+                    "status": "passed",
+                    "title": "lists folder children with depth",
+                    "duration": 1.6720000000004802,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes lists folder children for a nested folder",
+                    "status": "passed",
+                    "title": "lists folder children for a nested folder",
+                    "duration": 0.675199999999677,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes finds folders by name or returns null",
+                    "status": "passed",
+                    "title": "finds folders by name or returns null",
+                    "duration": 1.1024999999990541,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes upserts folders and enforces access control",
+                    "status": "passed",
+                    "title": "upserts folders and enforces access control",
+                    "duration": 1.6490000000012515,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes edits and deletes folders",
+                    "status": "passed",
+                    "title": "edits and deletes folders",
+                    "duration": 3.771199999999226,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes gets and upserts specs",
+                    "status": "passed",
+                    "title": "gets and upserts specs",
+                    "duration": 4.662500000000364,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes lists specs with folder filters",
+                    "status": "passed",
+                    "title": "lists specs with folder filters",
+                    "duration": 1.8258000000005268,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes deletes specs and enforces access control",
+                    "status": "passed",
+                    "title": "deletes specs and enforces access control",
+                    "duration": 1.144800000000032,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes replaces requirements for a spec and updates counts",
+                    "status": "passed",
+                    "title": "replaces requirements for a spec and updates counts",
+                    "duration": 2.279000000000451,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes upserts requirements and enforces access control",
+                    "status": "passed",
+                    "title": "upserts requirements and enforces access control",
+                    "duration": 1.7067999999999302,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes deletes requirements and enforces access control",
+                    "status": "passed",
+                    "title": "deletes requirements and enforces access control",
+                    "duration": 1.368400000001202,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes replaces requirements with an empty list",
+                    "status": "passed",
+                    "title": "replaces requirements with an empty list",
+                    "duration": 0.800600000000486,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes rejects requirements that belong to another spec",
+                    "status": "passed",
+                    "title": "rejects requirements that belong to another spec",
+                    "duration": 0.6618999999991502,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["tests routes"],
+                    "fullName": "tests routes syncs report status mapping and returns report data",
+                    "status": "passed",
+                    "title": "syncs report status mapping and returns report data",
+                    "duration": 4.128200000001016,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873909,
+            "endTime": 1768330873948.1282,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/tests.basic.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson returns zero counts for empty report",
+                    "status": "passed",
+                    "title": "returns zero counts for empty report",
+                    "duration": 5.001299999999901,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson returns zero counts for undefined testResults",
+                    "status": "passed",
+                    "title": "returns zero counts for undefined testResults",
+                    "duration": 0.5073000000011234,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson creates folders from file paths",
+                    "status": "passed",
+                    "title": "creates folders from file paths",
+                    "duration": 3.010099999999511,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson creates specs from file names",
+                    "status": "passed",
+                    "title": "creates specs from file names",
+                    "duration": 1.0860000000011496,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson creates requirements from assertion titles",
+                    "status": "passed",
+                    "title": "creates requirements from assertion titles",
+                    "duration": 1.0129999999990105,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson creates tests linked to requirements",
+                    "status": "passed",
+                    "title": "creates tests linked to requirements",
+                    "duration": 0.807199999999284,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson updates spec numberOfTests after import",
+                    "status": "passed",
+                    "title": "updates spec numberOfTests after import",
+                    "duration": 0.8381000000008498,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson skips tests without file name",
+                    "status": "passed",
+                    "title": "skips tests without file name",
+                    "duration": 0.511899999999514,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson skips assertions without title",
+                    "status": "passed",
+                    "title": "skips assertions without title",
+                    "duration": 0.7867000000005646,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson creates nested folder structure",
+                    "status": "passed",
+                    "title": "creates nested folder structure",
+                    "duration": 0.7419000000008964,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["importFromJson"],
+                    "fullName": "importFromJson appends requirement order after existing requirements",
+                    "status": "passed",
+                    "title": "appends requirement order after existing requirements",
+                    "duration": 0.6571999999996478,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873909,
+            "endTime": 1768330873924.6572,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/tests.importFromJson.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["syncReport"],
+                    "fullName": "syncReport updates reported statuses and marks unmatched as missing, in batches",
+                    "status": "passed",
+                    "title": "updates reported statuses and marks unmatched as missing, in batches",
+                    "duration": 7.346400000000358,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768330873908,
+            "endTime": 1768330873915.3464,
+            "status": "passed",
+            "message": "",
+            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/tests.syncReport.test.ts"
+        }
+    ]
+}
