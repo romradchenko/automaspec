@@ -8,6 +8,16 @@ import { StaleTestsTable } from '@/app/analytics/components/stale-tests-table'
 import { StatusDistributionChart } from '@/app/analytics/components/status-distribution-chart'
 import { TestsGrowthChart } from '@/app/analytics/components/tests-growth-chart'
 
+vi.mock('recharts', async (importOriginal) => {
+    const actual = (await importOriginal()) as Record<string, unknown>
+    return {
+        ...actual,
+        ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+            <div style={{ width: 500, height: 300 }}>{children}</div>
+        )
+    }
+})
+
 vi.mock('@/lib/shared/better-auth-client', () => ({
     authClient: {
         useActiveOrganization: () => ({ data: { id: 'org-1', name: 'Test Org' } })

@@ -106,7 +106,7 @@ export function OnboardingEmptyState({ onImportClick, onStartFromScratch }: Onbo
                 </div>
             </div>
 
-            <div className="flex flex-1 items-center justify-center overflow-auto p-6">
+            <div className="flex flex-1 justify-center overflow-auto p-6 pt-12">
                 <div className="w-full max-w-3xl">
                     <div className="mb-8 text-center">
                         <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5">
@@ -116,8 +116,8 @@ export function OnboardingEmptyState({ onImportClick, onStartFromScratch }: Onbo
                         <p className="mt-1 text-muted-foreground">Choose how to get started with Automaspec</p>
                     </div>
 
-                    <div className="grid gap-6 lg:grid-cols-2">
-                        <Card className="border-2 transition-all hover:border-primary hover:shadow-lg">
+                    <div className="grid items-stretch gap-6 lg:grid-cols-2">
+                        <Card className="flex flex-col border-2 transition-all hover:border-primary hover:shadow-lg">
                             <CardHeader>
                                 <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900/30">
                                     <Upload className="size-6 text-green-600 dark:text-green-400" />
@@ -127,8 +127,8 @@ export function OnboardingEmptyState({ onImportClick, onStartFromScratch }: Onbo
                                     Import your existing test suite by uploading a Vitest JSON report
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="space-y-5">
-                                <div className="space-y-4">
+                            <CardContent className="flex flex-1 flex-col space-y-5">
+                                <div className="flex-1 space-y-4">
                                     <div className="flex items-start gap-3">
                                         <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                                             1
@@ -199,7 +199,7 @@ export function OnboardingEmptyState({ onImportClick, onStartFromScratch }: Onbo
                             </CardContent>
                         </Card>
 
-                        <Card className="border-2 transition-all hover:border-primary hover:shadow-lg">
+                        <Card className="flex flex-col border-2 transition-all hover:border-primary hover:shadow-lg">
                             <CardHeader>
                                 <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30">
                                     <FileText className="size-6 text-blue-600 dark:text-blue-400" />
@@ -209,47 +209,49 @@ export function OnboardingEmptyState({ onImportClick, onStartFromScratch }: Onbo
                                     Load a demo project to see how Automaspec works before importing your own tests
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="space-y-5">
-                                <div className="rounded-lg border bg-muted/40 p-4">
-                                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                        Sample project includes
-                                    </p>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="flex items-center gap-2.5">
-                                            <FolderTree className="size-4 text-blue-500" />
-                                            <span className="text-sm">6 folders</span>
-                                        </div>
-                                        <div className="flex items-center gap-2.5">
-                                            <FileText className="size-4 text-green-500" />
-                                            <span className="text-sm">8 specs</span>
-                                        </div>
-                                        <div className="flex items-center gap-2.5">
-                                            <ListChecks className="size-4 text-orange-500" />
-                                            <span className="text-sm">20 requirements</span>
-                                        </div>
-                                        <div className="flex items-center gap-2.5">
-                                            <TestTube className="size-4 text-purple-500" />
-                                            <span className="text-sm">20 tests</span>
+                            <CardContent className="flex flex-1 flex-col space-y-5">
+                                <div className="flex-1 space-y-4">
+                                    <div className="rounded-lg border bg-muted/40 p-4">
+                                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                            Sample project includes
+                                        </p>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="flex items-center gap-2.5">
+                                                <FolderTree className="size-4 text-blue-500" />
+                                                <span className="text-sm">6 folders</span>
+                                            </div>
+                                            <div className="flex items-center gap-2.5">
+                                                <FileText className="size-4 text-green-500" />
+                                                <span className="text-sm">8 specs</span>
+                                            </div>
+                                            <div className="flex items-center gap-2.5">
+                                                <ListChecks className="size-4 text-orange-500" />
+                                                <span className="text-sm">20 requirements</span>
+                                            </div>
+                                            <div className="flex items-center gap-2.5">
+                                                <TestTube className="size-4 text-purple-500" />
+                                                <span className="text-sm">20 tests</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="space-y-2">
-                                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                        What you'll explore
-                                    </p>
-                                    <div className="grid gap-2">
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Zap className="size-3.5 text-yellow-500" />
-                                            <span>Test organization & hierarchy</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <BarChart3 className="size-3.5 text-green-500" />
-                                            <span>Analytics & coverage metrics</span>
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm">
-                                            <Users className="size-3.5 text-blue-500" />
-                                            <span>Team collaboration features</span>
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                            What you'll explore
+                                        </p>
+                                        <div className="grid gap-2">
+                                            <div className="flex items-center gap-2 text-sm">
+                                                <Zap className="size-3.5 text-yellow-500" />
+                                                <span>Test organization & hierarchy</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm">
+                                                <BarChart3 className="size-3.5 text-green-500" />
+                                                <span>Analytics & coverage metrics</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm">
+                                                <Users className="size-3.5 text-blue-500" />
+                                                <span>Team collaboration features</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

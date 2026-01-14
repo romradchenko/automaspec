@@ -11,14 +11,13 @@ export default defineConfig({
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
-            include: ['lib/*.ts', 'orpc/middleware.ts', 'orpc/routes/**/*.ts'],
+            include: ['lib/*.ts', 'orpc/middleware.ts', 'orpc/routes/**/*.ts', 'db/schema/**/*.ts'],
             exclude: [
                 'node_modules/',
                 '__tests__/',
                 'e2e/**',
                 'app/**',
                 'components/**',
-                'db/**',
                 'lib/orpc/**',
                 'lib/query/**',
                 '**/*.test.ts',
