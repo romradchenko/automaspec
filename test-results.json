@@ -24,7 +24,7 @@
         "updated": 0,
         "didUpdate": false
     },
-    "startTime": 1768330865239,
+    "startTime": 1768428487950,
     "success": true,
     "testResults": [
         {
@@ -34,7 +34,7 @@
                     "fullName": "createAiTools calls test folder upsert with context and returns success",
                     "status": "passed",
                     "title": "calls test folder upsert with context and returns success",
-                    "duration": 5.703499999999622,
+                    "duration": 8.913830999999846,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -43,7 +43,7 @@
                     "fullName": "createAiTools returns failure when folder is not found by name",
                     "status": "passed",
                     "title": "returns failure when folder is not found by name",
-                    "duration": 1.9583000000002357,
+                    "duration": 2.7012070000000676,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -52,7 +52,7 @@
                     "fullName": "createAiTools creates a spec and replaces requirements",
                     "status": "passed",
                     "title": "creates a spec and replaces requirements",
-                    "duration": 1.7785000000003492,
+                    "duration": 2.884393000000273,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -61,7 +61,7 @@
                     "fullName": "createAiTools returns failure when create folder throws",
                     "status": "passed",
                     "title": "returns failure when create folder throws",
-                    "duration": 1.710399999999936,
+                    "duration": 3.1132949999996526,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -70,7 +70,7 @@
                     "fullName": "ai helpers normalizes messages to core messages",
                     "status": "passed",
                     "title": "normalizes messages to core messages",
-                    "duration": 0.36819999999897846,
+                    "duration": 0.7575090000000273,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -79,7 +79,7 @@
                     "fullName": "ai helpers resolves provider and model defaults",
                     "status": "passed",
                     "title": "resolves provider and model defaults",
-                    "duration": 0.3294000000005326,
+                    "duration": 0.7426420000001599,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -88,7 +88,7 @@
                     "fullName": "ai helpers finds last user content and blocked patterns",
                     "status": "passed",
                     "title": "finds last user content and blocked patterns",
-                    "duration": 0.35310000000026776,
+                    "duration": 0.7398659999998927,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -97,7 +97,7 @@
                     "fullName": "ai helpers enforces prompt guard and length limits",
                     "status": "passed",
                     "title": "enforces prompt guard and length limits",
-                    "duration": 1.5424000000002707,
+                    "duration": 2.545904000000064,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -106,7 +106,7 @@
                     "fullName": "ai helpers enforces rate limits per organization",
                     "status": "passed",
                     "title": "enforces rate limits per organization",
-                    "duration": 0.521999999999025,
+                    "duration": 1.0004570000000967,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -115,7 +115,7 @@
                     "fullName": "ai.chat returns text from openrouter stream",
                     "status": "passed",
                     "title": "returns text from openrouter stream",
-                    "duration": 5.414600000000064,
+                    "duration": 7.464274999999816,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -124,7 +124,7 @@
                     "fullName": "ai.chat returns fallback text when openrouter stream is empty",
                     "status": "passed",
                     "title": "returns fallback text when openrouter stream is empty",
-                    "duration": 3.09190000000126,
+                    "duration": 4.546188999999686,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -133,7 +133,7 @@
                     "fullName": "ai.chat rejects when google key is missing",
                     "status": "passed",
                     "title": "rejects when google key is missing",
-                    "duration": 2.7204000000001543,
+                    "duration": 2.9276350000000093,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -142,16 +142,16 @@
                     "fullName": "ai.chat returns text from google stream",
                     "status": "passed",
                     "title": "returns text from google stream",
-                    "duration": 1.540499999999156,
+                    "duration": 2.292656999999963,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873909,
-            "endTime": 1768330873936.5405,
+            "startTime": 1768428492816,
+            "endTime": 1768428492858.2927,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/ai.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/ai.test.ts"
         },
         {
             "assertionResults": [
@@ -160,7 +160,7 @@
                     "fullName": "Analytics Page Components renders metrics cards with correct values",
                     "status": "passed",
                     "title": "renders metrics cards with correct values",
-                    "duration": 107.49299999999857,
+                    "duration": 68.72371599999997,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -169,7 +169,7 @@
                     "fullName": "Analytics Page Components renders status distribution chart with data",
                     "status": "passed",
                     "title": "renders status distribution chart with data",
-                    "duration": 43.447000000000116,
+                    "duration": 31.288484000000153,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -178,7 +178,7 @@
                     "fullName": "Analytics Page Components renders tests growth chart with data",
                     "status": "passed",
                     "title": "renders tests growth chart with data",
-                    "duration": 14.13589999999931,
+                    "duration": 9.934226000000308,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -187,7 +187,7 @@
                     "fullName": "Analytics Page Components renders stale tests table with items",
                     "status": "passed",
                     "title": "renders stale tests table with items",
-                    "duration": 14.297199999999066,
+                    "duration": 15.80726999999979,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -196,16 +196,16 @@
                     "fullName": "Analytics Page Components displays empty state when no stale tests",
                     "status": "passed",
                     "title": "displays empty state when no stale tests",
-                    "duration": 7.085100000000239,
+                    "duration": 7.44895600000018,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330876014,
-            "endTime": 1768330876200.0852,
+            "startTime": 1768428492014,
+            "endTime": 1768428492147.449,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/components/analytics-page.test.tsx"
+            "name": "/home/qweered/Projects/automaspec/__tests__/components/analytics-page.test.tsx"
         },
         {
             "assertionResults": [
@@ -214,7 +214,7 @@
                     "fullName": "FolderDetailsPanel shows empty state when no folder is selected",
                     "status": "passed",
                     "title": "shows empty state when no folder is selected",
-                    "duration": 152.58190000000104,
+                    "duration": 93.30695699999978,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -223,7 +223,7 @@
                     "fullName": "FolderDetailsPanel shows empty state when folder has no specs",
                     "status": "passed",
                     "title": "shows empty state when folder has no specs",
-                    "duration": 145.97109999999884,
+                    "duration": 45.04153700000006,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -232,7 +232,7 @@
                     "fullName": "FolderDetailsPanel shows empty state when folder has no subfolders",
                     "status": "passed",
                     "title": "shows empty state when folder has no subfolders",
-                    "duration": 64.24789999999848,
+                    "duration": 31.718736000000263,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -241,16 +241,16 @@
                     "fullName": "FolderDetailsPanel displays folder statistics",
                     "status": "passed",
                     "title": "displays folder statistics",
-                    "duration": 60.25140000000101,
+                    "duration": 38.59804699999995,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330875006,
-            "endTime": 1768330875429.2515,
+            "startTime": 1768428490789,
+            "endTime": 1768428490998.5981,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/components/folder-details-panel.test.tsx"
+            "name": "/home/qweered/Projects/automaspec/__tests__/components/folder-details-panel.test.tsx"
         },
         {
             "assertionResults": [
@@ -259,7 +259,7 @@
                     "fullName": "Test Details Panel should display test spec details",
                     "status": "passed",
                     "title": "should display test spec details",
-                    "duration": 171.41539999999986,
+                    "duration": 133.987795,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -268,7 +268,7 @@
                     "fullName": "Test Details Panel should display test statistics",
                     "status": "passed",
                     "title": "should display test statistics",
-                    "duration": 48.86789999999928,
+                    "duration": 33.59181000000035,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -277,16 +277,16 @@
                     "fullName": "Test Details Panel should handle no spec selected",
                     "status": "passed",
                     "title": "should handle no spec selected",
-                    "duration": 14.550900000000183,
+                    "duration": 10.77804900000001,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330875153,
-            "endTime": 1768330875388.5508,
+            "startTime": 1768428490682,
+            "endTime": 1768428490859.778,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/components/test-details-panel.test.tsx"
+            "name": "/home/qweered/Projects/automaspec/__tests__/components/test-details-panel.test.tsx"
         },
         {
             "assertionResults": [
@@ -295,7 +295,7 @@
                     "fullName": "Database Schema Test Tables should have testFolder table defined",
                     "status": "passed",
                     "title": "should have testFolder table defined",
-                    "duration": 1.920100000000275,
+                    "duration": 2.443941999999879,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -304,7 +304,7 @@
                     "fullName": "Database Schema Test Tables should have testSpec table defined",
                     "status": "passed",
                     "title": "should have testSpec table defined",
-                    "duration": 0.33750000000009095,
+                    "duration": 0.5825800000000072,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -313,7 +313,7 @@
                     "fullName": "Database Schema Test Tables should have testRequirement table defined",
                     "status": "passed",
                     "title": "should have testRequirement table defined",
-                    "duration": 0.219300000000203,
+                    "duration": 0.4091319999999996,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -322,7 +322,7 @@
                     "fullName": "Database Schema Test Tables should have test table defined",
                     "status": "passed",
                     "title": "should have test table defined",
-                    "duration": 0.20630000000028303,
+                    "duration": 0.4587149999999838,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -331,7 +331,7 @@
                     "fullName": "Database Schema Auth Tables should have user table defined",
                     "status": "passed",
                     "title": "should have user table defined",
-                    "duration": 0.2153000000002976,
+                    "duration": 0.620441000000028,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -340,7 +340,7 @@
                     "fullName": "Database Schema Auth Tables should have organization table defined",
                     "status": "passed",
                     "title": "should have organization table defined",
-                    "duration": 0.18519999999989523,
+                    "duration": 0.5096520000001874,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -349,7 +349,7 @@
                     "fullName": "Database Schema Auth Tables should have member table defined",
                     "status": "passed",
                     "title": "should have member table defined",
-                    "duration": 0.12030000000004293,
+                    "duration": 0.3408030000000508,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -358,7 +358,7 @@
                     "fullName": "Database Schema Table Columns testFolder should have required columns",
                     "status": "passed",
                     "title": "testFolder should have required columns",
-                    "duration": 0.8355999999998858,
+                    "duration": 1.8766920000000482,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -367,7 +367,7 @@
                     "fullName": "Database Schema Table Columns testSpec should have required columns",
                     "status": "passed",
                     "title": "testSpec should have required columns",
-                    "duration": 0.6554999999998472,
+                    "duration": 2.2972050000000763,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -376,16 +376,16 @@
                     "fullName": "Database Schema Table Columns test should have required columns",
                     "status": "passed",
                     "title": "test should have required columns",
-                    "duration": 0.2784999999998945,
+                    "duration": 0.608257999999978,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330872208,
-            "endTime": 1768330872214.2786,
+            "startTime": 1768428496270,
+            "endTime": 1768428496281.6082,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/db/schema.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/db/schema.test.ts"
         },
         {
             "assertionResults": [
@@ -394,16 +394,16 @@
                     "fullName": "invalidateAndRefetchQueries invalidates and refetches queries matching a path predicate",
                     "status": "passed",
                     "title": "invalidates and refetches queries matching a path predicate",
-                    "duration": 2.0898999999999432,
+                    "duration": 1.7879839999999376,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330876156,
-            "endTime": 1768330876158.0898,
+            "startTime": 1768428497111,
+            "endTime": 1768428497112.788,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/integration/query-invalidation.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/integration/query-invalidation.test.ts"
         },
         {
             "assertionResults": [
@@ -412,7 +412,7 @@
                     "fullName": "Constants TEST_STATUSES should contain all required test statuses",
                     "status": "passed",
                     "title": "should contain all required test statuses",
-                    "duration": 2.9313999999999396,
+                    "duration": 2.702239999999847,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -421,7 +421,7 @@
                     "fullName": "Constants TEST_STATUSES should have string values matching keys",
                     "status": "passed",
                     "title": "should have string values matching keys",
-                    "duration": 0.5781999999999243,
+                    "duration": 0.7933170000001155,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -430,7 +430,7 @@
                     "fullName": "Constants SPEC_STATUSES should extend TEST_STATUSES with additional statuses",
                     "status": "passed",
                     "title": "should extend TEST_STATUSES with additional statuses",
-                    "duration": 0.3213999999998123,
+                    "duration": 0.43151399999987916,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -439,7 +439,7 @@
                     "fullName": "Constants SPEC_STATUSES should include all test statuses",
                     "status": "passed",
                     "title": "should include all test statuses",
-                    "duration": 0.45620000000008076,
+                    "duration": 0.7496049999999741,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -448,7 +448,7 @@
                     "fullName": "Constants STATUS_CONFIGS should have config for each status",
                     "status": "passed",
                     "title": "should have config for each status",
-                    "duration": 0.5294000000003507,
+                    "duration": 1.5447750000000724,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -457,7 +457,7 @@
                     "fullName": "Constants STATUS_CONFIGS should have required properties for each config",
                     "status": "passed",
                     "title": "should have required properties for each config",
-                    "duration": 1.1204000000002452,
+                    "duration": 1.1706990000000133,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -466,16 +466,16 @@
                     "fullName": "Constants STATUS_CONFIGS should have correct labels",
                     "status": "passed",
                     "title": "should have correct labels",
-                    "duration": 0.21770000000014988,
+                    "duration": 0.21956500000010237,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330875938,
-            "endTime": 1768330875944.2178,
+            "startTime": 1768428495879,
+            "endTime": 1768428495888.2195,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/constants.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/lib/constants.test.ts"
         },
         {
             "assertionResults": [
@@ -484,7 +484,7 @@
                     "fullName": "getDatabaseUrl returns local url in development",
                     "status": "passed",
                     "title": "returns local url in development",
-                    "duration": 3.0241000000000895,
+                    "duration": 2.456967000000077,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -493,7 +493,7 @@
                     "fullName": "getDatabaseUrl falls back to default local file in development",
                     "status": "passed",
                     "title": "falls back to default local file in development",
-                    "duration": 1.1743999999998778,
+                    "duration": 0.5942519999999831,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -502,16 +502,16 @@
                     "fullName": "getDatabaseUrl returns production url outside development",
                     "status": "passed",
                     "title": "returns production url outside development",
-                    "duration": 0.42770000000018626,
+                    "duration": 0.5659480000000485,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330876160,
-            "endTime": 1768330876164.4277,
+            "startTime": 1768428496479,
+            "endTime": 1768428496483.566,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/get-database-url.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/lib/get-database-url.test.ts"
         },
         {
             "assertionResults": [
@@ -520,7 +520,7 @@
                     "fullName": "createServerLogger uses standard pino logger in production",
                     "status": "passed",
                     "title": "uses standard pino logger in production",
-                    "duration": 2.3688999999999396,
+                    "duration": 4.117190000000164,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -529,16 +529,16 @@
                     "fullName": "createServerLogger uses pretty logger outside production",
                     "status": "passed",
                     "title": "uses pretty logger outside production",
-                    "duration": 1.533900000000358,
+                    "duration": 1.8988529999999173,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330876226,
-            "endTime": 1768330876230.534,
+            "startTime": 1768428494393,
+            "endTime": 1768428494399.899,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/server-logger.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/lib/server-logger.test.ts"
         },
         {
             "assertionResults": [
@@ -547,7 +547,7 @@
                     "fullName": "Type Schemas testSpecInsertSchema should validate required fields",
                     "status": "passed",
                     "title": "should validate required fields",
-                    "duration": 13.169200000000274,
+                    "duration": 3.6194500000001426,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -556,7 +556,7 @@
                     "fullName": "Type Schemas testSpecInsertSchema should accept valid test spec data",
                     "status": "passed",
                     "title": "should accept valid test spec data",
-                    "duration": 9.504300000000512,
+                    "duration": 1.5592719999999645,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -565,7 +565,7 @@
                     "fullName": "Type Schemas testFolderInsertSchema should accept valid folder data",
                     "status": "passed",
                     "title": "should accept valid folder data",
-                    "duration": 3.0131000000001222,
+                    "duration": 0.9261679999999615,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -574,16 +574,16 @@
                     "fullName": "Type Schemas testFolderInsertSchema should require organization ID",
                     "status": "passed",
                     "title": "should require organization ID",
-                    "duration": 1.0937999999996464,
+                    "duration": 0.6126659999999902,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873194,
-            "endTime": 1768330873221.0938,
+            "startTime": 1768428494681,
+            "endTime": 1768428494687.6125,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/types.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/lib/types.test.ts"
         },
         {
             "assertionResults": [
@@ -592,7 +592,7 @@
                     "fullName": "utils cn (className merger) should merge class names",
                     "status": "passed",
                     "title": "should merge class names",
-                    "duration": 59.86709999999948,
+                    "duration": 12.9834800000001,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -601,7 +601,7 @@
                     "fullName": "utils cn (className merger) should handle conditional classes",
                     "status": "passed",
                     "title": "should handle conditional classes",
-                    "duration": 10.104499999999462,
+                    "duration": 1.0026419999999234,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -610,7 +610,7 @@
                     "fullName": "utils cn (className merger) should handle tailwind merge",
                     "status": "passed",
                     "title": "should handle tailwind merge",
-                    "duration": 13.67529999999988,
+                    "duration": 0.9317490000000817,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -619,7 +619,7 @@
                     "fullName": "utils cn (className merger) should handle undefined and null",
                     "status": "passed",
                     "title": "should handle undefined and null",
-                    "duration": 1.7606000000005224,
+                    "duration": 0.37001900000018395,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -628,7 +628,7 @@
                     "fullName": "utils normalizeTestFileName should convert kebab-case file names",
                     "status": "passed",
                     "title": "should convert kebab-case file names",
-                    "duration": 0.9467999999997119,
+                    "duration": 0.7878259999999955,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -637,7 +637,7 @@
                     "fullName": "utils normalizeTestFileName should convert snake_case file names",
                     "status": "passed",
                     "title": "should convert snake_case file names",
-                    "duration": 11.16820000000007,
+                    "duration": 0.35020099999997,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -646,7 +646,7 @@
                     "fullName": "utils normalizeTestFileName should handle dot-separated file names",
                     "status": "passed",
                     "title": "should handle dot-separated file names",
-                    "duration": 0.33690000000024156,
+                    "duration": 0.19837399999983063,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -655,7 +655,7 @@
                     "fullName": "utils normalizeTestFileName should handle mixed separators",
                     "status": "passed",
                     "title": "should handle mixed separators",
-                    "duration": 0.30279999999947904,
+                    "duration": 0.164880999999923,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -664,7 +664,7 @@
                     "fullName": "utils normalizeTestFileName should handle spec files",
                     "status": "passed",
                     "title": "should handle spec files",
-                    "duration": 0.3371000000006461,
+                    "duration": 0.30300199999987854,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -673,7 +673,7 @@
                     "fullName": "utils normalizeTestFileName should handle simple file names",
                     "status": "passed",
                     "title": "should handle simple file names",
-                    "duration": 0.3463999999994485,
+                    "duration": 0.2771829999999227,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -682,7 +682,7 @@
                     "fullName": "utils extractFolderPath should extract folder names from path",
                     "status": "passed",
                     "title": "should extract folder names from path",
-                    "duration": 1.0784999999996217,
+                    "duration": 0.9207980000001044,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -691,7 +691,7 @@
                     "fullName": "utils extractFolderPath should ignore empty path segments",
                     "status": "passed",
                     "title": "should ignore empty path segments",
-                    "duration": 12.757399999999507,
+                    "duration": 0.32074499999998807,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -700,7 +700,7 @@
                     "fullName": "utils extractFolderPath should skip __tests__ folder",
                     "status": "passed",
                     "title": "should skip __tests__ folder",
-                    "duration": 0.3098999999992884,
+                    "duration": 0.25383899999997084,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -709,7 +709,7 @@
                     "fullName": "utils extractFolderPath should skip tests folder",
                     "status": "passed",
                     "title": "should skip tests folder",
-                    "duration": 0.31739999999990687,
+                    "duration": 0.20841299999983676,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -718,7 +718,7 @@
                     "fullName": "utils extractFolderPath should skip test folder",
                     "status": "passed",
                     "title": "should skip test folder",
-                    "duration": 0.22450000000026193,
+                    "duration": 0.20806199999992714,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -727,7 +727,7 @@
                     "fullName": "utils extractFolderPath should skip e2e folder",
                     "status": "passed",
                     "title": "should skip e2e folder",
-                    "duration": 0.26150000000052387,
+                    "duration": 0.2400830000001406,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -736,7 +736,7 @@
                     "fullName": "utils extractFolderPath should return empty array for root level files",
                     "status": "passed",
                     "title": "should return empty array for root level files",
-                    "duration": 19.038000000000466,
+                    "duration": 0.2871219999999539,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -745,16 +745,16 @@
                     "fullName": "utils extractFolderPath should handle deeply nested paths",
                     "status": "passed",
                     "title": "should handle deeply nested paths",
-                    "duration": 19.987500000000182,
+                    "duration": 0.28565900000012334,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330869751,
-            "endTime": 1768330869915.9875,
+            "startTime": 1768428493399,
+            "endTime": 1768428493420.2856,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/lib/utils.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/lib/utils.test.ts"
         },
         {
             "assertionResults": [
@@ -763,7 +763,7 @@
                     "fullName": "orpc middleware rejects calls without a session",
                     "status": "passed",
                     "title": "rejects calls without a session",
-                    "duration": 9.50500000000011,
+                    "duration": 2.8285580000001573,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -772,124 +772,16 @@
                     "fullName": "orpc middleware rejects calls without an active organization",
                     "status": "passed",
                     "title": "rejects calls without an active organization",
-                    "duration": 57.00579999999991,
+                    "duration": 0.7116829999999936,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330875526,
-            "endTime": 1768330875592.0059,
+            "startTime": 1768428497674,
+            "endTime": 1768428497677.7117,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/middleware.test.ts"
-        },
-        {
-            "assertionResults": [
-                {
-                    "ancestorTitles": ["Math Operations"],
-                    "fullName": "Math Operations should add two numbers correctly",
-                    "status": "passed",
-                    "title": "should add two numbers correctly",
-                    "duration": 1.0537999999996828,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Math Operations"],
-                    "fullName": "Math Operations should subtract two numbers correctly",
-                    "status": "passed",
-                    "title": "should subtract two numbers correctly",
-                    "duration": 0.17880000000013752,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Math Operations"],
-                    "fullName": "Math Operations should multiply two numbers correctly",
-                    "status": "passed",
-                    "title": "should multiply two numbers correctly",
-                    "duration": 0.09940000000005966,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Array Operations"],
-                    "fullName": "Array Operations should check if array contains element",
-                    "status": "passed",
-                    "title": "should check if array contains element",
-                    "duration": 0.9870999999998276,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Array Operations"],
-                    "fullName": "Array Operations should return correct array length",
-                    "status": "passed",
-                    "title": "should return correct array length",
-                    "duration": 0.6653999999998632,
-                    "failureMessages": [],
-                    "meta": {}
-                }
-            ],
-            "startTime": 1768330876097,
-            "endTime": 1768330876099.6653,
-            "status": "passed",
-            "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/samples/vitest-pnpm/tests/example.test.ts"
-        },
-        {
-            "assertionResults": [
-                {
-                    "ancestorTitles": ["Math Operations"],
-                    "fullName": "Math Operations should add two numbers correctly",
-                    "status": "passed",
-                    "title": "should add two numbers correctly",
-                    "duration": 1.1325999999999112,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Math Operations"],
-                    "fullName": "Math Operations should subtract two numbers correctly",
-                    "status": "passed",
-                    "title": "should subtract two numbers correctly",
-                    "duration": 0.40650000000005093,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Math Operations"],
-                    "fullName": "Math Operations should multiply two numbers correctly",
-                    "status": "passed",
-                    "title": "should multiply two numbers correctly",
-                    "duration": 0.27389999999968495,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Array Operations"],
-                    "fullName": "Array Operations should check if array contains element",
-                    "status": "passed",
-                    "title": "should check if array contains element",
-                    "duration": 1.3339000000000851,
-                    "failureMessages": [],
-                    "meta": {}
-                },
-                {
-                    "ancestorTitles": ["Array Operations"],
-                    "fullName": "Array Operations should return correct array length",
-                    "status": "passed",
-                    "title": "should return correct array length",
-                    "duration": 0.7201000000000022,
-                    "failureMessages": [],
-                    "meta": {}
-                }
-            ],
-            "startTime": 1768330876063,
-            "endTime": 1768330876067.7202,
-            "status": "passed",
-            "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/samples/vitest-npm/tests/example.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/orpc/middleware.test.ts"
         },
         {
             "assertionResults": [
@@ -898,7 +790,7 @@
                     "fullName": "account routes exports account data with memberships",
                     "status": "passed",
                     "title": "exports account data with memberships",
-                    "duration": 5.511800000000221,
+                    "duration": 7.4740639999999985,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -907,7 +799,7 @@
                     "fullName": "account routes deletes account when user exists",
                     "status": "passed",
                     "title": "deletes account when user exists",
-                    "duration": 1.6211999999995896,
+                    "duration": 1.8411439999999857,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -916,16 +808,16 @@
                     "fullName": "account routes throws when deleting missing user",
                     "status": "passed",
                     "title": "throws when deleting missing user",
-                    "duration": 2.2400999999990745,
+                    "duration": 2.964814999999817,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873908,
-            "endTime": 1768330873917.24,
+            "startTime": 1768428495149,
+            "endTime": 1768428495160.9648,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/account.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/orpc/routes/account.test.ts"
         },
         {
             "assertionResults": [
@@ -934,7 +826,7 @@
                     "fullName": "analytics.getMetrics returns correct total counts",
                     "status": "passed",
                     "title": "returns correct total counts",
-                    "duration": 17.88260000000082,
+                    "duration": 20.497330000000147,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -943,7 +835,7 @@
                     "fullName": "analytics.getMetrics returns correct status distribution",
                     "status": "passed",
                     "title": "returns correct status distribution",
-                    "duration": 1.3729999999995925,
+                    "duration": 1.226654999999937,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -952,7 +844,7 @@
                     "fullName": "analytics.getMetrics returns stale tests older than 30 days",
                     "status": "passed",
                     "title": "returns stale tests older than 30 days",
-                    "duration": 1.100800000000163,
+                    "duration": 1.2737639999995736,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -961,7 +853,7 @@
                     "fullName": "analytics.getMetrics returns tests growth data grouped by date",
                     "status": "passed",
                     "title": "returns tests growth data grouped by date",
-                    "duration": 0.8753000000015163,
+                    "duration": 0.8811730000002171,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -970,7 +862,7 @@
                     "fullName": "analytics.getMetrics respects period filter for tests growth",
                     "status": "passed",
                     "title": "respects period filter for tests growth",
-                    "duration": 0.9795000000012806,
+                    "duration": 1.515730000000076,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -979,16 +871,16 @@
                     "fullName": "analytics.getMetrics returns active members count",
                     "status": "passed",
                     "title": "returns active members count",
-                    "duration": 0.5787000000000262,
+                    "duration": 1.0921109999999317,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873909,
-            "endTime": 1768330873931.5786,
+            "startTime": 1768428493102,
+            "endTime": 1768428493128.092,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/analytics.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/orpc/routes/analytics.test.ts"
         },
         {
             "assertionResults": [
@@ -997,7 +889,7 @@
                     "fullName": "tests routes gets a folder and rejects missing folders",
                     "status": "passed",
                     "title": "gets a folder and rejects missing folders",
-                    "duration": 8.678099999999176,
+                    "duration": 8.33894700000019,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1006,7 +898,7 @@
                     "fullName": "tests routes lists folders with parent filters",
                     "status": "passed",
                     "title": "lists folders with parent filters",
-                    "duration": 2.341099999999642,
+                    "duration": 2.2599350000000413,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1015,7 +907,7 @@
                     "fullName": "tests routes lists folder children with depth",
                     "status": "passed",
                     "title": "lists folder children with depth",
-                    "duration": 1.6720000000004802,
+                    "duration": 1.8824220000001333,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1024,7 +916,7 @@
                     "fullName": "tests routes lists folder children for a nested folder",
                     "status": "passed",
                     "title": "lists folder children for a nested folder",
-                    "duration": 0.675199999999677,
+                    "duration": 0.6803939999999784,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1033,7 +925,7 @@
                     "fullName": "tests routes finds folders by name or returns null",
                     "status": "passed",
                     "title": "finds folders by name or returns null",
-                    "duration": 1.1024999999990541,
+                    "duration": 1.6284230000001116,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1042,7 +934,7 @@
                     "fullName": "tests routes upserts folders and enforces access control",
                     "status": "passed",
                     "title": "upserts folders and enforces access control",
-                    "duration": 1.6490000000012515,
+                    "duration": 2.3120229999999538,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1051,7 +943,7 @@
                     "fullName": "tests routes edits and deletes folders",
                     "status": "passed",
                     "title": "edits and deletes folders",
-                    "duration": 3.771199999999226,
+                    "duration": 4.504188999999769,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1060,7 +952,7 @@
                     "fullName": "tests routes gets and upserts specs",
                     "status": "passed",
                     "title": "gets and upserts specs",
-                    "duration": 4.662500000000364,
+                    "duration": 4.760373000000072,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1069,7 +961,7 @@
                     "fullName": "tests routes lists specs with folder filters",
                     "status": "passed",
                     "title": "lists specs with folder filters",
-                    "duration": 1.8258000000005268,
+                    "duration": 2.384849999999915,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1078,7 +970,7 @@
                     "fullName": "tests routes deletes specs and enforces access control",
                     "status": "passed",
                     "title": "deletes specs and enforces access control",
-                    "duration": 1.144800000000032,
+                    "duration": 1.9327370000000883,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1087,7 +979,7 @@
                     "fullName": "tests routes replaces requirements for a spec and updates counts",
                     "status": "passed",
                     "title": "replaces requirements for a spec and updates counts",
-                    "duration": 2.279000000000451,
+                    "duration": 3.0319509999999354,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1096,7 +988,7 @@
                     "fullName": "tests routes upserts requirements and enforces access control",
                     "status": "passed",
                     "title": "upserts requirements and enforces access control",
-                    "duration": 1.7067999999999302,
+                    "duration": 2.236790999999812,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1105,7 +997,7 @@
                     "fullName": "tests routes deletes requirements and enforces access control",
                     "status": "passed",
                     "title": "deletes requirements and enforces access control",
-                    "duration": 1.368400000001202,
+                    "duration": 1.1960070000000087,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1114,7 +1006,7 @@
                     "fullName": "tests routes replaces requirements with an empty list",
                     "status": "passed",
                     "title": "replaces requirements with an empty list",
-                    "duration": 0.800600000000486,
+                    "duration": 0.6990900000000693,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1123,7 +1015,7 @@
                     "fullName": "tests routes rejects requirements that belong to another spec",
                     "status": "passed",
                     "title": "rejects requirements that belong to another spec",
-                    "duration": 0.6618999999991502,
+                    "duration": 0.7106909999997697,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1132,16 +1024,16 @@
                     "fullName": "tests routes syncs report status mapping and returns report data",
                     "status": "passed",
                     "title": "syncs report status mapping and returns report data",
-                    "duration": 4.128200000001016,
+                    "duration": 4.643611999999848,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873909,
-            "endTime": 1768330873948.1282,
+            "startTime": 1768428490580,
+            "endTime": 1768428490623.6436,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/tests.basic.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/orpc/routes/tests.basic.test.ts"
         },
         {
             "assertionResults": [
@@ -1150,7 +1042,7 @@
                     "fullName": "importFromJson returns zero counts for empty report",
                     "status": "passed",
                     "title": "returns zero counts for empty report",
-                    "duration": 5.001299999999901,
+                    "duration": 5.206674999999905,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1159,7 +1051,7 @@
                     "fullName": "importFromJson returns zero counts for undefined testResults",
                     "status": "passed",
                     "title": "returns zero counts for undefined testResults",
-                    "duration": 0.5073000000011234,
+                    "duration": 0.5767789999999877,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1168,7 +1060,7 @@
                     "fullName": "importFromJson creates folders from file paths",
                     "status": "passed",
                     "title": "creates folders from file paths",
-                    "duration": 3.010099999999511,
+                    "duration": 3.2095260000000962,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1177,7 +1069,7 @@
                     "fullName": "importFromJson creates specs from file names",
                     "status": "passed",
                     "title": "creates specs from file names",
-                    "duration": 1.0860000000011496,
+                    "duration": 1.5208299999999326,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1186,7 +1078,7 @@
                     "fullName": "importFromJson creates requirements from assertion titles",
                     "status": "passed",
                     "title": "creates requirements from assertion titles",
-                    "duration": 1.0129999999990105,
+                    "duration": 1.6824950000000172,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1195,7 +1087,7 @@
                     "fullName": "importFromJson creates tests linked to requirements",
                     "status": "passed",
                     "title": "creates tests linked to requirements",
-                    "duration": 0.807199999999284,
+                    "duration": 1.2181890000001658,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1204,7 +1096,7 @@
                     "fullName": "importFromJson updates spec numberOfTests after import",
                     "status": "passed",
                     "title": "updates spec numberOfTests after import",
-                    "duration": 0.8381000000008498,
+                    "duration": 1.4412990000000718,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1213,7 +1105,7 @@
                     "fullName": "importFromJson skips tests without file name",
                     "status": "passed",
                     "title": "skips tests without file name",
-                    "duration": 0.511899999999514,
+                    "duration": 0.821480000000065,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1222,7 +1114,7 @@
                     "fullName": "importFromJson skips assertions without title",
                     "status": "passed",
                     "title": "skips assertions without title",
-                    "duration": 0.7867000000005646,
+                    "duration": 1.363792999999987,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1231,7 +1123,7 @@
                     "fullName": "importFromJson creates nested folder structure",
                     "status": "passed",
                     "title": "creates nested folder structure",
-                    "duration": 0.7419000000008964,
+                    "duration": 1.2057350000000042,
                     "failureMessages": [],
                     "meta": {}
                 },
@@ -1240,16 +1132,16 @@
                     "fullName": "importFromJson appends requirement order after existing requirements",
                     "status": "passed",
                     "title": "appends requirement order after existing requirements",
-                    "duration": 0.6571999999996478,
+                    "duration": 1.2350799999999253,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873909,
-            "endTime": 1768330873924.6572,
+            "startTime": 1768428493254,
+            "endTime": 1768428493274.235,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/tests.importFromJson.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/orpc/routes/tests.importFromJson.test.ts"
         },
         {
             "assertionResults": [
@@ -1258,16 +1150,124 @@
                     "fullName": "syncReport updates reported statuses and marks unmatched as missing, in batches",
                     "status": "passed",
                     "title": "updates reported statuses and marks unmatched as missing, in batches",
-                    "duration": 7.346400000000358,
+                    "duration": 10.582499999999982,
                     "failureMessages": [],
                     "meta": {}
                 }
             ],
-            "startTime": 1768330873908,
-            "endTime": 1768330873915.3464,
+            "startTime": 1768428495476,
+            "endTime": 1768428495486.5825,
             "status": "passed",
             "message": "",
-            "name": "C:/Users/noden/Desktop/automaspec/__tests__/orpc/routes/tests.syncReport.test.ts"
+            "name": "/home/qweered/Projects/automaspec/__tests__/orpc/routes/tests.syncReport.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should add two numbers correctly",
+                    "status": "passed",
+                    "title": "should add two numbers correctly",
+                    "duration": 2.6770520000000033,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should subtract two numbers correctly",
+                    "status": "passed",
+                    "title": "should subtract two numbers correctly",
+                    "duration": 0.6851629999999886,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should multiply two numbers correctly",
+                    "status": "passed",
+                    "title": "should multiply two numbers correctly",
+                    "duration": 0.4944629999999961,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should check if array contains element",
+                    "status": "passed",
+                    "title": "should check if array contains element",
+                    "duration": 1.6612649999999576,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should return correct array length",
+                    "status": "passed",
+                    "title": "should return correct array length",
+                    "duration": 0.8120020000000068,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768428496153,
+            "endTime": 1768428496159.812,
+            "status": "passed",
+            "message": "",
+            "name": "/home/qweered/Projects/automaspec/samples/vitest-npm/tests/example.test.ts"
+        },
+        {
+            "assertionResults": [
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should add two numbers correctly",
+                    "status": "passed",
+                    "title": "should add two numbers correctly",
+                    "duration": 1.511162000000013,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should subtract two numbers correctly",
+                    "status": "passed",
+                    "title": "should subtract two numbers correctly",
+                    "duration": 0.28208199999994577,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Math Operations"],
+                    "fullName": "Math Operations should multiply two numbers correctly",
+                    "status": "passed",
+                    "title": "should multiply two numbers correctly",
+                    "duration": 0.1755319999999756,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should check if array contains element",
+                    "status": "passed",
+                    "title": "should check if array contains element",
+                    "duration": 1.217247000000043,
+                    "failureMessages": [],
+                    "meta": {}
+                },
+                {
+                    "ancestorTitles": ["Array Operations"],
+                    "fullName": "Array Operations should return correct array length",
+                    "status": "passed",
+                    "title": "should return correct array length",
+                    "duration": 0.6449870000000146,
+                    "failureMessages": [],
+                    "meta": {}
+                }
+            ],
+            "startTime": 1768428496806,
+            "endTime": 1768428496809.645,
+            "status": "passed",
+            "message": "",
+            "name": "/home/qweered/Projects/automaspec/samples/vitest-pnpm/tests/example.test.ts"
         }
     ]
 }

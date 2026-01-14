@@ -23,10 +23,10 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (isPending) return
-        if (session) {
+        if (session && !isSignUp) {
             router.replace('/choose-organization')
         }
-    }, [session, isPending, router])
+    }, [session, isPending, router, isSignUp])
 
     const handleValuesChange = useCallback((values: { email?: string; password?: string }) => {
         setAuthValues((prev) => ({

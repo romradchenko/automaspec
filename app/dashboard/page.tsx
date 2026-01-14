@@ -26,7 +26,6 @@ import { DeleteConfirmDialog } from './components/delete-confirm-dialog'
 import { FolderDetailsPanel } from './components/folder-details-panel'
 import { DashboardHeader } from './components/header'
 import { ImportTestsDialog } from './components/import-tests-dialog'
-import { OnboardingEmptyState } from './components/onboarding-empty-state'
 import { TestDetailsPanel } from './components/test-details-panel'
 import { invalidateAndRefetchQueries } from './hooks'
 import { Tree, type TreeHandle } from './tree'
@@ -86,13 +85,6 @@ export default function Dashboard() {
         }
     }, [aiOpen])
 
-    const { data: specs = [], isLoading: isLoadingSpecs } = useQuery({
-        queryKey: ['test-specs'],
-        queryFn: async () => {
-            const res = await safeClient.testSpecs.list({})
-            return res.data || []
-        }
-    })
     const { data: requirements = [] } = useQuery({
         queryKey: ['test-requirements'],
         queryFn: async () => {
@@ -107,8 +99,6 @@ export default function Dashboard() {
             return res.data || []
         }
     })
-
-    const isEmptyOrganization = !isLoadingSpecs && specs.length === 0
 
     const handleSpecSelect = (spec: TestSpec) => {
         const specRequirements = []
@@ -450,25 +440,6 @@ export default function Dashboard() {
 
     if (!activeOrganization) {
         return null
-    }
-
-    if (isEmptyOrganization) {
-        return (
-            <>
-                <div className="flex h-screen flex-col bg-background">
-                    <DashboardHeader onImportClick={() => setImportDialogOpen(true)} />
-                    <OnboardingEmptyState onImportClick={() => setImportDialogOpen(true)} />
-                </div>
-                <ImportTestsDialog
-                    open={importDialogOpen}
-                    onOpenChange={setImportDialogOpen}
-                    onImportComplete={() => {
-                        void queryClient.invalidateQueries({ queryKey: ['test-specs'] })
-                        void treeRef.current?.refreshItemChildren('root')
-                    }}
-                />
-            </>
-        )
     }
 
     return (
