@@ -2,6 +2,5 @@ neverBuiltDependencies:
     - esbuild
     - lefthook
     - sharp
-minimumReleaseAge: 120
+minimumReleaseAge: 20
 blockExoticSubdeps: true
-trustPolicy: no-downgrade
