@@ -2,7 +2,8 @@ import { getTableName } from 'drizzle-orm'
 import { describe, it, expect } from 'vitest'
 
 import { organization, member, user } from '@/db/schema/auth'
-import { testFolder, testSpec, testRequirement, test } from '@/db/schema/tests'
+import { testFolder, testSpec, testRequirement, test, DEFAULT_SPEC_STATUSES } from '@/db/schema/tests'
+import { SPEC_STATUSES } from '@/lib/constants'
 
 describe('Database Schema', () => {
     describe('Test Tables', () => {
@@ -71,6 +72,21 @@ describe('Database Schema', () => {
             expect(columns).toContain('framework')
             expect(columns).toContain('code')
             expect(columns).toContain('requirementId')
+        })
+    })
+
+    describe('DEFAULT_SPEC_STATUSES', () => {
+        it('should have all spec statuses initialized to 0', () => {
+            const statusValues = Object.values(SPEC_STATUSES)
+            for (const status of statusValues) {
+                expect(DEFAULT_SPEC_STATUSES[status]).toBe(0)
+            }
+        })
+
+        it('should have the same keys as SPEC_STATUSES values', () => {
+            const expectedKeys = Object.values(SPEC_STATUSES)
+            const actualKeys = Object.keys(DEFAULT_SPEC_STATUSES)
+            expect(actualKeys.sort()).toEqual(expectedKeys.sort())
         })
     })
 })

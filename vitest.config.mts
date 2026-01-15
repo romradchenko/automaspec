@@ -18,7 +18,6 @@ export default defineConfig({
                 'e2e/**',
                 'app/**',
                 'components/**',
-                'db/**',
                 'lib/orpc/**',
                 'lib/query/**',
                 '**/*.test.ts',

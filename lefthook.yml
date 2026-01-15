@@ -7,7 +7,7 @@ pre-commit:
           fail_text: '❌ Database schema validation failed'
 
         - name: format staged files
-          glob: '*.{ts,tsx,mts,json,yaml,yml}'
+          glob: '*.{ts,tsx,mts,json}'
           run: pnpm format {staged_files}
           stage_fixed: true
           fail_text: '❌ oxfmt failed'

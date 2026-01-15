@@ -216,6 +216,240 @@ export const NODE_ENVS = {
     test: 'test'
 } as const
 
+export const PACKAGE_MANAGER_COMMANDS = {
+    pnpm: 'pnpm vitest --reporter=json --outputFile=test-results.json',
+    npm: 'npx vitest --reporter=json --outputFile=test-results.json',
+    yarn: 'yarn vitest --reporter=json --outputFile=test-results.json',
+    bun: 'bun vitest --reporter=json --outputFile=test-results.json'
+} as const
+
+export const SAMPLE_VITEST_REPORT = {
+    numTotalTestSuites: 8,
+    numPassedTestSuites: 5,
+    numFailedTestSuites: 2,
+    numPendingTestSuites: 1,
+    numTotalTests: 20,
+    numPassedTests: 15,
+    numFailedTests: 3,
+    numPendingTests: 2,
+    numTodoTests: 0,
+    success: false,
+    startTime: Date.now(),
+    testResults: [
+        {
+            name: 'auth/login.test.ts',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Login'],
+                    fullName: 'Login should authenticate with valid credentials',
+                    status: 'passed',
+                    title: 'should authenticate with valid credentials',
+                    duration: 45,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Login'],
+                    fullName: 'Login should reject invalid password',
+                    status: 'passed',
+                    title: 'should reject invalid password',
+                    duration: 23,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Login'],
+                    fullName: 'Login should handle rate limiting',
+                    status: 'passed',
+                    title: 'should handle rate limiting',
+                    duration: 67,
+                    failureMessages: [],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'auth/session.test.ts',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Session Management'],
+                    fullName: 'Session Management should create new session on login',
+                    status: 'passed',
+                    title: 'should create new session on login',
+                    duration: 34,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Session Management'],
+                    fullName: 'Session Management should handle session expiry',
+                    status: 'failed',
+                    title: 'should handle session expiry',
+                    duration: 156,
+                    failureMessages: ['Expected session to be null after expiry'],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'api/users.test.ts',
+            assertionResults: [
+                {
+                    ancestorTitles: ['User API'],
+                    fullName: 'User API should create a new user',
+                    status: 'passed',
+                    title: 'should create a new user',
+                    duration: 89,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['User API'],
+                    fullName: 'User API should update user profile',
+                    status: 'passed',
+                    title: 'should update user profile',
+                    duration: 67,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['User API'],
+                    fullName: 'User API should delete user account',
+                    status: 'pending',
+                    title: 'should delete user account',
+                    duration: 0,
+                    failureMessages: [],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'api/products.test.ts',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Product API'],
+                    fullName: 'Product API should list all products',
+                    status: 'passed',
+                    title: 'should list all products',
+                    duration: 45,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Product API'],
+                    fullName: 'Product API should filter products by category',
+                    status: 'passed',
+                    title: 'should filter products by category',
+                    duration: 52,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Product API'],
+                    fullName: 'Product API should handle pagination',
+                    status: 'failed',
+                    title: 'should handle pagination',
+                    duration: 78,
+                    failureMessages: ['Expected page 2 to have 10 items'],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'utils/validation.test.ts',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Validation Utils'],
+                    fullName: 'Validation Utils should validate email format',
+                    status: 'passed',
+                    title: 'should validate email format',
+                    duration: 12,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Validation Utils'],
+                    fullName: 'Validation Utils should validate password strength',
+                    status: 'passed',
+                    title: 'should validate password strength',
+                    duration: 8,
+                    failureMessages: [],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'utils/formatting.test.ts',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Formatting Utils'],
+                    fullName: 'Formatting Utils should format currency correctly',
+                    status: 'passed',
+                    title: 'should format currency correctly',
+                    duration: 5,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Formatting Utils'],
+                    fullName: 'Formatting Utils should format dates in locale',
+                    status: 'passed',
+                    title: 'should format dates in locale',
+                    duration: 7,
+                    failureMessages: [],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'components/Button.test.tsx',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Button Component'],
+                    fullName: 'Button Component should render with correct text',
+                    status: 'passed',
+                    title: 'should render with correct text',
+                    duration: 15,
+                    failureMessages: [],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Button Component'],
+                    fullName: 'Button Component should handle click events',
+                    status: 'passed',
+                    title: 'should handle click events',
+                    duration: 18,
+                    failureMessages: [],
+                    meta: {}
+                }
+            ]
+        },
+        {
+            name: 'components/Form.test.tsx',
+            assertionResults: [
+                {
+                    ancestorTitles: ['Form Component'],
+                    fullName: 'Form Component should validate required fields',
+                    status: 'failed',
+                    title: 'should validate required fields',
+                    duration: 45,
+                    failureMessages: ['Expected error message to be displayed'],
+                    meta: {}
+                },
+                {
+                    ancestorTitles: ['Form Component'],
+                    fullName: 'Form Component should submit form data',
+                    status: 'pending',
+                    title: 'should submit form data',
+                    duration: 0,
+                    failureMessages: [],
+                    meta: {}
+                }
+            ]
+        }
+    ]
+} as const
+
 export const DEMO_CREDENTIALS = {
     email: 'demo@automaspec.com',
     password: 'demo1234'
