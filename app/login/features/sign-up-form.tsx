@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -20,14 +20,7 @@ interface SignUpFormProps {
 
 export function SignUpForm({ onToggle, initialEmail = '', initialPassword = '', onValuesChange }: SignUpFormProps) {
     const router = useRouter()
-    const isRedirectingRef = useRef(false)
-    const { data: session } = authClient.useSession()
-
-    useEffect(() => {
-        if (session && isRedirectingRef.current) {
-            router.replace('/create-organization')
-        }
-    }, [session, router])
+    const [isLoading, setIsLoading] = useState(false)
 
     const formApi = useAppForm({
         defaultValues: {
@@ -39,23 +32,22 @@ export function SignUpForm({ onToggle, initialEmail = '', initialPassword = '', 
             onChange: SignUpSchema
         },
         onSubmit: async ({ value }) => {
-            isRedirectingRef.current = true
-            void authClient.signUp.email(
-                {
-                    email: value.email,
-                    password: value.password,
-                    name: value.name
-                },
-                {
-                    onSuccess: async () => {
-                        toast.success('Sign up successful')
-                    },
-                    onError: (ctx) => {
-                        isRedirectingRef.current = false
-                        toast.error(ctx.error.message)
-                    }
-                }
-            )
+            setIsLoading(true)
+
+            const { error } = await authClient.signUp.email({
+                email: value.email,
+                password: value.password,
+                name: value.name
+            })
+
+            if (error) {
+                setIsLoading(false)
+                toast.error(error.message)
+                return
+            }
+
+            toast.success('Sign up successful')
+            router.replace('/create-organization')
         }
     })
 
@@ -83,7 +75,17 @@ export function SignUpForm({ onToggle, initialEmail = '', initialPassword = '', 
                         <formApi.AppField name="password">
                             {(field) => <field.PasswordField label="Password" />}
                         </formApi.AppField>
-                        <formApi.SubmitButton />
+                        <formApi.Subscribe>
+                            {(state) => (
+                                <Button
+                                    type="submit"
+                                    className="w-full"
+                                    disabled={!state.canSubmit || state.isSubmitting || isLoading}
+                                >
+                                    {state.isSubmitting || isLoading ? 'Creating account...' : 'Create account'}
+                                </Button>
+                            )}
+                        </formApi.Subscribe>
                     </formApi.AppForm>
                 </form>
 

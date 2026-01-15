@@ -301,6 +301,9 @@ describe('ai.chat', () => {
         vi.stubEnv('NODE_ENV', NODE_ENVS.test)
         vi.stubEnv(AI_ENV_KEYS.openrouter, 'key')
         aiSdkMocks.streamText.mockReturnValue({ text: Promise.resolve('') })
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+            return
+        })
 
         const result = await client.ai.chat({
             provider: AI_PROVIDERS.openrouter,
@@ -308,6 +311,7 @@ describe('ai.chat', () => {
         })
 
         expect(result.text).toContain('returned no content')
+        consoleErrorSpy.mockRestore()
     })
 
     it('rejects when google key is missing', async () => {
